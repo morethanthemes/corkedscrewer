@@ -1,0 +1,155 @@
+
+/*** ESSENTIAL STYLES ***/
+#menu ul, #menu ul * {
+	margin:			0;
+	padding:		0;
+	list-style:		none;
+}
+#menu ul {
+	line-height:	1.0;
+}
+#menu ul ul {
+	position:		absolute;
+	top:			-999em;
+	width:			10em; /* left offset of submenus need to match (see below) */
+}
+#menu ul ul li {
+	width:			100%;
+}
+#menu ul li:hover {
+	visibility:		inherit; /* fixes IE7 'sticky bug' */
+}
+#menu ul li {
+	float:			left;
+	position:		relative;
+}
+#menu ul a {
+	display:		block;
+	position:		relative;
+}
+#menu ul li:hover ul,
+#menu ul li.sfHover ul {
+	left:			0;
+	top:			54px; /* match top ul list item height */
+	z-index:		99;
+}
+#menu ul li:hover li ul,
+#menu ul li.sfHover li ul {
+	top:			-999em;
+}
+#menu ul li li:hover ul,
+#menu ul li li.sfHover ul {
+	left:			200px; /* match ul width */
+	top:			0;
+}
+#menu ul li li:hover li ul,
+#menu ul li li.sfHover li ul {
+	top:			-999em;
+}
+#menu ul li li li:hover ul,
+#menu ul li li li.sfHover ul {
+	left:			200px; /* match ul width */
+	top:			0;
+}
+
+/*** DEMO SKIN ***/
+
+/*
+.sf-menu {
+	float:			left;
+	margin-bottom:	1em;
+}
+.sf-menu a {
+	border-left:	1px solid #fff;
+	border-top:		1px solid #CFDEFF;
+	padding: 		.75em 1em;
+	text-decoration:none;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+/*	color:			#13a;
+}
+.sf-menu li {
+	background:		#BDD2FF;
+}
+.sf-menu li li {
+	background:		#AABDE6;
+}
+.sf-menu li li li {
+	background:		#9AAEDB;
+}
+.sf-menu li:hover, .sf-menu li.sfHover,
+.sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
+	background:		#CFDEFF;
+	outline:		0;
+}*/
+
+#menu ul li ul{
+  background: #2f2f2f; /* Old browsers */
+  background: -moz-linear-gradient(top, #2f2f2f 0%, #101010 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2f2f2f), color-stop(100%,#101010)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #2f2f2f 0%,#101010 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #2f2f2f 0%,#101010 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #2f2f2f 0%,#101010 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #2f2f2f 0%,#101010 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f2f2f', endColorstr='#101010',GradientType=0 ); /* IE6-9 */
+}
+
+#menu ul li ul {
+	width: 200px;
+
+}
+
+/*** arrows **/
+#menu ul a.sf-with-ul {
+	padding-right: 	2.25em;
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.sf-sub-indicator {
+	position:		absolute;
+	display:		block;
+	right:			0;
+	top:			1.05em; /* IE6 only */
+	width:			10px;
+	height:			10px;
+	text-indent: 	-999em;
+	overflow:		hidden;
+	background:		url('../images/menu-sub-indicator.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+a > .sf-sub-indicator {  /* give all except IE6 the correct values */
+	top:			25px;
+	background-position: 0 0px; /* use translucent arrow for modern browsers*/
+}
+/* apply hovers to modern browsers */
+a:focus > .sf-sub-indicator,
+a:hover > .sf-sub-indicator,
+a:active > .sf-sub-indicator,
+li:hover > a > .sf-sub-indicator,
+li.sfHover > a > .sf-sub-indicator {
+	background-position: 0px 0px; /* arrow hovers for modern browsers*/
+}
+
+/* point right for anchors in subs */
+#menu ul ul .sf-sub-indicator { background-position:  -10px 0; }
+#menu ul ul a > .sf-sub-indicator { background-position:  0 0; }
+/* apply hovers to modern browsers */
+#menu ul ul a:focus > .sf-sub-indicator,
+#menu ul ul a:hover > .sf-sub-indicator,
+#menu ul ul a:active > .sf-sub-indicator,
+#menu ul ul li:hover > a > .sf-sub-indicator,
+#menu ul ul li.sfHover > a > .sf-sub-indicator {
+	background-position: 0px 0; /* arrow hovers for modern browsers*/
+}
+
+/*** shadows for all but IE6 ***/
+/*
+.sf-shadow ul {
+	background:	url('../images/shadow.png') no-repeat bottom right;
+	padding: 0 8px 9px 0;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;
+}
+.sf-shadow ul.sf-shadow-off {
+	background: transparent;
+}*/

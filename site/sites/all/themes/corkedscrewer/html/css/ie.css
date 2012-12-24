@@ -1,0 +1,7 @@
+#slider .slide-nav{
+margin-top: -6px; padding-bottom: 6px;
+}
+
+#main-content .comment .comment-arrow{
+background: url('../images/comment-wrap-arrow.png') 78px 15px no-repeat;
+}

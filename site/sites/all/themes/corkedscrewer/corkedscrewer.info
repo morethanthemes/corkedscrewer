@@ -8,13 +8,12 @@ stylesheets[all][] = css/reset.css
 stylesheets[all and (min-width: 980px)][] = css/960.css
 stylesheets[all and (min-width: 760px) and (max-width: 980px)][] = css/720.css
 stylesheets[all and (max-width: 760px)][] = css/mobile.css
-stylesheets[all][] = css/superfish.css
 stylesheets[all][] = css/style.css
 
 
 ; Javascript
-scripts[] = js/superfish.js
-scripts[] = js/custom.js
+
+
 
 ; Regions
 regions[header] = Header

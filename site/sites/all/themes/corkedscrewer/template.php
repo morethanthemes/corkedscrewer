@@ -101,7 +101,9 @@ function corkedscrewer_breadcrumb($variables){
 
 }
 
-
+/**
+ * Page alter.
+ */
 function corkedscrewer_page_alter($page) {
 
 	if (theme_get_setting('responsive_meta','corkedscrewer')):

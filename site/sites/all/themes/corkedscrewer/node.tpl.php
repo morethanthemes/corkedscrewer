@@ -109,9 +109,11 @@
     </div>
 
     <div class="post-meta">
-       
-        <div class="comments-count"><span class="comments"><?php print $comment_count; ?></span><a href="<?php print $node_url; ?>">comments</a></div>
-       
+        
+        <?php if($type=='article') { ?>
+            <div class="comments-count"><span class="comments"><?php print $comment_count; ?></span><a href="<?php print $node_url; ?>">comments</a></div>
+        <?php } ;?>
+
         <?php if (!$is_front): ?>
         <?php  print render($content['links']); ?>
         <?php endif; ?>
@@ -120,11 +122,13 @@
         <?php $node_author = user_load($uid); ?>
         
         <?php if (!$is_front): ?>
-        <div class="author-signature clearfix">
-            <?php print $user_picture; ?>
-            <h5>About the author</h5>
-            <?php print $node_author->signature; ?>
-        </div>      
+            <?php if($type=='article') { ?>
+            <div class="author-signature clearfix">
+                <?php print $user_picture; ?>
+                <h5>About the author</h5>
+                <?php print $node_author->signature; ?>
+            </div>     
+            <?php } ;?>
         <?php endif;?>
 
         <?php print render($content['comments']); ?>

@@ -22,12 +22,12 @@
 _______________________________________________________________________*/
 @import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700);          
 @font-face { 
-    font-family: 'WebSymbolsRegular';
-    src: url('../fonts/websymbols/websymbols-regular-webfont.eot');
-    src: url('../fonts/websymbols/websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
-       url('../fonts/websymbols/websymbols-regular-webfont.woff') format('woff'),
-       url('../fonts/websymbols/websymbols-regular-webfont.ttf') format('truetype'),
-       url('../fonts/websymbols/websymbols-regular-webfont.svg#WebSymbolsRegular') format('svg');
+	font-family: 'WebSymbolsRegular';
+	src: url('../fonts/websymbols/websymbols-regular-webfont.eot');
+	src: url('../fonts/websymbols/websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
+	url('../fonts/websymbols/websymbols-regular-webfont.woff') format('woff'),
+	url('../fonts/websymbols/websymbols-regular-webfont.ttf') format('truetype'),
+	url('../fonts/websymbols/websymbols-regular-webfont.svg#WebSymbolsRegular') format('svg');
     }
 .websymbols {
     font-family: 'WebSymbolsRegular';
@@ -40,7 +40,8 @@ _______________________________________________________________________*/
     font-style: normal;
     text-decoration: none;
     font-weight: bold;
-    }    
+    }
+	
 /*
 1. general
 _______________________________________________________________________*/
@@ -357,8 +358,9 @@ _______________________________________________________________________*/
 7. #main-menu
 _______________________________________________________________________*/
 #main-menu {
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     }
+	
 /*** ESSENTIAL STYLES ***/
 .sf-menu, .sf-menu *, #menu>ul.menu, #menu>ul.menu * {
     margin:         0;

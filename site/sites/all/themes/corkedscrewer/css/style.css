@@ -1057,20 +1057,13 @@ _______________________________________________________________________*/
     margin-bottom: 4px;
     padding-bottom: 0;
     }  
-#footer-top{
+#footer-top {
     margin-bottom: 12px;
-    }    
-#footer-bottom{
-
-    }  
-#footer-bottom ul.secondary-menu{
-    padding-left: 0;
-    }    
-#footer-bottom ul.secondary-menu li, #footer-bottom ul.menu li{
+    }   
+#footer-bottom ul.menu li{
     display: inline-block;
-    margin-top: 18px;
     }    
-#footer-bottom ul.secondary-menu li a, #footer-bottom ul.menu li a{
+#footer-bottom ul.menu li a{
     font-style: normal;
     padding: 2px 12px;
     text-decoration: none;
@@ -1078,15 +1071,19 @@ _______________________________________________________________________*/
     text-shadow: 1px 1px 1px #F6F4EB;
     border-right: 1px solid #DAD4C1;
     }
-#footer-bottom ul.secondary-menu li a:hover, #footer-bottom ul.menu li a:hover{
+#footer-bottom ul.menu li.first a {	padding-left:0 }
+	
+#footer-bottom ul.menu li a:hover{
     color:#122B2B;
     }        
-#footer-bottom ul.secondary-menu li.last a, #footer-bottom ul.menu li.last a{
+#footer-bottom ul.menu li.last a {
     border:none;
     }
 #footer-bottom ul.menu ul.menu{ 
     display:none; 
     }
+ul.secondary-menu { margin-top:18px; } 
+	
 /*
 10. Drupal styles override
 _______________________________________________________________________*/

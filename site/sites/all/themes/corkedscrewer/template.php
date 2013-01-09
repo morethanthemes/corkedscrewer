@@ -4,7 +4,7 @@
 */ 
 function corkedscrewer_preprocess_html(&$variables) {
 	if (!theme_get_setting('responsive_respond','corkedscrewer')):
-		drupal_add_css(path_to_theme() . '/css/basic-layout.css', array('group' => CSS_THEME, 'browsers' => array('IE' => '(lte IE 8)&(!IEMobile)', '!IE' => FALSE), 'preprocess' => FALSE));
+	drupal_add_css(path_to_theme() . '/css/basic-layout.css', array('group' => CSS_THEME, 'browsers' => array('IE' => '(lte IE 8)&(!IEMobile)', '!IE' => FALSE), 'preprocess' => FALSE));
 	endif;
 
 	drupal_add_css(path_to_theme() . '/css/ie.css', array('group' => CSS_THEME, 'browsers' => array('!IE' => FALSE), 'preprocess' => FALSE));
@@ -35,8 +35,7 @@ if (theme_get_setting('slideshow_js','corkedscrewer')):
 			$("slideshow .slide-control").fadeIn("slow");
 			$("#slide-nav").fadeIn("slow");
 		
-			$(".slides")
-			.cycle({ 
+			$(".slides").cycle({ 
 				fx:      	"'.$effect.'", 
 				speed:    	"slow",
 	    		timeout: 	'.$effect_time.',

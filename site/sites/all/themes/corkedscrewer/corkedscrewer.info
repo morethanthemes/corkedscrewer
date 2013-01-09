@@ -1,21 +1,14 @@
 name = CorkedScrewer
-description = A flexible theme with many regions supported by <a href="http://www.morethanthemes.com/" target="_blank">More Than (just) Themes</a>. If you like this theme, we encourage you to try also our other <a href="http://www.morethanthemes.com" target="_blank">Premium</a> and <a href="http://drupalizing.com" target="_blank">Free</a> Drupal themes.
+description = A flexible responsive theme with many regions supported by <a href="http://www.morethanthemes.com/" target="_blank">More Than (just) Themes</a>. If you like this theme, we encourage you to try also our other <a href="http://www.morethanthemes.com" target="_blank">Premium</a> and <a href="http://drupalizing.com" target="_blank">Free</a> Drupal themes.
 version = VERSION
 core = 7.x
 
-; css
 stylesheets[all][] = css/reset.css
 stylesheets[all and (min-width: 980px)][] = css/960.css
 stylesheets[all and (min-width: 760px) and (max-width: 980px)][] = css/720.css
-stylesheets[all and (max-width: 760px)][] = css/mobile.css
+stylesheets[all and (max-width: 759px)][] = css/mobile.css
 stylesheets[all][] = css/style.css
 
-
-; Javascript
-
-
-
-; Regions
 regions[header] = Header
 regions[navigation] = Navigation
 regions[banner] = Banner

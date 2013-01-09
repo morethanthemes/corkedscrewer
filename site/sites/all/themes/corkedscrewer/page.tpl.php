@@ -1,5 +1,3 @@
-
-
 <!-- #page-wrapper -->
 <div id="page-wrapper">
 
@@ -68,9 +66,7 @@
                     <?php else :
                     if (module_exists('i18n_menu')) {
                     $main_menu_tree = i18n_menu_translated_tree(variable_get('menu_main_links_source', 'main-menu'));
-                    } else {
-                    $main_menu_tree = menu_tree(variable_get('menu_main_links_source', 'main-menu')); 
-                    }
+                    } else { $main_menu_tree = menu_tree(variable_get('menu_main_links_source', 'main-menu')); }
                     print drupal_render($main_menu_tree);
                     endif; ?>
                 </div>
@@ -89,7 +85,7 @@
 
             <?php if ($page['banner']) : ?>
             <div class="grid_12">
-                <?php print render($page['banner']); ?>
+            <?php print render($page['banner']); ?>
             </div>
             <?php endif; ?>
 

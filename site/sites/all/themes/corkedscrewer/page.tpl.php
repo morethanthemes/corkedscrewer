@@ -6,8 +6,10 @@
         <!--#header-inside-->
         <div id="header-inside" class="container_12">
             
-            <?php if ($page['header']) { ?>
+            <?php if ($page['header'] && !$page['content_top']) { ?>
             <div class="grid_9">
+            <?php } elseif (($page['header'] && $page['content_top']) || ($page['content_top'])) { ?>
+            <div class="grid_4">    
             <?php } else { ?>
             <div class="grid_12">
             <?php } ?>
@@ -38,6 +40,16 @@
                 <!--EOF:#header-inside-left-->
             </div>
             
+            <?php if ($page['content_top']) :?>
+                <div class="grid_5">
+                    <!-- #header-inside-right -->
+                    <div id="content-top" class="clearfix">
+                        <?php print render($page['content_top']); ?>
+                    </div>
+                    <!--EOF:#header-inside-right-->
+                </div>
+            <?php endif; ?>
+
             <?php if ($page['header']) :?>
                 <div class="grid_3">
                     <!-- #header-inside-right -->

@@ -10,6 +10,7 @@ stylesheets[all and (max-width: 759px)][] = css/mobile.css
 stylesheets[all][] = css/style.css
 
 regions[header] = Header
+regions[content_top] = Content Top
 regions[navigation] = Navigation
 regions[banner] = Banner
 regions[highlighted] = Highlighted

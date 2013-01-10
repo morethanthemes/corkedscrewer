@@ -786,13 +786,13 @@ _______________________________________________________________________*/
 .breadcrumb-wrapper  {
     margin: 24px 0 0 0;
     }
-#main-content .post {
+#main-content .node {
     margin-bottom: 24px;
     }
-#main-content .post-info {
+#main-content .node-info {
     margin-bottom: 18px;
     }
-#main-content .post-info .user {
+#main-content .node-info .user {
     margin-right: 3px;
     background: url("../images/user.png");
     width: 15px;
@@ -802,7 +802,7 @@ _______________________________________________________________________*/
     margin-top: -8px;
     vertical-align: middle;
     }
-#main-content .post-info .calendar {
+#main-content .node-info .calendar {
     margin-right: 3px;
     background: url("../images/calendar.png");
     width: 13px;
@@ -810,14 +810,14 @@ _______________________________________________________________________*/
     display: inline-block;
     line-height: 18px;
     }
-#main-content .post-info a {
+#main-content .node-info a {
     font-size: 12px;
     text-decoration: none;
     }
-#main-content .post-info .username {
+#main-content .node-info .username {
     margin-right: 12px;
     }
-#main-content .post img {
+#main-content .node img {
     float: left;
     width: 48%;
     height: 235px;
@@ -832,7 +832,7 @@ _______________________________________________________________________*/
     -o-transition: 0.3s all;
     transition: 0.3s all;
     }
-.front #main-content .post img:hover {
+.front #main-content .node img:hover {
     border-color: rgba(201, 89, 102, 0.8);
     outline: 0;
     outline: thin dotted 9;
@@ -840,24 +840,28 @@ _______________________________________________________________________*/
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(197, 45, 63, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(197, 45, 63, 0.6);
     }
-#main-content .post-meta {
+#main-content .node-meta {
     margin-top: 24px;
     clear: both;
     }
-#main-content .post-meta ul li {
+#main-content .node-meta ul li {
     display: inline-block;
     padding: 0 6px 0 0 ;
     line-height: 20px;
     font-size: 12px;
     }
-#main-content .post-meta ul.tips li {
+#main-content .node-meta ul.tips li {
     display: list-item;
     }    
-.post-meta .comments-count {
+#main-content .node-meta .comments-count {
     margin-right: 12px;
     display: inline-block;
     }
-.post-meta  span.comments {
+#main-content .node-meta ul li.comment-comments {
+    display: none;
+    }
+	
+.node-meta  span.comments {
     background: url("../images/comment.png") no-repeat left center;
     width: 20px;
     height: 20px;
@@ -875,15 +879,15 @@ ul.links li a.active {
 ul.links li a.active:hover {
     color: #122B2B;
     }
-.post-meta .field-name-field-tags, .post-meta .field-label, .post-meta .field-items, .post-meta .field-item {
+.node-meta .field-name-field-tags, .node-meta .field-label, .node-meta .field-items, .node-meta .field-item {
     display: inline-block;
     }
-.post-meta .field-label {
+.node-meta .field-label {
     font-size: 12px;
     font-weight: normal;
     margin-left: 24px;
     }
-.post-meta .field-item {
+.node-meta .field-item {
     margin-right: 6px;
     }
 .fb {
@@ -902,7 +906,7 @@ ul.links li a.active:hover {
     }
 /* autor-signature 
 -------------------*/
-#main-content .post .author-signature {
+#main-content .node .author-signature {
     background: #ffffff; /* Old browsers */
     background: -moz-linear-gradient(top,  #ffffff 0%, #f7f7f7 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f7f7f7)); /* Chrome,Safari4+ */
@@ -925,7 +929,7 @@ ul.links li a.active:hover {
     -webkit-box-shadow: 1px 1px 1px #CFCFCF;
     box-shadow: 1px 1px 1px #CFCFCF;
     }
-#main-content .post .author-signature img {
+#main-content .node .author-signature img {
     width: 112px;
     height: 70px;
     padding: 0;
@@ -1460,7 +1464,7 @@ _______________________________________________________________________*/
     #featured .featured-teaser-title{
         font-size: 13px;
     }
-    #main-content .post img {
+    #main-content .node img {
         width: 100%;
         height: auto;
     }

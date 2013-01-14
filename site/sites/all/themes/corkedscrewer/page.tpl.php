@@ -16,10 +16,9 @@
 
                 <!-- #header-inside-left -->
                 <div id="header-inside-left">
-                    <?php if ($logo): ?>
-                        <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" class="logo clearfix">
-                            <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
-                        </a>
+					<?php if ($logo): ?>
+                    <a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>" class="logo">
+                    <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>"/></a>
                     <?php endif; ?>
 
                     <?php if ($site_name || $site_slogan): ?>
@@ -27,11 +26,13 @@
                         <div id="name-and-slogan" class="clearfix">
                             <?php if ($site_name): ?>
                             <div id="site-name">
-                                <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><?php print $site_name; ?></a>
+                             <a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?>
                             </div>
                             <?php endif; ?>
                             <?php if ($site_slogan): ?>
-                                <div id="site-slogan"><?php print $site_slogan; ?></div>
+                             <div id="site-slogan">
+							 <?php print $site_slogan; ?>
+                             </div>
                             <?php endif; ?>
                         </div> 
                         <!-- EOF:#name-and-slogan -->

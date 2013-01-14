@@ -249,11 +249,7 @@ _______________________________________________________________________*/
     margin-bottom: 18px;
     }
 #header a.logo {
-    width: 250px;
-    height: 60px;
-    display: inline-block;
-    font: 0/0 a;
-    color: transparent;
+    float:left;
     text-shadow: none;
     background-color: transparent;
     border: 0;
@@ -291,7 +287,7 @@ _______________________________________________________________________*/
     }
 #block-search-form input.form-text {
     margin: 0;
-    width: 200px;
+    width: 220px;
     height: 36px;
 
     -webkit-border-radius: 5px;

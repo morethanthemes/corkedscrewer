@@ -1,7 +1,7 @@
 Corked Screwer
 ==============
 
-This repository contains the Drupal installation that runs at drupalizing.com and demonstrates the “Corked Screwer” Drupal theme. We use this repository in order to maintain the above mentioned site and develop the corresponding theme. 
+This repository contains the Drupal installation that runs at [drupalizing.com](http://drupalizing.com) and demonstrates the [“Corked Screwer”](http://drupal.org/project/corkedscrewer) Drupal theme. We use this repository in order to maintain the above mentioned site and develop the corresponding theme. 
 
 You are welcome however to grab this code and have the demonstration site running on your end. By doing this you have the chance to see the Corked Screwer theme in action exactly the way it looks like on our demo.
 

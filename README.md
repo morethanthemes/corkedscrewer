@@ -1,7 +1,7 @@
 corkedscrewer
 =============
 
-Corked screwer Drupal theme
+Corked screwer Drupal theme<br/>
 <strong>Login credentials for the Drupal distribution:</strong> admin/password
 
 <strong>Corked Screwer</strong> by <a href="http://www.morethanthemes.com/">More than (just) Themes</a> is based on the homonymous PSD template, which was designed and published by Corked Screwer. 

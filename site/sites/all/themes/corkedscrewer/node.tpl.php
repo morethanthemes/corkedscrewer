@@ -17,7 +17,7 @@
         ?>
        
         <?php if ($display_submitted): ?>
-        <div class="node-info"><span class="user"></span> <?php print $name ?> <span class="calendar"></span> <?php print $date ?></div>
+        <div class="node-info"><span class="user"></span> <?php print $name ?> <span class="calendar"></span> <?php print $date; ?></div>
         <?php endif; ?>
        
         <?php print render($content); ?>

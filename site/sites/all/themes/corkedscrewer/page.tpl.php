@@ -17,23 +17,25 @@
                 <!-- #header-inside-left -->
                 <div id="header-inside-left">
 					<?php if ($logo): ?>
-                    <a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>" class="logo">
-                    <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>"/></a>
+                    <div id="logo" class="clearfix">
+                    <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"> <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" /> </a>
+                    </div>
                     <?php endif; ?>
 
                     <?php if ($site_name || $site_slogan): ?>
                         <!-- #name-and-slogan -->
-                        <div id="name-and-slogan" class="clearfix">
-                            <?php if ($site_name): ?>
-                            <div id="site-name">
-                             <a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?>
-                            </div>
-                            <?php endif; ?>
-                            <?php if ($site_slogan): ?>
-                             <div id="site-slogan">
-							 <?php print $site_slogan; ?>
-                             </div>
-                            <?php endif; ?>
+                        <div id="name-and-slogan">
+						<?php if ($site_name):?>
+                        <div id="site-name">
+                        <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?></a>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($site_slogan):?>
+                        <div id="site-slogan">
+                        <?php print $site_slogan; ?>
+                        </div>
+                        <?php endif; ?>
                         </div> 
                         <!-- EOF:#name-and-slogan -->
                     <?php endif; ?>

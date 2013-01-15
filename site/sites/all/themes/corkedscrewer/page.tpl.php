@@ -109,63 +109,63 @@
             <?php if ($is_front): ?>
 
             <div class="grid_12">
-                <!--#slideshow-->
-                <div id="slideshow">
+<!--#slideshow-->
+<div id="slideshow">
 
-                    <!--slides-->
-                    <div class="slides">
-                        <!--slider-item-->
-                        <div class="slider-item">
-                            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-                            <div class="slider-item-title">Corked Screwer</div>
-                            <div class="slider-item-body">Unique resource for wine lovers</div>
-                        </div>
-                        <!--EOF:slider-item-->
+<!--slides-->
+<div class="slides">
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title">Corked Screwer</div>
+<div class="slider-item-body">Unique resource for wine lovers</div>
+</div>
+<!--EOF:slider-item-->
 
-                        <!--slider-item-->
-                        <div class="slider-item">
-                            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-                            <div class="slider-item-title light">Wine Lovers </div>
-                            <div class="slider-item-body">Monaco restaurants</div>
-                        </div>
-                        <!--EOF:slider-item-->
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title light">Wine Lovers </div>
+<div class="slider-item-body">Monaco restaurants</div>
+</div>
+<!--EOF:slider-item-->
 
-                        <!--slider-item-->
-                        <div class="slider-item">
-                            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-                            <div class="slider-item-title light">Best Blog</div>
-                            <div class="slider-item-body">Best wine ideas</div>
-                        </div>
-                        <!--EOF:slider-item-->
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title light">Best Blog</div>
+<div class="slider-item-body">Best wine ideas</div>
+</div>
+<!--EOF:slider-item-->
 
-                        <!--slider-item-->
-                        <div class="slider-item">
-                            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-                            <div class="slider-item-title">Wine Lovers </div>
-                            <div class="slider-item-body">Monaco restaurants</div>
-                        </div>
-                        <!--EOF:slider-item-->
-                    </div> 
-                    <!--EOF:slides-->
-                    
-                    <!--slide-control-->
-                    <div class="slide-control">
-                        <div id="prev" href="#"><span class="websymbols"><</span></div>
-                        <div id="next" href="#"><span class="websymbols">></span></div>
-                    </div>
-                    <!--EOF:slide-control-->
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title">Wine Lovers </div>
+<div class="slider-item-body">Monaco restaurants</div>
+</div>
+<!--EOF:slider-item-->
+</div> 
+<!--EOF:slides-->
 
-                    <!--#slide-nav-->
-                    <ul id="slide-nav">
-                        <li><a href="#"></a></li>
-                        <li><a href="#"></a></li>
-                        <li><a href="#"></a></li>
-                        <li><a href="#"></a></li>
-                    </ul> 
-                    <!--EOF:#slide-nav-->                
+<!--slide-control-->
+<div class="slide-control">
+<div id="prev" href="#"><span class="websymbols"><</span></div>
+<div id="next" href="#"><span class="websymbols">></span></div>
+</div>
+<!--EOF:slide-control-->
 
-                </div>
-                <!--EOF:#slideshow-->
+<!--#slide-nav-->
+<ul id="slide-nav">
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+</ul> 
+<!--EOF:#slide-nav-->                
+
+</div>
+<!--EOF:#slideshow-->
             </div>    
 
             <?php endif; ?>
@@ -191,74 +191,75 @@
             <?php if (theme_get_setting('highlighted_display','corkedscrewer')): ?>
                     
             <?php if ($is_front): ?>            
-
-            <!--#featured-->
-            <div id="featured" class="clearfix">
+            <div class="grid_12">
+                <!--#featured-->
+                <div id="featured" class="clearfix">
                 
-                <div class="grid_3 ">
-                    <!--featured-teaser-->
-                    <div class="featured-teaser">
-                        <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img1.png"/></a></div>
-                        <div class="featured-teaser-title">Monaco restaurants</div>
-                        <div class="featured-teaser-body">25</div>
-                    </div>
-                    <!--EOF:featured-teaser-->
-
-                    <!--featured-teaser-->
-                    <div class="featured-teaser">
-                        <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img2.png"/></a></div>
-                        <div class="featured-teaser-title">Wine & Meat</div>
-                        <div class="featured-teaser-body">25</div>
-                    </div>
-                    <!--EOF:featured-teaser-->
+                <div class="grid_3 alpha">
+                <!--featured-teaser-->
+                <div class="featured-teaser">
+                <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img1.png"/></a></div>
+                <div class="featured-teaser-title">Monaco restaurants</div>
+                <div class="featured-teaser-body">25</div>
+                </div>
+                <!--EOF:featured-teaser-->
                 
-                    <!--featured-teaser-->
-                    <div class="featured-teaser">
-                        <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img3.png"/></a></div>
-                        <div class="featured-teaser-title">Best wine deals</div>
-                        <div class="featured-teaser-body">25</div>
-                    </div> 
-                    <!--EOF:featured-teaser-->
+                <!--featured-teaser-->
+                <div class="featured-teaser">
+                <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img2.png"/></a></div>
+                <div class="featured-teaser-title">Wine & Meat</div>
+                <div class="featured-teaser-body">25</div>
+                </div>
+                <!--EOF:featured-teaser-->
+                
+                <!--featured-teaser-->
+                <div class="featured-teaser">
+                <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img3.png"/></a></div>
+                <div class="featured-teaser-title">Best wine deals</div>
+                <div class="featured-teaser-body">25</div>
+                </div> 
+                <!--EOF:featured-teaser-->
                 </div>
                 
                 <div class="grid_6">
-                    <!--featured-->
-                    <div class="featured">
-                        <div class="featured-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img.png"/></a></div>
-                        <div class="featured-title"><h2><a href="#">The spirit of Italy</a> <span class="comments">12</span></h2></div>
-                        <div class="featured-body">Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world's foremost producers, responsible for approximately one-fifth of world wine production in 2005.</div>
-                    </div>
-                    <!--EOF:featured-->
+                <!--featured-->
+                <div class="featured">
+                <div class="featured-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img.png"/></a></div>
+                <div class="featured-title"><h2><a href="#">The spirit of Italy</a> <span class="comments">12</span></h2></div>
+                <div class="featured-body">Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world's foremost producers, responsible for approximately one-fifth of world wine production in 2005.</div>
                 </div>
-
-                <div class="grid_3 ">
-                    <!--featured-teaser-->
-                    <div class="featured-teaser">
-                        <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img4.png"/></a></div>
-                        <div class="featured-teaser-title">Cheese</div>
-                        <div class="featured-teaser-body">25</div>
-                    </div>
-                    <!--EOF:featured-teaser-->
-
-                    <!--featured-teaser-->
-                    <div class="featured-teaser">  
-                        <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img5.png"/></a></div>
-                        <div class="featured-teaser-title">Red wine</div>
-                        <div class="featured-teaser-body">25</div>
-                    </div>  
-                    <!--EOF:featured-teaser-->
-
-                    <!--featured-teaser-->
-                    <div class="featured-teaser">  
-                        <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img6.png"/></a></div>
-                        <div class="featured-teaser-title">The best in the world</div>
-                        <div class="featured-teaser-body">25</div>
-                    </div>  
-                    <!--EOF:featured-teaser-->
+                <!--EOF:featured-->
+                </div>
+                
+                <div class="grid_3 omega">
+                <!--featured-teaser-->
+                <div class="featured-teaser">
+                <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img4.png"/></a></div>
+                <div class="featured-teaser-title">Cheese</div>
+                <div class="featured-teaser-body">25</div>
+                </div>
+                <!--EOF:featured-teaser-->
+                
+                <!--featured-teaser-->
+                <div class="featured-teaser">  
+                <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img5.png"/></a></div>
+                <div class="featured-teaser-title">Red wine</div>
+                <div class="featured-teaser-body">25</div>
+                </div>  
+                <!--EOF:featured-teaser-->
+                
+                <!--featured-teaser-->
+                <div class="featured-teaser">  
+                <div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/ft-img6.png"/></a></div>
+                <div class="featured-teaser-title">The best in the world</div>
+                <div class="featured-teaser-body">25</div>
+                </div>  
+                <!--EOF:featured-teaser-->
                 </div>   
-
+                
+                </div>
+                <!--EOF:#featured-->
             </div>
-            <!--EOF:#featured-->
 
             <?php endif; ?>
 

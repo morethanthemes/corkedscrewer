@@ -109,63 +109,63 @@
             <?php if ($is_front): ?>
 
             <div class="grid_12">
-            <!--#slideshow-->
-            <div id="slideshow">
-            
-            <!--slides-->
-            <div class="slides">
-            <!--slider-item-->
-            <div class="slider-item">
-            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-            <div class="slider-item-title">Corked Screwer</div>
-            <div class="slider-item-body">Unique resource for wine lovers</div>
-            </div>
-            <!--EOF:slider-item-->
-            
-            <!--slider-item-->
-            <div class="slider-item">
-            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-            <div class="slider-item-title light">Wine Lovers </div>
-            <div class="slider-item-body">Monaco restaurants</div>
-            </div>
-            <!--EOF:slider-item-->
-            
-            <!--slider-item-->
-            <div class="slider-item">
-            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-            <div class="slider-item-title light">Best Blog</div>
-            <div class="slider-item-body">Best wine ideas</div>
-            </div>
-            <!--EOF:slider-item-->
-            
-            <!--slider-item-->
-            <div class="slider-item">
-            <div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
-            <div class="slider-item-title">Wine Lovers </div>
-            <div class="slider-item-body">Monaco restaurants</div>
-            </div>
-            <!--EOF:slider-item-->
-            </div> 
-            <!--EOF:slides-->
-            
-            <!--slide-control-->
-            <div class="slide-control">
-            <div id="prev" href="#"><span class="websymbols"><</span></div>
-            <div id="next" href="#"><span class="websymbols">></span></div>
-            </div>
-            <!--EOF:slide-control-->
-            
-            <!--#slide-nav-->
-            <ul id="slide-nav">
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            </ul> 
-            <!--EOF:#slide-nav-->                
-            
-            </div>
-            <!--EOF:#slideshow-->
+<!--#slideshow-->
+<div id="slideshow">
+
+<!--slides-->
+<div class="slides">
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title">Corked Screwer</div>
+<div class="slider-item-body">Unique resource for wine lovers</div>
+</div>
+<!--EOF:slider-item-->
+
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title light">Wine Lovers </div>
+<div class="slider-item-body">Monaco restaurants</div>
+</div>
+<!--EOF:slider-item-->
+
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title light">Best Blog</div>
+<div class="slider-item-body">Best wine ideas</div>
+</div>
+<!--EOF:slider-item-->
+
+<!--slider-item-->
+<div class="slider-item">
+<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path('theme', 'corkedscrewer') ;?>/images/local/slider-img1.png"/></div>
+<div class="slider-item-title">Wine Lovers </div>
+<div class="slider-item-body">Monaco restaurants</div>
+</div>
+<!--EOF:slider-item-->
+</div> 
+<!--EOF:slides-->
+
+<!--slide-control-->
+<div class="slide-control">
+<div id="prev" href="#"><span class="websymbols"><</span></div>
+<div id="next" href="#"><span class="websymbols">></span></div>
+</div>
+<!--EOF:slide-control-->
+
+<!--#slide-nav-->
+<ul id="slide-nav">
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+</ul> 
+<!--EOF:#slide-nav-->                
+
+</div>
+<!--EOF:#slideshow-->
             </div>    
 
             <?php endif; ?>

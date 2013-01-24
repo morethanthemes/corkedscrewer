@@ -1,4 +1,4 @@
-name = CorkedScrewer
+name = corkedscrewer
 description = A flexible responsive theme with many regions supported by <a href="http://www.morethanthemes.com/" target="_blank">More Than (just) Themes</a>. If you like this theme, we encourage you to try also our other <a href="http://www.morethanthemes.com" target="_blank">Premium</a> and <a href="http://drupalizing.com" target="_blank">Free</a> Drupal themes.
 version = VERSION
 core = 7.x
@@ -39,3 +39,10 @@ settings[slideshow_wrap]= 0
 settings[slideshow_pause]= 0
 settings[responsive_meta]= 1
 settings[responsive_respond]= 0
+
+; Information added by drupal.org packaging script on 2013-01-15
+version = "7.x-1.0"
+core = "7.x"
+project = "corkedscrewer"
+datestamp = "1358281896"
+

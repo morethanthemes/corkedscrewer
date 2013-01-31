@@ -1186,8 +1186,21 @@ _______________________________________________________________________*/
 #footer-bottom ul.menu ul.menu{ 
     display:none; 
     }
-ul.secondary-menu { margin-top:18px; } 
-	
+ul.secondary-menu { 
+    margin-top:18px; 
+    }
+#footer .credits {
+    font-size: 11px; 
+    color: #6F6F6F; 
+    margin-top: 18px;
+    text-shadow:1px 1px #f3f3f3;
+    }
+#footer .credits a {
+    color: #A39B82;
+    }  
+#footer .credits a:hover {
+    color: #122B2B;
+    }  	
 /*
 10. Drupal styles override
 _______________________________________________________________________*/

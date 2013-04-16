@@ -6,13 +6,14 @@
 /*  3. links
 /*  4. headings
 /*  5. lists
-/*  6. #header
-/*  7. #main-menu
-/*  8. #slideshow
-/*  9. #content
-/*  10. #footer
-/*  11. Drupal styles override
-/*  12. Responsive layout
+/*  6. tables
+/*  7. #header
+/*  8. #main-menu
+/*  9. #slideshow
+/*  10. #content
+/*  11. #footer
+/*  12. Drupal styles override
+/*  13. Responsive layout
 */
 
 /*
@@ -207,7 +208,7 @@ li.expanded,li.collapsed,li.leaf {
     margin: 0;
     }
 /*
-6. #header
+6. tables
 _______________________________________________________________________*/
 table { 
     border-spacing:0; 
@@ -241,7 +242,7 @@ table.noborder tr{
     }    
 
 /*
-6. #header
+7. #header
 _______________________________________________________________________*/
 #header {
     margin-bottom: 18px;
@@ -352,7 +353,7 @@ _______________________________________________________________________*/
     }    
 
 /*
-7. #main-menu
+8. #main-menu
 _______________________________________________________________________*/
 #main-menu {
     margin-bottom: 5px;
@@ -464,13 +465,14 @@ ul.sf-menu li li li.sfHover ul,
     background: transparent;
     }
 #menu .sf-menu li:hover,
-/*#menu .sf-menu li.sfHover,*/
 #menu .sf-menu a:focus,
 #menu .sf-menu a:hover,
 #menu .sf-menu a:active,
+#menu .sf-menu > li > a.active,
 #menu .menu li:hover,
 #menu .menu a:focus,
-#menu .menu a:active {
+#menu .menu a:active,
+#menu > .menu > li > a.active {
     background: #6f0025; /* Old browsers */
     background: -moz-linear-gradient(top,  #6f0025 0%, #3f000f 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6f0025), color-stop(100%,#3f000f)); /* Chrome,Safari4+ */
@@ -519,9 +521,24 @@ li.sfHover > a > .sf-sub-indicator {
     } 
 /*css drop down menu arrows*/
 #menu li.expanded > a {
-    background: url('../images/menu-sub-indicator.png') no-repeat 92% 50%;
+    background-image: url('../images/menu-sub-indicator.png');
+    background-repeat:  no-repeat; 
+    background-position: 92% 50%;
     display: block;
     }
+#menu > .menu > li.expanded > a.active {
+    background: #6f0025;
+    background-image: url('../images/menu-sub-indicator.png');
+    background-image: url('../images/menu-sub-indicator.png'), -webkit-gradient(linear, left top, left bottom, from(#6f0025), to(#3f000f)); /* Saf4+, Chrome */
+    background-image: url('../images/menu-sub-indicator.png'), -webkit-linear-gradient(top, #6f0025, #3f000f); /* Chrome 10+, Saf5.1+ */
+    background-image: url('../images/menu-sub-indicator.png'),    -moz-linear-gradient(top, #6f0025, #3f000f); /* FF3.6+ */
+    background-image: url('../images/menu-sub-indicator.png'),     -ms-linear-gradient(top, #6f0025, #3f000f); /* IE10 */
+    background-image: url('../images/menu-sub-indicator.png'),      -o-linear-gradient(top, #6f0025, #3f000f); /* Opera 11.10+ */
+    background-image: url('../images/menu-sub-indicator.png'),         linear-gradient(top, #6f0025, #3f000f);
+    background-repeat:  no-repeat; 
+    background-position: 92% 50%;
+    display: block;
+    }  
 #menu li.expanded:hover > a, #menu li.expanded:active > a {    
     background-image: url('../images/menu-sub-indicator.png');
     background-repeat:  no-repeat; 
@@ -536,7 +553,7 @@ li.sfHover > a > .sf-sub-indicator {
 #navigation .block-superfish ul.sf-menu li a:focus, .block-superfish ul.sf-menu li a:hover, 
 #navigation .block-superfish ul.sf-menu li a:active { background:none; border:none; }    
 /*
-8. #slideshow
+9. #slideshow
 _______________________________________________________________________*/
 #slideshow {
     position: relative;
@@ -678,7 +695,7 @@ _______________________________________________________________________*/
     }
 
 /*
-9. #content
+10. #content
 _______________________________________________________________________*/
 #content-inside {
     padding-bottom: 18px;
@@ -821,8 +838,7 @@ _______________________________________________________________________*/
     }
 #main-content .node img {
     float: left;
-    width: 48%;
-    height: 235px;
+    max-width: 100%;
     padding: 5px;
     background: #ffffff;
     margin:0 30px 24px 0;
@@ -1146,7 +1162,7 @@ ul.social-bookmarks .rss {
     } 
 
 /*
-10. #footer
+11. #footer
 _______________________________________________________________________*/
 #footer {
 	padding:0 0 20px 0;
@@ -1200,9 +1216,9 @@ ul.secondary-menu {
     }  
 #footer .credits a:hover {
     color: #122B2B;
-    }  	
+    }      
 /*
-10. Drupal styles override
+12. Drupal styles override
 _______________________________________________________________________*/
 
 /*comment form*/
@@ -1515,7 +1531,7 @@ div.warning {
     color: #122B2B;
     }
 /*
-12. Responsive Layout
+13. Responsive Layout
 _______________________________________________________________________*/
 /*LANDSCAPE PHONE TO DOWN*/
 @media (max-width: 480px) {
@@ -1580,6 +1596,7 @@ _______________________________________________________________________*/
     }
     #main-content .node img {
         width: 100%;
+        max-width: 100%;
         height: auto;
     }
     #main-content .comment-picture img {

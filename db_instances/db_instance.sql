@@ -1,23 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.2.2
--- http://www.phpmyadmin.net
+-- version 4.7.3
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 16, 2013 at 09:52 PM
--- Server version: 5.5.27
--- PHP Version: 5.4.7
+-- Host: localhost:8889
+-- Generation Time: Apr 02, 2018 at 06:33 PM
+-- Server version: 5.6.35
+-- PHP Version: 5.6.31
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `site-0416`
+-- Database: `db_instance`
 --
 
 -- --------------------------------------------------------
@@ -26,13 +26,12 @@ SET time_zone = "+00:00";
 -- Table structure for table `actions`
 --
 
-CREATE TABLE IF NOT EXISTS `actions` (
+CREATE TABLE `actions` (
   `aid` varchar(255) NOT NULL DEFAULT '0' COMMENT 'Primary Key: Unique actions ID.',
   `type` varchar(32) NOT NULL DEFAULT '' COMMENT 'The object that that action acts on (node, user, comment, system or custom types.)',
   `callback` varchar(255) NOT NULL DEFAULT '' COMMENT 'The callback function that executes when the action runs.',
   `parameters` longblob NOT NULL COMMENT 'Parameters to be passed to the callback function.',
-  `label` varchar(255) NOT NULL DEFAULT '0' COMMENT 'Label of the action.',
-  PRIMARY KEY (`aid`)
+  `label` varchar(255) NOT NULL DEFAULT '0' COMMENT 'Label of the action.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores action information.';
 
 --
@@ -59,14 +58,12 @@ INSERT INTO `actions` (`aid`, `type`, `callback`, `parameters`, `label`) VALUES
 -- Table structure for table `authmap`
 --
 
-CREATE TABLE IF NOT EXISTS `authmap` (
-  `aid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique authmap ID.',
+CREATE TABLE `authmap` (
+  `aid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique authmap ID.',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT 'User’s users.uid.',
   `authname` varchar(128) NOT NULL DEFAULT '' COMMENT 'Unique authentication name.',
-  `module` varchar(128) NOT NULL DEFAULT '' COMMENT 'Module which is controlling the authentication.',
-  PRIMARY KEY (`aid`),
-  UNIQUE KEY `authname` (`authname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores distributed authentication mapping.' AUTO_INCREMENT=1 ;
+  `module` varchar(128) NOT NULL DEFAULT '' COMMENT 'Module which is controlling the authentication.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores distributed authentication mapping.';
 
 -- --------------------------------------------------------
 
@@ -74,13 +71,11 @@ CREATE TABLE IF NOT EXISTS `authmap` (
 -- Table structure for table `batch`
 --
 
-CREATE TABLE IF NOT EXISTS `batch` (
-  `bid` int(10) unsigned NOT NULL COMMENT 'Primary Key: Unique batch ID.',
+CREATE TABLE `batch` (
+  `bid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique batch ID.',
   `token` varchar(64) NOT NULL COMMENT 'A string token generated against the current user’s session id and the batch id, used to ensure that only the user who submitted the batch can effectively access it.',
   `timestamp` int(11) NOT NULL COMMENT 'A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.',
-  `batch` longblob COMMENT 'A serialized array containing the processing data for the batch.',
-  PRIMARY KEY (`bid`),
-  KEY `token` (`token`)
+  `batch` longblob COMMENT 'A serialized array containing the processing data for the batch.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores details about batches (processes that run in...';
 
 -- --------------------------------------------------------
@@ -89,8 +84,8 @@ CREATE TABLE IF NOT EXISTS `batch` (
 -- Table structure for table `block`
 --
 
-CREATE TABLE IF NOT EXISTS `block` (
-  `bid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique block ID.',
+CREATE TABLE `block` (
+  `bid` int(11) NOT NULL COMMENT 'Primary Key: Unique block ID.',
   `module` varchar(64) NOT NULL DEFAULT '' COMMENT 'The module from which the block originates; for example, ’user’ for the Who’s Online block, and ’block’ for any custom blocks.',
   `delta` varchar(32) NOT NULL DEFAULT '0' COMMENT 'Unique ID for block within a module.',
   `theme` varchar(64) NOT NULL DEFAULT '' COMMENT 'The theme under which the block settings apply.',
@@ -101,11 +96,8 @@ CREATE TABLE IF NOT EXISTS `block` (
   `visibility` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate how to show blocks on pages. (0 = Show on all pages except listed pages, 1 = Show only on listed pages, 2 = Use custom PHP code to determine visibility)',
   `pages` text NOT NULL COMMENT 'Contents of the "Pages" block; contains either a list of paths on which to include/exclude the block or PHP code, depending on "visibility" setting.',
   `title` varchar(64) NOT NULL DEFAULT '' COMMENT 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
-  `cache` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Binary flag to indicate block cache mode. (-2: Custom cache, -1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See DRUPAL_CACHE_* constants in ../includes/common.inc for more detailed information.',
-  PRIMARY KEY (`bid`),
-  UNIQUE KEY `tmd` (`theme`,`module`,`delta`),
-  KEY `list` (`theme`,`status`,`region`,`weight`,`module`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores block settings, such as region and visibility...' AUTO_INCREMENT=125 ;
+  `cache` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Binary flag to indicate block cache mode. (-2: Custom cache, -1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See DRUPAL_CACHE_* constants in ../includes/common.inc for more detailed information.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores block settings, such as region and visibility...';
 
 --
 -- Dumping data for table `block`
@@ -243,12 +235,10 @@ INSERT INTO `block` (`bid`, `module`, `delta`, `theme`, `status`, `weight`, `reg
 -- Table structure for table `blocked_ips`
 --
 
-CREATE TABLE IF NOT EXISTS `blocked_ips` (
-  `iid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: unique ID for IP addresses.',
-  `ip` varchar(40) NOT NULL DEFAULT '' COMMENT 'IP address',
-  PRIMARY KEY (`iid`),
-  KEY `blocked_ip` (`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores blocked IP addresses.' AUTO_INCREMENT=1 ;
+CREATE TABLE `blocked_ips` (
+  `iid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: unique ID for IP addresses.',
+  `ip` varchar(40) NOT NULL DEFAULT '' COMMENT 'IP address'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores blocked IP addresses.';
 
 -- --------------------------------------------------------
 
@@ -256,26 +246,24 @@ CREATE TABLE IF NOT EXISTS `blocked_ips` (
 -- Table structure for table `block_custom`
 --
 
-CREATE TABLE IF NOT EXISTS `block_custom` (
-  `bid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The block’s block.bid.',
+CREATE TABLE `block_custom` (
+  `bid` int(10) UNSIGNED NOT NULL COMMENT 'The block’s block.bid.',
   `body` longtext COMMENT 'Block contents.',
   `info` varchar(128) NOT NULL DEFAULT '' COMMENT 'Block description.',
-  `format` varchar(255) DEFAULT NULL COMMENT 'The filter_format.format of the block body.',
-  PRIMARY KEY (`bid`),
-  UNIQUE KEY `info` (`info`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores contents of custom-made blocks.' AUTO_INCREMENT=7 ;
+  `format` varchar(255) DEFAULT NULL COMMENT 'The filter_format.format of the block body.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores contents of custom-made blocks.';
 
 --
 -- Dumping data for table `block_custom`
 --
 
 INSERT INTO `block_custom` (`bid`, `body`, `info`, `format`) VALUES
-(1, '<img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/footer-logo.png">', 'Footer logo', 'php_code'),
-(2, '<div id="subscribe">\r\n<div class="subscribe-form container-inline">\r\n<div class="form-item">\r\n<label class="element-invisible" for="">Subscribe</label>\r\n<input title="Subscribe" type="text" id="subscribe-form" name="subscribe_block_form" value="" size="15" maxlength="128" class="form-text">\r\n</div>\r\n<div class="form-actions form-wrapper" id="edit-actions"><input type="submit" id="edit-submit" name="op" value="subscribe" class="form-submit"></div>\r\n</div>\r\n\r\n<ul class="social-bookmarks">\r\n<li class="twitter"><a href="http://twitter.com/morethanthemes">Twitter</a></li>\r\n<li class="facebook"><a href="http://www.facebook.com/pages/More-than-just-themes/194842423863081">Facebook</a></li>\r\n<li class="rss"><a href="rss.xml">RSS</a></li>\r\n</ul>\r\n</div>', 'Social bookmarks', 'full_html'),
-(3, '<div class="tips">\r\n<p>Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing</p>\r\n<div><a href="<?php print base_path() ;?>node/12" class="link">Read More</a></div>\r\n</div> ', 'Tips', 'php_code'),
-(4, '<!--#slideshow-->\r\n<div id="slideshow">\r\n\r\n<!--slides-->\r\n<div class="slides">\r\n<!--slider-item-->\r\n<div class="slider-item">\r\n<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/slider-img1.png"/></div>\r\n<div class="slider-item-title">Corked Screwer</div>\r\n<div class="slider-item-body">Unique resource for wine lovers</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n\r\n<!--slider-item-->\r\n<div class="slider-item">\r\n<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/slider-img1.png"/></div>\r\n<div class="slider-item-title light">Wine Lovers </div>\r\n<div class="slider-item-body">Monaco restaurants</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n\r\n<!--slider-item-->\r\n<div class="slider-item">\r\n<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/slider-img1.png"/></div>\r\n<div class="slider-item-title light">Best Blog</div>\r\n<div class="slider-item-body">Best wine ideas</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n\r\n<!--slider-item-->\r\n<div class="slider-item">\r\n<div class="slider-item-image"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/slider-img1.png"/></div>\r\n<div class="slider-item-title">Wine Lovers </div>\r\n<div class="slider-item-body">Monaco restaurants</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n</div> \r\n<!--EOF:slides-->\r\n\r\n<!--slide-control-->\r\n<div class="slide-control">\r\n<div id="prev" href="#"><span class="websymbols"><</span></div>\r\n<div id="next" href="#"><span class="websymbols">></span></div>\r\n</div>\r\n<!--EOF:slide-control-->\r\n\r\n<!--#slide-nav-->\r\n<ul id="slide-nav">\r\n<li><a href="#"></a></li>\r\n<li><a href="#"></a></li>\r\n<li><a href="#"></a></li>\r\n<li><a href="#"></a></li>\r\n</ul> \r\n<!--EOF:#slide-nav-->                \r\n\r\n</div>\r\n<!--EOF:#slideshow-->\r\n', 'Slideshow', 'php_code'),
-(5, '<!--#featured-->\r\n<div id="featured" class="clearfix">\r\n\r\n<div class="grid_3 alpha">\r\n<!--featured-teaser-->\r\n<div class="featured-teaser">\r\n<div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img1.png"/></a></div>\r\n<div class="featured-teaser-title">Monaco restaurants</div>\r\n<div class="featured-teaser-body">25</div>\r\n</div>\r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class="featured-teaser">\r\n<div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img2.png"/></a></div>\r\n<div class="featured-teaser-title">Wine & Meat</div>\r\n<div class="featured-teaser-body">25</div>\r\n</div>\r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class="featured-teaser">\r\n<div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img3.png"/></a></div>\r\n<div class="featured-teaser-title">Best wine deals</div>\r\n<div class="featured-teaser-body">25</div>\r\n</div> \r\n<!--EOF:featured-teaser-->\r\n</div>\r\n\r\n<div class="grid_6">\r\n<!--featured-->\r\n<div class="featured">\r\n<div class="featured-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img.png"/></a></div>\r\n<div class="featured-title"><h2><a href="#">The spirit of Italy</a> <span class="comments">12</span></h2></div>\r\n<div class="featured-body">Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world''s foremost producers, responsible for approximately one-fifth of world wine production in 2005.</div>\r\n</div>\r\n<!--EOF:featured-->\r\n</div>\r\n\r\n<div class="grid_3 omega">\r\n<!--featured-teaser-->\r\n<div class="featured-teaser">\r\n<div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img4.png"/></a></div>\r\n<div class="featured-teaser-title">Cheese</div>\r\n<div class="featured-teaser-body">25</div>\r\n</div>\r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class="featured-teaser">  \r\n<div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img5.png"/></a></div>\r\n<div class="featured-teaser-title">Red wine</div>\r\n<div class="featured-teaser-body">25</div>\r\n</div>  \r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class="featured-teaser">  \r\n<div class="featured-teaser-image"><a href="#"><img src="<?php print base_path() . drupal_get_path(''theme'', ''corkedscrewer'') ;?>/images/local/ft-img6.png"/></a></div>\r\n<div class="featured-teaser-title">The best in the world</div>\r\n<div class="featured-teaser-body">25</div>\r\n</div>  \r\n<!--EOF:featured-teaser-->\r\n</div>   \r\n\r\n</div>\r\n<!--EOF:#featured-->\r\n', 'Featured', 'php_code'),
-(6, '<p class="credits" >© 2013 Copyright CorkedScrewer Theme. All Rights Reserved. Ported to Drupal by <a href="http://www.drupalizing.com">Drupalizing</a>, a Project of <a href="http://www.morethanthemes.com">More than Themes</a>. Designed by <a href="http://www.vladimirkudinov.com/">Vladimir Kudinov</a></p>', 'Footer Credits', 'full_html');
+(1, '<img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/footer-logo.png\">', 'Footer logo', 'php_code'),
+(2, '<div id=\"subscribe\">\r\n<div class=\"subscribe-form container-inline\">\r\n<div class=\"form-item\">\r\n<label class=\"element-invisible\" for=\"\">Subscribe</label>\r\n<input title=\"Subscribe\" type=\"text\" id=\"subscribe-form\" name=\"subscribe_block_form\" value=\"\" size=\"15\" maxlength=\"128\" class=\"form-text\">\r\n</div>\r\n<div class=\"form-actions form-wrapper\" id=\"edit-actions\"><input type=\"submit\" id=\"edit-submit\" name=\"op\" value=\"subscribe\" class=\"form-submit\"></div>\r\n</div>\r\n\r\n<ul class=\"social-bookmarks\">\r\n<li class=\"twitter\"><a href=\"http://twitter.com/morethanthemes\">Twitter</a></li>\r\n<li class=\"facebook\"><a href=\"http://www.facebook.com/pages/More-than-just-themes/194842423863081\">Facebook</a></li>\r\n<li class=\"rss\"><a href=\"rss.xml\">RSS</a></li>\r\n</ul>\r\n</div>', 'Social bookmarks', 'full_html'),
+(3, '<div class=\"tips\">\r\n<p>Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing</p>\r\n<div><a href=\"<?php print base_path() ;?>node/12\" class=\"link\">Read More</a></div>\r\n</div> ', 'Tips', 'php_code'),
+(4, '<!--#slideshow-->\r\n<div id=\"slideshow\">\r\n\r\n<!--slides-->\r\n<div class=\"slides\">\r\n<!--slider-item-->\r\n<div class=\"slider-item\">\r\n<div class=\"slider-item-image\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/slider-img1.png\"/></div>\r\n<div class=\"slider-item-title\">Corked Screwer</div>\r\n<div class=\"slider-item-body\">Unique resource for wine lovers</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n\r\n<!--slider-item-->\r\n<div class=\"slider-item\">\r\n<div class=\"slider-item-image\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/slider-img1.png\"/></div>\r\n<div class=\"slider-item-title light\">Wine Lovers </div>\r\n<div class=\"slider-item-body\">Monaco restaurants</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n\r\n<!--slider-item-->\r\n<div class=\"slider-item\">\r\n<div class=\"slider-item-image\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/slider-img1.png\"/></div>\r\n<div class=\"slider-item-title light\">Best Blog</div>\r\n<div class=\"slider-item-body\">Best wine ideas</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n\r\n<!--slider-item-->\r\n<div class=\"slider-item\">\r\n<div class=\"slider-item-image\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/slider-img1.png\"/></div>\r\n<div class=\"slider-item-title\">Wine Lovers </div>\r\n<div class=\"slider-item-body\">Monaco restaurants</div>\r\n</div>\r\n<!--EOF:slider-item-->\r\n</div> \r\n<!--EOF:slides-->\r\n\r\n<!--slide-control-->\r\n<div class=\"slide-control\">\r\n<div id=\"prev\" href=\"#\"><span class=\"websymbols\"><</span></div>\r\n<div id=\"next\" href=\"#\"><span class=\"websymbols\">></span></div>\r\n</div>\r\n<!--EOF:slide-control-->\r\n\r\n<!--#slide-nav-->\r\n<ul id=\"slide-nav\">\r\n<li><a href=\"#\"></a></li>\r\n<li><a href=\"#\"></a></li>\r\n<li><a href=\"#\"></a></li>\r\n<li><a href=\"#\"></a></li>\r\n</ul> \r\n<!--EOF:#slide-nav-->                \r\n\r\n</div>\r\n<!--EOF:#slideshow-->\r\n', 'Slideshow', 'php_code'),
+(5, '<!--#featured-->\r\n<div id=\"featured\" class=\"clearfix\">\r\n\r\n<div class=\"grid_3 alpha\">\r\n<!--featured-teaser-->\r\n<div class=\"featured-teaser\">\r\n<div class=\"featured-teaser-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img1.png\"/></a></div>\r\n<div class=\"featured-teaser-title\">Monaco restaurants</div>\r\n<div class=\"featured-teaser-body\">25</div>\r\n</div>\r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class=\"featured-teaser\">\r\n<div class=\"featured-teaser-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img2.png\"/></a></div>\r\n<div class=\"featured-teaser-title\">Wine & Meat</div>\r\n<div class=\"featured-teaser-body\">25</div>\r\n</div>\r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class=\"featured-teaser\">\r\n<div class=\"featured-teaser-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img3.png\"/></a></div>\r\n<div class=\"featured-teaser-title\">Best wine deals</div>\r\n<div class=\"featured-teaser-body\">25</div>\r\n</div> \r\n<!--EOF:featured-teaser-->\r\n</div>\r\n\r\n<div class=\"grid_6\">\r\n<!--featured-->\r\n<div class=\"featured\">\r\n<div class=\"featured-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img.png\"/></a></div>\r\n<div class=\"featured-title\"><h2><a href=\"#\">The spirit of Italy</a> <span class=\"comments\">12</span></h2></div>\r\n<div class=\"featured-body\">Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world\'s foremost producers, responsible for approximately one-fifth of world wine production in 2005.</div>\r\n</div>\r\n<!--EOF:featured-->\r\n</div>\r\n\r\n<div class=\"grid_3 omega\">\r\n<!--featured-teaser-->\r\n<div class=\"featured-teaser\">\r\n<div class=\"featured-teaser-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img4.png\"/></a></div>\r\n<div class=\"featured-teaser-title\">Cheese</div>\r\n<div class=\"featured-teaser-body\">25</div>\r\n</div>\r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class=\"featured-teaser\">  \r\n<div class=\"featured-teaser-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img5.png\"/></a></div>\r\n<div class=\"featured-teaser-title\">Red wine</div>\r\n<div class=\"featured-teaser-body\">25</div>\r\n</div>  \r\n<!--EOF:featured-teaser-->\r\n\r\n<!--featured-teaser-->\r\n<div class=\"featured-teaser\">  \r\n<div class=\"featured-teaser-image\"><a href=\"#\"><img src=\"<?php print base_path() . drupal_get_path(\'theme\', \'corkedscrewer\') ;?>/images/local/ft-img6.png\"/></a></div>\r\n<div class=\"featured-teaser-title\">The best in the world</div>\r\n<div class=\"featured-teaser-body\">25</div>\r\n</div>  \r\n<!--EOF:featured-teaser-->\r\n</div>   \r\n\r\n</div>\r\n<!--EOF:#featured-->\r\n', 'Featured', 'php_code'),
+(6, '<p class=\"credits\" >© 2013 Copyright CorkedScrewer Theme. All Rights Reserved. Ported to Drupal by <a href=\"http://www.drupalizing.com\">Drupalizing</a>, a Project of <a href=\"http://www.morethanthemes.com\">More than Themes</a>. Designed by <a href=\"http://www.vladimirkudinov.com/\">Vladimir Kudinov</a></p>', 'Footer Credits', 'full_html');
 
 -- --------------------------------------------------------
 
@@ -283,12 +271,10 @@ INSERT INTO `block_custom` (`bid`, `body`, `info`, `format`) VALUES
 -- Table structure for table `block_node_type`
 --
 
-CREATE TABLE IF NOT EXISTS `block_node_type` (
+CREATE TABLE `block_node_type` (
   `module` varchar(64) NOT NULL COMMENT 'The block’s origin module, from block.module.',
   `delta` varchar(32) NOT NULL COMMENT 'The block’s unique delta within module, from block.delta.',
-  `type` varchar(32) NOT NULL COMMENT 'The machine-readable name of this type from node_type.type.',
-  PRIMARY KEY (`module`,`delta`,`type`),
-  KEY `type` (`type`)
+  `type` varchar(32) NOT NULL COMMENT 'The machine-readable name of this type from node_type.type.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Sets up display criteria for blocks based on content types';
 
 -- --------------------------------------------------------
@@ -297,12 +283,10 @@ CREATE TABLE IF NOT EXISTS `block_node_type` (
 -- Table structure for table `block_role`
 --
 
-CREATE TABLE IF NOT EXISTS `block_role` (
+CREATE TABLE `block_role` (
   `module` varchar(64) NOT NULL COMMENT 'The block’s origin module, from block.module.',
   `delta` varchar(32) NOT NULL COMMENT 'The block’s unique delta within module, from block.delta.',
-  `rid` int(10) unsigned NOT NULL COMMENT 'The user’s role ID from users_roles.rid.',
-  PRIMARY KEY (`module`,`delta`,`rid`),
-  KEY `rid` (`rid`)
+  `rid` int(10) UNSIGNED NOT NULL COMMENT 'The user’s role ID from users_roles.rid.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Sets up access permissions for blocks based on user roles';
 
 -- --------------------------------------------------------
@@ -311,14 +295,12 @@ CREATE TABLE IF NOT EXISTS `block_role` (
 -- Table structure for table `cache`
 --
 
-CREATE TABLE IF NOT EXISTS `cache` (
+CREATE TABLE `cache` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Generic cache table for caching things not separated out...';
 
 -- --------------------------------------------------------
@@ -327,14 +309,12 @@ CREATE TABLE IF NOT EXISTS `cache` (
 -- Table structure for table `cache_block`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_block` (
+CREATE TABLE `cache_block` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for the Block module to store already built...';
 
 -- --------------------------------------------------------
@@ -343,14 +323,12 @@ CREATE TABLE IF NOT EXISTS `cache_block` (
 -- Table structure for table `cache_bootstrap`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_bootstrap` (
+CREATE TABLE `cache_bootstrap` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for data required to bootstrap Drupal, may be...';
 
 -- --------------------------------------------------------
@@ -359,14 +337,12 @@ CREATE TABLE IF NOT EXISTS `cache_bootstrap` (
 -- Table structure for table `cache_field`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_field` (
+CREATE TABLE `cache_field` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Generic cache table for caching things not separated out...';
 
 -- --------------------------------------------------------
@@ -375,14 +351,12 @@ CREATE TABLE IF NOT EXISTS `cache_field` (
 -- Table structure for table `cache_filter`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_filter` (
+CREATE TABLE `cache_filter` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for the Filter module to store already...';
 
 -- --------------------------------------------------------
@@ -391,14 +365,12 @@ CREATE TABLE IF NOT EXISTS `cache_filter` (
 -- Table structure for table `cache_form`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_form` (
+CREATE TABLE `cache_form` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for the form system to store recently built...';
 
 -- --------------------------------------------------------
@@ -407,14 +379,12 @@ CREATE TABLE IF NOT EXISTS `cache_form` (
 -- Table structure for table `cache_image`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_image` (
+CREATE TABLE `cache_image` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table used to store information about image...';
 
 -- --------------------------------------------------------
@@ -423,14 +393,12 @@ CREATE TABLE IF NOT EXISTS `cache_image` (
 -- Table structure for table `cache_libraries`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_libraries` (
+CREATE TABLE `cache_libraries` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table to store library information.';
 
 -- --------------------------------------------------------
@@ -439,14 +407,12 @@ CREATE TABLE IF NOT EXISTS `cache_libraries` (
 -- Table structure for table `cache_menu`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_menu` (
+CREATE TABLE `cache_menu` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for the menu system to store router...';
 
 -- --------------------------------------------------------
@@ -455,14 +421,12 @@ CREATE TABLE IF NOT EXISTS `cache_menu` (
 -- Table structure for table `cache_page`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_page` (
+CREATE TABLE `cache_page` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table used to store compressed pages for anonymous...';
 
 -- --------------------------------------------------------
@@ -471,14 +435,12 @@ CREATE TABLE IF NOT EXISTS `cache_page` (
 -- Table structure for table `cache_path`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_path` (
+CREATE TABLE `cache_path` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for path alias lookup.';
 
 -- --------------------------------------------------------
@@ -487,14 +449,12 @@ CREATE TABLE IF NOT EXISTS `cache_path` (
 -- Table structure for table `cache_update`
 --
 
-CREATE TABLE IF NOT EXISTS `cache_update` (
+CREATE TABLE `cache_update` (
   `cid` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique cache ID.',
   `data` longblob COMMENT 'A collection of data to cache.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'A Unix timestamp indicating when the cache entry was created.',
-  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).',
-  PRIMARY KEY (`cid`),
-  KEY `expire` (`expire`)
+  `serialized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate whether content is serialized (1) or not (0).'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cache table for the Update module to store information...';
 
 -- --------------------------------------------------------
@@ -503,8 +463,8 @@ CREATE TABLE IF NOT EXISTS `cache_update` (
 -- Table structure for table `comment`
 --
 
-CREATE TABLE IF NOT EXISTS `comment` (
-  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique comment ID.',
+CREATE TABLE `comment` (
+  `cid` int(11) NOT NULL COMMENT 'Primary Key: Unique comment ID.',
   `pid` int(11) NOT NULL DEFAULT '0' COMMENT 'The comment.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
   `nid` int(11) NOT NULL DEFAULT '0' COMMENT 'The node.nid to which this comment is a reply.',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT 'The users.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
@@ -512,28 +472,22 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `hostname` varchar(128) NOT NULL DEFAULT '' COMMENT 'The author’s host name.',
   `created` int(11) NOT NULL DEFAULT '0' COMMENT 'The time that the comment was created, as a Unix timestamp.',
   `changed` int(11) NOT NULL DEFAULT '0' COMMENT 'The time that the comment was last edited, as a Unix timestamp.',
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT 'The published status of a comment. (0 = Not Published, 1 = Published)',
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'The published status of a comment. (0 = Not Published, 1 = Published)',
   `thread` varchar(255) NOT NULL COMMENT 'The vancode representation of the comment’s place in a thread.',
   `name` varchar(60) DEFAULT NULL COMMENT 'The comment author’s name. Uses users.name if the user is logged in, otherwise uses the value typed into the comment form.',
   `mail` varchar(64) DEFAULT NULL COMMENT 'The comment author’s e-mail address from the comment form, if user is anonymous, and the ’Anonymous users may/must leave their contact information’ setting is turned on.',
   `homepage` varchar(255) DEFAULT NULL COMMENT 'The comment author’s home page address from the comment form, if user is anonymous, and the ’Anonymous users may/must leave their contact information’ setting is turned on.',
-  `language` varchar(12) NOT NULL DEFAULT '' COMMENT 'The languages.language of this comment.',
-  PRIMARY KEY (`cid`),
-  KEY `comment_status_pid` (`pid`,`status`),
-  KEY `comment_num_new` (`nid`,`status`,`created`,`cid`,`thread`),
-  KEY `comment_uid` (`uid`),
-  KEY `comment_nid_language` (`nid`,`language`),
-  KEY `comment_created` (`created`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores comments and associated data.' AUTO_INCREMENT=12 ;
+  `language` varchar(12) NOT NULL DEFAULT '' COMMENT 'The languages.language of this comment.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores comments and associated data.';
 
 --
 -- Dumping data for table `comment`
 --
 
 INSERT INTO `comment` (`cid`, `pid`, `nid`, `uid`, `subject`, `hostname`, `created`, `changed`, `status`, `thread`, `name`, `mail`, `homepage`, `language`) VALUES
-(1, 0, 1, 1, 'Whilst Campione d''Italia is', '109.242.196.16', 1354452188, 1354452188, 1, '01/', 'soukri', '', '', 'und'),
-(2, 0, 1, 1, 'Whilst Campione d''Italia is', '109.242.196.16', 1354452198, 1354452198, 1, '02/', 'soukri', '', '', 'und'),
-(3, 0, 1, 1, 'Whilst Campione d''Italia is', '109.242.196.16', 1354452207, 1354452207, 1, '03/', 'soukri', '', '', 'und'),
+(1, 0, 1, 1, 'Whilst Campione d\'Italia is', '109.242.196.16', 1354452188, 1354452188, 1, '01/', 'soukri', '', '', 'und'),
+(2, 0, 1, 1, 'Whilst Campione d\'Italia is', '109.242.196.16', 1354452198, 1354452198, 1, '02/', 'soukri', '', '', 'und'),
+(3, 0, 1, 1, 'Whilst Campione d\'Italia is', '109.242.196.16', 1354452207, 1354452207, 1, '03/', 'soukri', '', '', 'und'),
 (4, 0, 2, 1, 'In suscipit libero id felis', '109.242.196.16', 1354457354, 1354457353, 1, '01/', 'soukri', '', '', 'und'),
 (5, 0, 2, 1, 'Vivamus nec diam ligula, id', '109.242.196.16', 1354457392, 1354457392, 1, '02/', 'soukri', '', '', 'und'),
 (6, 0, 3, 1, 'Curabitur nec quam ligula.', '109.242.196.16', 1354459490, 1354459490, 1, '01/', 'soukri', '', '', 'und'),
@@ -549,24 +503,21 @@ INSERT INTO `comment` (`cid`, `pid`, `nid`, `uid`, `subject`, `hostname`, `creat
 -- Table structure for table `contact`
 --
 
-CREATE TABLE IF NOT EXISTS `contact` (
-  `cid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique category ID.',
+CREATE TABLE `contact` (
+  `cid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique category ID.',
   `category` varchar(255) NOT NULL DEFAULT '' COMMENT 'Category name.',
   `recipients` longtext NOT NULL COMMENT 'Comma-separated list of recipient e-mail addresses.',
   `reply` longtext NOT NULL COMMENT 'Text of the auto-reply message.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The category’s weight.',
-  `selected` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)',
-  PRIMARY KEY (`cid`),
-  UNIQUE KEY `category` (`category`),
-  KEY `list` (`weight`,`category`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Contact form category settings.' AUTO_INCREMENT=2 ;
+  `selected` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contact form category settings.';
 
 --
 -- Dumping data for table `contact`
 --
 
 INSERT INTO `contact` (`cid`, `category`, `recipients`, `reply`, `weight`, `selected`) VALUES
-(1, 'Website feedback', 'skehaya@gmail.com', '', 0, 1);
+(1, 'Website feedback', 'support@yoursite.com', '', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -574,14 +525,12 @@ INSERT INTO `contact` (`cid`, `category`, `recipients`, `reply`, `weight`, `sele
 -- Table structure for table `date_formats`
 --
 
-CREATE TABLE IF NOT EXISTS `date_formats` (
-  `dfid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The date format identifier.',
+CREATE TABLE `date_formats` (
+  `dfid` int(10) UNSIGNED NOT NULL COMMENT 'The date format identifier.',
   `format` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'The date format string.',
   `type` varchar(64) NOT NULL COMMENT 'The date format type, e.g. medium.',
-  `locked` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not this format can be modified.',
-  PRIMARY KEY (`dfid`),
-  UNIQUE KEY `formats` (`format`,`type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores configured date formats.' AUTO_INCREMENT=36 ;
+  `locked` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not this format can be modified.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configured date formats.';
 
 --
 -- Dumping data for table `date_formats`
@@ -630,11 +579,10 @@ INSERT INTO `date_formats` (`dfid`, `format`, `type`, `locked`) VALUES
 -- Table structure for table `date_format_locale`
 --
 
-CREATE TABLE IF NOT EXISTS `date_format_locale` (
+CREATE TABLE `date_format_locale` (
   `format` varchar(100) NOT NULL COMMENT 'The date format string.',
   `type` varchar(64) NOT NULL COMMENT 'The date format type, e.g. medium.',
-  `language` varchar(12) NOT NULL COMMENT 'A languages.language for this format to be used with.',
-  PRIMARY KEY (`type`,`language`)
+  `language` varchar(12) NOT NULL COMMENT 'A languages.language for this format to be used with.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configured date formats for each locale.';
 
 -- --------------------------------------------------------
@@ -643,12 +591,10 @@ CREATE TABLE IF NOT EXISTS `date_format_locale` (
 -- Table structure for table `date_format_type`
 --
 
-CREATE TABLE IF NOT EXISTS `date_format_type` (
+CREATE TABLE `date_format_type` (
   `type` varchar(64) NOT NULL COMMENT 'The date format type, e.g. medium.',
   `title` varchar(255) NOT NULL COMMENT 'The human readable name of the format type.',
-  `locked` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not this is a system provided format.',
-  PRIMARY KEY (`type`),
-  KEY `title` (`title`)
+  `locked` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Whether or not this is a system provided format.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configured date format types.';
 
 --
@@ -666,8 +612,8 @@ INSERT INTO `date_format_type` (`type`, `title`, `locked`) VALUES
 -- Table structure for table `field_config`
 --
 
-CREATE TABLE IF NOT EXISTS `field_config` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for a field',
+CREATE TABLE `field_config` (
+  `id` int(11) NOT NULL COMMENT 'The primary identifier for a field',
   `field_name` varchar(32) NOT NULL COMMENT 'The name of this field. Non-deleted field names are unique, but multiple deleted fields can have the same name.',
   `type` varchar(128) NOT NULL COMMENT 'The type of this field.',
   `module` varchar(128) NOT NULL DEFAULT '' COMMENT 'The module that implements the field type.',
@@ -679,17 +625,8 @@ CREATE TABLE IF NOT EXISTS `field_config` (
   `data` longblob NOT NULL COMMENT 'Serialized data containing the field properties that do not warrant a dedicated column.',
   `cardinality` tinyint(4) NOT NULL DEFAULT '0',
   `translatable` tinyint(4) NOT NULL DEFAULT '0',
-  `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `field_name` (`field_name`),
-  KEY `active` (`active`),
-  KEY `storage_active` (`storage_active`),
-  KEY `deleted` (`deleted`),
-  KEY `module` (`module`),
-  KEY `storage_module` (`storage_module`),
-  KEY `type` (`type`),
-  KEY `storage_type` (`storage_type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `field_config`
@@ -707,18 +644,15 @@ INSERT INTO `field_config` (`id`, `field_name`, `type`, `module`, `active`, `sto
 -- Table structure for table `field_config_instance`
 --
 
-CREATE TABLE IF NOT EXISTS `field_config_instance` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for a field instance',
+CREATE TABLE `field_config_instance` (
+  `id` int(11) NOT NULL COMMENT 'The primary identifier for a field instance',
   `field_id` int(11) NOT NULL COMMENT 'The identifier of the field attached by this instance',
   `field_name` varchar(32) NOT NULL DEFAULT '',
   `entity_type` varchar(32) NOT NULL DEFAULT '',
   `bundle` varchar(128) NOT NULL DEFAULT '',
   `data` longblob NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `field_name_bundle` (`field_name`,`entity_type`,`bundle`),
-  KEY `deleted` (`deleted`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `field_config_instance`
@@ -738,25 +672,17 @@ INSERT INTO `field_config_instance` (`id`, `field_id`, `field_name`, `entity_typ
 -- Table structure for table `field_data_body`
 --
 
-CREATE TABLE IF NOT EXISTS `field_data_body` (
+CREATE TABLE `field_data_body` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
   `body_value` longtext,
   `body_summary` longtext,
-  `body_format` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `body_format` (`body_format`)
+  `body_format` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Data storage for field 2 (body)';
 
 --
@@ -764,10 +690,10 @@ CREATE TABLE IF NOT EXISTS `field_data_body` (
 --
 
 INSERT INTO `field_data_body` (`entity_type`, `bundle`, `deleted`, `entity_id`, `revision_id`, `language`, `delta`, `body_value`, `body_summary`, `body_format`) VALUES
-('node', 'article', 0, 1, 1, 'und', 0, 'Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world''s foremost producers, responsible for approximately one-fifth of world wine production in 2005.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world''s foremost producers, responsible for approximately one-fifth of world wine production in 2005.', '', 'filtered_html'),
+('node', 'article', 0, 1, 1, 'und', 0, 'Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world\'s foremost producers, responsible for approximately one-fifth of world wine production in 2005.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world\'s foremost producers, responsible for approximately one-fifth of world wine production in 2005.', '', 'filtered_html'),
 ('node', 'article', 0, 2, 2, 'und', 0, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in velit enim, in condimentum massa. Donec fringilla lacinia feugiat. Mauris rutrum, lacus vitae ultrices faucibus, felis enim cursus risus, quis cursus dui massa eget dui. Donec interdum hendrerit quam in adipiscing. Pellentesque eros neque, varius id fringilla nec, condimentum vel magna. Nam lacinia ligula vel eros placerat quis sagittis arcu dictum. Nulla ut tristique metus. Donec suscipit feugiat libero. Nunc volutpat lorem in ligula vehicula et fermentum purus bibendum. Sed id semper nulla. Praesent et elit urna, sit amet ultrices purus. Pellentesque condimentum, purus vitae pellentesque rhoncus, erat tortor ultricies nisi, quis dapibus enim nibh vel risus. Sed id pellentesque magna. Ut lacinia, elit non ullamcorper imperdiet, purus eros interdum augue, at tempus orci sapien sit amet orci.\r\nSuspendisse potenti. Maecenas ornare velit tempor nisi fringilla sed commodo felis gravida. Fusce metus orci, vestibulum at cursus et, sollicitudin ut tellus. Mauris semper tincidunt iaculis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam eget feugiat neque. Praesent nulla nulla, porttitor vel vehicula sit amet, pulvinar quis ipsum. Aliquam erat volutpat. Integer quis iaculis turpis.', '', 'filtered_html'),
 ('node', 'article', 0, 3, 3, 'und', 0, 'Sed urna orci, consectetur nec facilisis vitae, viverra eget nibh. Morbi vel purus metus, eu aliquam justo. Fusce pharetra consectetur ligula, vel tempor quam rhoncus vel. Cras bibendum varius odio sed adipiscing. Phasellus tempus gravida libero nec imperdiet. Phasellus dignissim pellentesque tellus a vehicula. Quisque pharetra dignissim congue.\r\n\r\nSed elit augue, tincidunt et imperdiet ac, aliquet vel leo. Pellentesque et velit in lectus suscipit bibendum quis id nisi. Etiam vitae massa odio, sed condimentum sapien. Curabitur nec quam ligula. Nam vulputate consectetur lorem, sed imperdiet nulla ullamcorper ut. Vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet. Maecenas varius nisl eu magna fringilla quis dignissim erat semper. Morbi gravida posuere est eget posuere. Etiam cursus tristique nulla, a vestibulum arcu pretium imperdiet. Aliquam vitae odio eros. Aenean eu sagittis velit. Vivamus et semper turpis. Ut congue, leo lobortis vulputate cursus, nisi mauris fermentum arcu, at iaculis augue tellus ut est.', '', 'filtered_html'),
-('node', 'page', 0, 4, 4, 'und', 0, 'Excepteur sint occaecat cupidatat non proident. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.\r\n \r\n<blockquote><strong>Blockquote</strong> - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco...</blockquote>\r\n \r\n<h2>Header 2</h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h2><a href="#">Linked Header 2</a></h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h3>Header 3</h3>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Header 4</h4>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Code snippet</h4>\r\n<code>#header h1 a {<br />\r\ndisplay: block;<br />\r\nheight: 80px;<br />\r\nwidth: 300px;<br />\r\n}</code>\r\n \r\n<h4>Drupal''s messages</h4>\r\n<div class="messages status">Sample status message. Page <em><strong>Typography</strong></em> has been updated.</div>\r\n \r\n<div class="messages error">Sample error message. There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately! See the available updates page for more information.</div>\r\n \r\n<div class="messages warning">Sample warning message. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>\r\n \r\n<h2>Paragraph With Links</h2>\r\n<p>Lorem ipsum dolor sit amet, <a href="#">consectetuer adipiscing</a> elit. Donec odio. Quisque volutpat mattis eros. <a href="#">Nullam malesuada</a> erat ut turpis. Suspendisse urna nibh, viverra 			non, semper suscipit, posuere a, pede.</p>\r\n \r\n<h2>Ordered List</h2>\r\n<ol>\r\n<li>This is a sample <strong>Ordered List</strong>.</li>\r\n<li>Lorem ipsum dolor sit amet consectetuer.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ol>\r\n<li>Something goes here.</li>\r\n<li>And another here</li>\r\n<li>Then one more</li>\r\n</ol>\r\n</li>\r\n<li>Congue Quisque augue elit dolor nibh.</li>\r\n</ol>\r\n \r\n<h2>Unordered List</h2>\r\n<ul>\r\n<li>This is a sample <strong>Unordered List</strong>.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ul>\r\n<li>Something goes here.</li>\r\n<li>And another here\r\n<ul>\r\n<li>Something here as well</li>      \r\n<li>Something here as well</li>\r\n<li>Something here as well</li>\r\n</ul>\r\n</li>\r\n<li>Then one more</li>\r\n</ul>\r\n</li>\r\n<li>Nunc cursus sem et pretium sapien eget.</li>\r\n</ul>\r\n \r\n<h2>Fieldset</h2>\r\n<fieldset> <legend>Account information</legend> </fieldset>\r\n \r\n<h2>Table</h2>\r\n \r\n<table border="1">\r\n \r\n<tr>\r\n<th>Header 1</th>\r\n<th>Header 2</th>\r\n</tr>\r\n \r\n<tr class="odd">\r\n<td>row 1, cell 1</td>\r\n<td>row 1, cell 2</td>\r\n</tr>\r\n \r\n<tr class="even">\r\n<td>row 2, cell 1</td>\r\n<td>row 2, cell 2</td>\r\n</tr>\r\n \r\n<tr class="odd">\r\n<td>row 3, cell 1</td>\r\n<td>row 3, cell 2</td>\r\n</tr>\r\n \r\n</table>', '', 'full_html'),
+('node', 'page', 0, 4, 4, 'und', 0, 'Excepteur sint occaecat cupidatat non proident. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.\r\n \r\n<blockquote><strong>Blockquote</strong> - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco...</blockquote>\r\n \r\n<h2>Header 2</h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h2><a href=\"#\">Linked Header 2</a></h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h3>Header 3</h3>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Header 4</h4>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Code snippet</h4>\r\n<code>#header h1 a {<br />\r\ndisplay: block;<br />\r\nheight: 80px;<br />\r\nwidth: 300px;<br />\r\n}</code>\r\n \r\n<h4>Drupal\'s messages</h4>\r\n<div class=\"messages status\">Sample status message. Page <em><strong>Typography</strong></em> has been updated.</div>\r\n \r\n<div class=\"messages error\">Sample error message. There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately! See the available updates page for more information.</div>\r\n \r\n<div class=\"messages warning\">Sample warning message. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>\r\n \r\n<h2>Paragraph With Links</h2>\r\n<p>Lorem ipsum dolor sit amet, <a href=\"#\">consectetuer adipiscing</a> elit. Donec odio. Quisque volutpat mattis eros. <a href=\"#\">Nullam malesuada</a> erat ut turpis. Suspendisse urna nibh, viverra 			non, semper suscipit, posuere a, pede.</p>\r\n \r\n<h2>Ordered List</h2>\r\n<ol>\r\n<li>This is a sample <strong>Ordered List</strong>.</li>\r\n<li>Lorem ipsum dolor sit amet consectetuer.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ol>\r\n<li>Something goes here.</li>\r\n<li>And another here</li>\r\n<li>Then one more</li>\r\n</ol>\r\n</li>\r\n<li>Congue Quisque augue elit dolor nibh.</li>\r\n</ol>\r\n \r\n<h2>Unordered List</h2>\r\n<ul>\r\n<li>This is a sample <strong>Unordered List</strong>.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ul>\r\n<li>Something goes here.</li>\r\n<li>And another here\r\n<ul>\r\n<li>Something here as well</li>      \r\n<li>Something here as well</li>\r\n<li>Something here as well</li>\r\n</ul>\r\n</li>\r\n<li>Then one more</li>\r\n</ul>\r\n</li>\r\n<li>Nunc cursus sem et pretium sapien eget.</li>\r\n</ul>\r\n \r\n<h2>Fieldset</h2>\r\n<fieldset> <legend>Account information</legend> </fieldset>\r\n \r\n<h2>Table</h2>\r\n \r\n<table border=\"1\">\r\n \r\n<tr>\r\n<th>Header 1</th>\r\n<th>Header 2</th>\r\n</tr>\r\n \r\n<tr class=\"odd\">\r\n<td>row 1, cell 1</td>\r\n<td>row 1, cell 2</td>\r\n</tr>\r\n \r\n<tr class=\"even\">\r\n<td>row 2, cell 1</td>\r\n<td>row 2, cell 2</td>\r\n</tr>\r\n \r\n<tr class=\"odd\">\r\n<td>row 3, cell 1</td>\r\n<td>row 3, cell 2</td>\r\n</tr>\r\n \r\n</table>', '', 'full_html'),
 ('node', 'page', 0, 12, 12, 'und', 0, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In libero nunc, accumsan quis ultrices id, semper ac turpis. Sed sed rhoncus tellus. Integer facilisis est sit amet est pellentesque pulvinar. Cras imperdiet pellentesque eros, non vulputate massa gravida non. Suspendisse potenti. \r\n\r\nDuis malesuada risus vitae nunc venenatis a rutrum sapien dignissim. Mauris vitae nibh eget est viverra ultrices sit amet non lectus. Ut tincidunt, ipsum viverra sagittis venenatis, velit ipsum commodo elit, nec vestibulum libero massa a felis. Pellentesque libero tortor, euismod eget congue in, facilisis vitae diam. Ut sed enim libero. Nulla facilisi. Nam vehicula blandit aliquam. Ut ornare nisl ac erat ornare bibendum. Sed semper dolor mauris. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos', '', 'filtered_html');
 
 -- --------------------------------------------------------
@@ -776,24 +702,16 @@ INSERT INTO `field_data_body` (`entity_type`, `bundle`, `deleted`, `entity_id`, 
 -- Table structure for table `field_data_comment_body`
 --
 
-CREATE TABLE IF NOT EXISTS `field_data_comment_body` (
+CREATE TABLE `field_data_comment_body` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
   `comment_body_value` longtext,
-  `comment_body_format` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `comment_body_format` (`comment_body_format`)
+  `comment_body_format` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Data storage for field 1 (comment_body)';
 
 --
@@ -801,9 +719,9 @@ CREATE TABLE IF NOT EXISTS `field_data_comment_body` (
 --
 
 INSERT INTO `field_data_comment_body` (`entity_type`, `bundle`, `deleted`, `entity_id`, `revision_id`, `language`, `delta`, `comment_body_value`, `comment_body_format`) VALUES
-('comment', 'comment_node_article', 0, 1, 1, 'und', 0, 'Whilst Campione d''Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
-('comment', 'comment_node_article', 0, 2, 2, 'und', 0, 'Whilst Campione d''Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi).', 'filtered_html'),
-('comment', 'comment_node_article', 0, 3, 3, 'und', 0, 'Whilst Campione d''Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
+('comment', 'comment_node_article', 0, 1, 1, 'und', 0, 'Whilst Campione d\'Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
+('comment', 'comment_node_article', 0, 2, 2, 'und', 0, 'Whilst Campione d\'Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi).', 'filtered_html'),
+('comment', 'comment_node_article', 0, 3, 3, 'und', 0, 'Whilst Campione d\'Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
 ('comment', 'comment_node_article', 0, 4, 4, 'und', 0, 'In suscipit libero id felis posuere id condimentum diam pellentesque. Curabitur tempus odio ut nunc auctor viverra. Suspendisse pretium mauris a justo lobortis sed gravida sem interdum. In ut fringilla lectus. Sed quam risus, tincidunt a pulvinar a, pellentesque mattis tellus.', 'filtered_html'),
 ('comment', 'comment_node_article', 0, 5, 5, 'und', 0, 'Vivamus nec diam ligula, id porta ante. Sed egestas tincidunt adipiscing. Mauris mollis rhoncus tincidunt. Donec rutrum cursus nibh eu facilisis.', 'filtered_html'),
 ('comment', 'comment_node_article', 0, 6, 6, 'und', 0, 'Curabitur nec quam ligula. Nam vulputate consectetur lorem, sed imperdiet nulla ullamcorper ut. Vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet. Maecenas varius nisl eu magna fringilla quis dignissim erat semper. Morbi gravida posuere est eget posuere. Etiam cursus tristique nulla, a vestibulum arcu pretium imperdiet. Aliquam vitae odio eros. Aenean eu sagittis velit.', 'filtered_html'),
@@ -819,27 +737,19 @@ INSERT INTO `field_data_comment_body` (`entity_type`, `bundle`, `deleted`, `enti
 -- Table structure for table `field_data_field_image`
 --
 
-CREATE TABLE IF NOT EXISTS `field_data_field_image` (
+CREATE TABLE `field_data_field_image` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
-  `field_image_fid` int(10) unsigned DEFAULT NULL COMMENT 'The file_managed.fid being referenced in this field.',
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `field_image_fid` int(10) UNSIGNED DEFAULT NULL COMMENT 'The file_managed.fid being referenced in this field.',
   `field_image_alt` varchar(512) DEFAULT NULL COMMENT 'Alternative image text, for the image’s ’alt’ attribute.',
   `field_image_title` varchar(1024) DEFAULT NULL COMMENT 'Image title text, for the image’s ’title’ attribute.',
-  `field_image_width` int(10) unsigned DEFAULT NULL COMMENT 'The width of the image in pixels.',
-  `field_image_height` int(10) unsigned DEFAULT NULL COMMENT 'The height of the image in pixels.',
-  PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `field_image_fid` (`field_image_fid`)
+  `field_image_width` int(10) UNSIGNED DEFAULT NULL COMMENT 'The width of the image in pixels.',
+  `field_image_height` int(10) UNSIGNED DEFAULT NULL COMMENT 'The height of the image in pixels.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Data storage for field 4 (field_image)';
 
 --
@@ -857,23 +767,15 @@ INSERT INTO `field_data_field_image` (`entity_type`, `bundle`, `deleted`, `entit
 -- Table structure for table `field_data_field_tags`
 --
 
-CREATE TABLE IF NOT EXISTS `field_data_field_tags` (
+CREATE TABLE `field_data_field_tags` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
-  `field_tags_tid` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `field_tags_tid` (`field_tags_tid`)
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `field_tags_tid` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Data storage for field 3 (field_tags)';
 
 --
@@ -897,25 +799,17 @@ INSERT INTO `field_data_field_tags` (`entity_type`, `bundle`, `deleted`, `entity
 -- Table structure for table `field_revision_body`
 --
 
-CREATE TABLE IF NOT EXISTS `field_revision_body` (
+CREATE TABLE `field_revision_body` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned NOT NULL COMMENT 'The entity revision id this data is attached to',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity revision id this data is attached to',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
   `body_value` longtext,
   `body_summary` longtext,
-  `body_format` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `body_format` (`body_format`)
+  `body_format` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Revision archive storage for field 2 (body)';
 
 --
@@ -923,10 +817,10 @@ CREATE TABLE IF NOT EXISTS `field_revision_body` (
 --
 
 INSERT INTO `field_revision_body` (`entity_type`, `bundle`, `deleted`, `entity_id`, `revision_id`, `language`, `delta`, `body_value`, `body_summary`, `body_format`) VALUES
-('node', 'article', 0, 1, 1, 'und', 0, 'Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world''s foremost producers, responsible for approximately one-fifth of world wine production in 2005.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world''s foremost producers, responsible for approximately one-fifth of world wine production in 2005.', '', 'filtered_html'),
+('node', 'article', 0, 1, 1, 'und', 0, 'Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world\'s foremost producers, responsible for approximately one-fifth of world wine production in 2005.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world.\r\n\r\nItalian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. Italy is one of the world\'s foremost producers, responsible for approximately one-fifth of world wine production in 2005.', '', 'filtered_html'),
 ('node', 'article', 0, 2, 2, 'und', 0, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in velit enim, in condimentum massa. Donec fringilla lacinia feugiat. Mauris rutrum, lacus vitae ultrices faucibus, felis enim cursus risus, quis cursus dui massa eget dui. Donec interdum hendrerit quam in adipiscing. Pellentesque eros neque, varius id fringilla nec, condimentum vel magna. Nam lacinia ligula vel eros placerat quis sagittis arcu dictum. Nulla ut tristique metus. Donec suscipit feugiat libero. Nunc volutpat lorem in ligula vehicula et fermentum purus bibendum. Sed id semper nulla. Praesent et elit urna, sit amet ultrices purus. Pellentesque condimentum, purus vitae pellentesque rhoncus, erat tortor ultricies nisi, quis dapibus enim nibh vel risus. Sed id pellentesque magna. Ut lacinia, elit non ullamcorper imperdiet, purus eros interdum augue, at tempus orci sapien sit amet orci.\r\nSuspendisse potenti. Maecenas ornare velit tempor nisi fringilla sed commodo felis gravida. Fusce metus orci, vestibulum at cursus et, sollicitudin ut tellus. Mauris semper tincidunt iaculis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam eget feugiat neque. Praesent nulla nulla, porttitor vel vehicula sit amet, pulvinar quis ipsum. Aliquam erat volutpat. Integer quis iaculis turpis.', '', 'filtered_html'),
 ('node', 'article', 0, 3, 3, 'und', 0, 'Sed urna orci, consectetur nec facilisis vitae, viverra eget nibh. Morbi vel purus metus, eu aliquam justo. Fusce pharetra consectetur ligula, vel tempor quam rhoncus vel. Cras bibendum varius odio sed adipiscing. Phasellus tempus gravida libero nec imperdiet. Phasellus dignissim pellentesque tellus a vehicula. Quisque pharetra dignissim congue.\r\n\r\nSed elit augue, tincidunt et imperdiet ac, aliquet vel leo. Pellentesque et velit in lectus suscipit bibendum quis id nisi. Etiam vitae massa odio, sed condimentum sapien. Curabitur nec quam ligula. Nam vulputate consectetur lorem, sed imperdiet nulla ullamcorper ut. Vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet. Maecenas varius nisl eu magna fringilla quis dignissim erat semper. Morbi gravida posuere est eget posuere. Etiam cursus tristique nulla, a vestibulum arcu pretium imperdiet. Aliquam vitae odio eros. Aenean eu sagittis velit. Vivamus et semper turpis. Ut congue, leo lobortis vulputate cursus, nisi mauris fermentum arcu, at iaculis augue tellus ut est.', '', 'filtered_html'),
-('node', 'page', 0, 4, 4, 'und', 0, 'Excepteur sint occaecat cupidatat non proident. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.\r\n \r\n<blockquote><strong>Blockquote</strong> - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco...</blockquote>\r\n \r\n<h2>Header 2</h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h2><a href="#">Linked Header 2</a></h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h3>Header 3</h3>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Header 4</h4>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Code snippet</h4>\r\n<code>#header h1 a {<br />\r\ndisplay: block;<br />\r\nheight: 80px;<br />\r\nwidth: 300px;<br />\r\n}</code>\r\n \r\n<h4>Drupal''s messages</h4>\r\n<div class="messages status">Sample status message. Page <em><strong>Typography</strong></em> has been updated.</div>\r\n \r\n<div class="messages error">Sample error message. There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately! See the available updates page for more information.</div>\r\n \r\n<div class="messages warning">Sample warning message. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>\r\n \r\n<h2>Paragraph With Links</h2>\r\n<p>Lorem ipsum dolor sit amet, <a href="#">consectetuer adipiscing</a> elit. Donec odio. Quisque volutpat mattis eros. <a href="#">Nullam malesuada</a> erat ut turpis. Suspendisse urna nibh, viverra 			non, semper suscipit, posuere a, pede.</p>\r\n \r\n<h2>Ordered List</h2>\r\n<ol>\r\n<li>This is a sample <strong>Ordered List</strong>.</li>\r\n<li>Lorem ipsum dolor sit amet consectetuer.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ol>\r\n<li>Something goes here.</li>\r\n<li>And another here</li>\r\n<li>Then one more</li>\r\n</ol>\r\n</li>\r\n<li>Congue Quisque augue elit dolor nibh.</li>\r\n</ol>\r\n \r\n<h2>Unordered List</h2>\r\n<ul>\r\n<li>This is a sample <strong>Unordered List</strong>.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ul>\r\n<li>Something goes here.</li>\r\n<li>And another here\r\n<ul>\r\n<li>Something here as well</li>      \r\n<li>Something here as well</li>\r\n<li>Something here as well</li>\r\n</ul>\r\n</li>\r\n<li>Then one more</li>\r\n</ul>\r\n</li>\r\n<li>Nunc cursus sem et pretium sapien eget.</li>\r\n</ul>\r\n \r\n<h2>Fieldset</h2>\r\n<fieldset> <legend>Account information</legend> </fieldset>\r\n \r\n<h2>Table</h2>\r\n \r\n<table border="1">\r\n \r\n<tr>\r\n<th>Header 1</th>\r\n<th>Header 2</th>\r\n</tr>\r\n \r\n<tr class="odd">\r\n<td>row 1, cell 1</td>\r\n<td>row 1, cell 2</td>\r\n</tr>\r\n \r\n<tr class="even">\r\n<td>row 2, cell 1</td>\r\n<td>row 2, cell 2</td>\r\n</tr>\r\n \r\n<tr class="odd">\r\n<td>row 3, cell 1</td>\r\n<td>row 3, cell 2</td>\r\n</tr>\r\n \r\n</table>', '', 'full_html'),
+('node', 'page', 0, 4, 4, 'und', 0, 'Excepteur sint occaecat cupidatat non proident. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.\r\n \r\n<blockquote><strong>Blockquote</strong> - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco...</blockquote>\r\n \r\n<h2>Header 2</h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h2><a href=\"#\">Linked Header 2</a></h2>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h3>Header 3</h3>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Header 4</h4>\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\n \r\n<h4>Code snippet</h4>\r\n<code>#header h1 a {<br />\r\ndisplay: block;<br />\r\nheight: 80px;<br />\r\nwidth: 300px;<br />\r\n}</code>\r\n \r\n<h4>Drupal\'s messages</h4>\r\n<div class=\"messages status\">Sample status message. Page <em><strong>Typography</strong></em> has been updated.</div>\r\n \r\n<div class=\"messages error\">Sample error message. There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately! See the available updates page for more information.</div>\r\n \r\n<div class=\"messages warning\">Sample warning message. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>\r\n \r\n<h2>Paragraph With Links</h2>\r\n<p>Lorem ipsum dolor sit amet, <a href=\"#\">consectetuer adipiscing</a> elit. Donec odio. Quisque volutpat mattis eros. <a href=\"#\">Nullam malesuada</a> erat ut turpis. Suspendisse urna nibh, viverra 			non, semper suscipit, posuere a, pede.</p>\r\n \r\n<h2>Ordered List</h2>\r\n<ol>\r\n<li>This is a sample <strong>Ordered List</strong>.</li>\r\n<li>Lorem ipsum dolor sit amet consectetuer.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ol>\r\n<li>Something goes here.</li>\r\n<li>And another here</li>\r\n<li>Then one more</li>\r\n</ol>\r\n</li>\r\n<li>Congue Quisque augue elit dolor nibh.</li>\r\n</ol>\r\n \r\n<h2>Unordered List</h2>\r\n<ul>\r\n<li>This is a sample <strong>Unordered List</strong>.</li>\r\n<li>Condimentum quis.</li>\r\n<li>Congue Quisque augue elit dolor.\r\n<ul>\r\n<li>Something goes here.</li>\r\n<li>And another here\r\n<ul>\r\n<li>Something here as well</li>      \r\n<li>Something here as well</li>\r\n<li>Something here as well</li>\r\n</ul>\r\n</li>\r\n<li>Then one more</li>\r\n</ul>\r\n</li>\r\n<li>Nunc cursus sem et pretium sapien eget.</li>\r\n</ul>\r\n \r\n<h2>Fieldset</h2>\r\n<fieldset> <legend>Account information</legend> </fieldset>\r\n \r\n<h2>Table</h2>\r\n \r\n<table border=\"1\">\r\n \r\n<tr>\r\n<th>Header 1</th>\r\n<th>Header 2</th>\r\n</tr>\r\n \r\n<tr class=\"odd\">\r\n<td>row 1, cell 1</td>\r\n<td>row 1, cell 2</td>\r\n</tr>\r\n \r\n<tr class=\"even\">\r\n<td>row 2, cell 1</td>\r\n<td>row 2, cell 2</td>\r\n</tr>\r\n \r\n<tr class=\"odd\">\r\n<td>row 3, cell 1</td>\r\n<td>row 3, cell 2</td>\r\n</tr>\r\n \r\n</table>', '', 'full_html'),
 ('node', 'page', 0, 12, 12, 'und', 0, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In libero nunc, accumsan quis ultrices id, semper ac turpis. Sed sed rhoncus tellus. Integer facilisis est sit amet est pellentesque pulvinar. Cras imperdiet pellentesque eros, non vulputate massa gravida non. Suspendisse potenti. \r\n\r\nDuis malesuada risus vitae nunc venenatis a rutrum sapien dignissim. Mauris vitae nibh eget est viverra ultrices sit amet non lectus. Ut tincidunt, ipsum viverra sagittis venenatis, velit ipsum commodo elit, nec vestibulum libero massa a felis. Pellentesque libero tortor, euismod eget congue in, facilisis vitae diam. Ut sed enim libero. Nulla facilisi. Nam vehicula blandit aliquam. Ut ornare nisl ac erat ornare bibendum. Sed semper dolor mauris. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos', '', 'filtered_html');
 
 -- --------------------------------------------------------
@@ -935,24 +829,16 @@ INSERT INTO `field_revision_body` (`entity_type`, `bundle`, `deleted`, `entity_i
 -- Table structure for table `field_revision_comment_body`
 --
 
-CREATE TABLE IF NOT EXISTS `field_revision_comment_body` (
+CREATE TABLE `field_revision_comment_body` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned NOT NULL COMMENT 'The entity revision id this data is attached to',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity revision id this data is attached to',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
   `comment_body_value` longtext,
-  `comment_body_format` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `comment_body_format` (`comment_body_format`)
+  `comment_body_format` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Revision archive storage for field 1 (comment_body)';
 
 --
@@ -960,9 +846,9 @@ CREATE TABLE IF NOT EXISTS `field_revision_comment_body` (
 --
 
 INSERT INTO `field_revision_comment_body` (`entity_type`, `bundle`, `deleted`, `entity_id`, `revision_id`, `language`, `delta`, `comment_body_value`, `comment_body_format`) VALUES
-('comment', 'comment_node_article', 0, 1, 1, 'und', 0, 'Whilst Campione d''Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
-('comment', 'comment_node_article', 0, 2, 2, 'und', 0, 'Whilst Campione d''Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi).', 'filtered_html'),
-('comment', 'comment_node_article', 0, 3, 3, 'und', 0, 'Whilst Campione d''Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
+('comment', 'comment_node_article', 0, 1, 1, 'und', 0, 'Whilst Campione d\'Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
+('comment', 'comment_node_article', 0, 2, 2, 'und', 0, 'Whilst Campione d\'Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi).', 'filtered_html'),
+('comment', 'comment_node_article', 0, 3, 3, 'und', 0, 'Whilst Campione d\'Italia is an Italian exclave in Switzerland. The territory of Italy covers some 301,338 km2 (116,347 sq mi) and is influenced by a temperate seasonal climate. With 60.6 million inhabitants, it is the fifth most populous country in Europe, and the 23rd most populous in the world.', 'filtered_html'),
 ('comment', 'comment_node_article', 0, 4, 4, 'und', 0, 'In suscipit libero id felis posuere id condimentum diam pellentesque. Curabitur tempus odio ut nunc auctor viverra. Suspendisse pretium mauris a justo lobortis sed gravida sem interdum. In ut fringilla lectus. Sed quam risus, tincidunt a pulvinar a, pellentesque mattis tellus.', 'filtered_html'),
 ('comment', 'comment_node_article', 0, 5, 5, 'und', 0, 'Vivamus nec diam ligula, id porta ante. Sed egestas tincidunt adipiscing. Mauris mollis rhoncus tincidunt. Donec rutrum cursus nibh eu facilisis.', 'filtered_html'),
 ('comment', 'comment_node_article', 0, 6, 6, 'und', 0, 'Curabitur nec quam ligula. Nam vulputate consectetur lorem, sed imperdiet nulla ullamcorper ut. Vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet. Maecenas varius nisl eu magna fringilla quis dignissim erat semper. Morbi gravida posuere est eget posuere. Etiam cursus tristique nulla, a vestibulum arcu pretium imperdiet. Aliquam vitae odio eros. Aenean eu sagittis velit.', 'filtered_html'),
@@ -978,27 +864,19 @@ INSERT INTO `field_revision_comment_body` (`entity_type`, `bundle`, `deleted`, `
 -- Table structure for table `field_revision_field_image`
 --
 
-CREATE TABLE IF NOT EXISTS `field_revision_field_image` (
+CREATE TABLE `field_revision_field_image` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned NOT NULL COMMENT 'The entity revision id this data is attached to',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity revision id this data is attached to',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
-  `field_image_fid` int(10) unsigned DEFAULT NULL COMMENT 'The file_managed.fid being referenced in this field.',
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `field_image_fid` int(10) UNSIGNED DEFAULT NULL COMMENT 'The file_managed.fid being referenced in this field.',
   `field_image_alt` varchar(512) DEFAULT NULL COMMENT 'Alternative image text, for the image’s ’alt’ attribute.',
   `field_image_title` varchar(1024) DEFAULT NULL COMMENT 'Image title text, for the image’s ’title’ attribute.',
-  `field_image_width` int(10) unsigned DEFAULT NULL COMMENT 'The width of the image in pixels.',
-  `field_image_height` int(10) unsigned DEFAULT NULL COMMENT 'The height of the image in pixels.',
-  PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `field_image_fid` (`field_image_fid`)
+  `field_image_width` int(10) UNSIGNED DEFAULT NULL COMMENT 'The width of the image in pixels.',
+  `field_image_height` int(10) UNSIGNED DEFAULT NULL COMMENT 'The height of the image in pixels.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Revision archive storage for field 4 (field_image)';
 
 --
@@ -1016,23 +894,15 @@ INSERT INTO `field_revision_field_image` (`entity_type`, `bundle`, `deleted`, `e
 -- Table structure for table `field_revision_field_tags`
 --
 
-CREATE TABLE IF NOT EXISTS `field_revision_field_tags` (
+CREATE TABLE `field_revision_field_tags` (
   `entity_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'The entity type this data is attached to',
   `bundle` varchar(128) NOT NULL DEFAULT '' COMMENT 'The field instance bundle to which this row belongs, used when deleting a field instance',
   `deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this data item has been deleted',
-  `entity_id` int(10) unsigned NOT NULL COMMENT 'The entity id this data is attached to',
-  `revision_id` int(10) unsigned NOT NULL COMMENT 'The entity revision id this data is attached to',
+  `entity_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity id this data is attached to',
+  `revision_id` int(10) UNSIGNED NOT NULL COMMENT 'The entity revision id this data is attached to',
   `language` varchar(32) NOT NULL DEFAULT '' COMMENT 'The language for this data item.',
-  `delta` int(10) unsigned NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
-  `field_tags_tid` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
-  KEY `entity_type` (`entity_type`),
-  KEY `bundle` (`bundle`),
-  KEY `deleted` (`deleted`),
-  KEY `entity_id` (`entity_id`),
-  KEY `revision_id` (`revision_id`),
-  KEY `language` (`language`),
-  KEY `field_tags_tid` (`field_tags_tid`)
+  `delta` int(10) UNSIGNED NOT NULL COMMENT 'The sequence number for this data item, used for multi-value fields',
+  `field_tags_tid` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Revision archive storage for field 3 (field_tags)';
 
 --
@@ -1056,21 +926,16 @@ INSERT INTO `field_revision_field_tags` (`entity_type`, `bundle`, `deleted`, `en
 -- Table structure for table `file_managed`
 --
 
-CREATE TABLE IF NOT EXISTS `file_managed` (
-  `fid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'File ID.',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The users.uid of the user who is associated with the file.',
+CREATE TABLE `file_managed` (
+  `fid` int(10) UNSIGNED NOT NULL COMMENT 'File ID.',
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The users.uid of the user who is associated with the file.',
   `filename` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
   `uri` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT 'The URI to access the file (either local or remote).',
   `filemime` varchar(255) NOT NULL DEFAULT '' COMMENT 'The file’s MIME type.',
-  `filesize` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The size of the file in bytes.',
+  `filesize` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The size of the file in bytes.',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
-  `timestamp` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'UNIX timestamp for when the file was added.',
-  PRIMARY KEY (`fid`),
-  UNIQUE KEY `uri` (`uri`),
-  KEY `uid` (`uid`),
-  KEY `status` (`status`),
-  KEY `timestamp` (`timestamp`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores information for uploaded files.' AUTO_INCREMENT=6 ;
+  `timestamp` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'UNIX timestamp for when the file was added.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores information for uploaded files.';
 
 --
 -- Dumping data for table `file_managed`
@@ -1088,16 +953,12 @@ INSERT INTO `file_managed` (`fid`, `uid`, `filename`, `uri`, `filemime`, `filesi
 -- Table structure for table `file_usage`
 --
 
-CREATE TABLE IF NOT EXISTS `file_usage` (
-  `fid` int(10) unsigned NOT NULL COMMENT 'File ID.',
+CREATE TABLE `file_usage` (
+  `fid` int(10) UNSIGNED NOT NULL COMMENT 'File ID.',
   `module` varchar(255) NOT NULL DEFAULT '' COMMENT 'The name of the module that is using the file.',
   `type` varchar(64) NOT NULL DEFAULT '' COMMENT 'The name of the object type in which the file is used.',
-  `id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The primary key of the object using the file.',
-  `count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The number of times this file is used by this object.',
-  PRIMARY KEY (`fid`,`type`,`id`,`module`),
-  KEY `type_id` (`type`,`id`),
-  KEY `fid_count` (`fid`,`count`),
-  KEY `fid_module` (`fid`,`module`)
+  `id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The primary key of the object using the file.',
+  `count` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The number of times this file is used by this object.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Track where a file is used.';
 
 --
@@ -1116,15 +977,13 @@ INSERT INTO `file_usage` (`fid`, `module`, `type`, `id`, `count`) VALUES
 -- Table structure for table `filter`
 --
 
-CREATE TABLE IF NOT EXISTS `filter` (
+CREATE TABLE `filter` (
   `format` varchar(255) NOT NULL COMMENT 'Foreign key: The filter_format.format to which this filter is assigned.',
   `module` varchar(64) NOT NULL DEFAULT '' COMMENT 'The origin module of the filter.',
   `name` varchar(32) NOT NULL DEFAULT '' COMMENT 'Name of the filter being referenced.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'Weight of filter within format.',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT 'Filter enabled status. (1 = enabled, 0 = disabled)',
-  `settings` longblob COMMENT 'A serialized array of name value pairs that store the filter settings for the specific format.',
-  PRIMARY KEY (`format`,`name`),
-  KEY `list` (`weight`,`module`,`name`)
+  `settings` longblob COMMENT 'A serialized array of name value pairs that store the filter settings for the specific format.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table that maps filters (HTML corrector) to text formats ...';
 
 --
@@ -1160,15 +1019,12 @@ INSERT INTO `filter` (`format`, `module`, `name`, `weight`, `status`, `settings`
 -- Table structure for table `filter_format`
 --
 
-CREATE TABLE IF NOT EXISTS `filter_format` (
+CREATE TABLE `filter_format` (
   `format` varchar(255) NOT NULL COMMENT 'Primary Key: Unique machine name of the format.',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the text format (Filtered HTML).',
   `cache` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate whether format is cacheable. (1 = cacheable, 0 = not cacheable)',
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT 'The status of the text format. (1 = enabled, 0 = disabled)',
-  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'Weight of text format to use when listing.',
-  PRIMARY KEY (`format`),
-  UNIQUE KEY `name` (`name`),
-  KEY `status_weight` (`status`,`weight`)
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'The status of the text format. (1 = enabled, 0 = disabled)',
+  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'Weight of text format to use when listing.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores text formats: custom groupings of filters, such as...';
 
 --
@@ -1187,16 +1043,13 @@ INSERT INTO `filter_format` (`format`, `name`, `cache`, `status`, `weight`) VALU
 -- Table structure for table `flood`
 --
 
-CREATE TABLE IF NOT EXISTS `flood` (
-  `fid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique flood event ID.',
+CREATE TABLE `flood` (
+  `fid` int(11) NOT NULL COMMENT 'Unique flood event ID.',
   `event` varchar(64) NOT NULL DEFAULT '' COMMENT 'Name of event (e.g. contact).',
   `identifier` varchar(128) NOT NULL DEFAULT '' COMMENT 'Identifier of the visitor, such as an IP address or hostname.',
   `timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'Timestamp of the event.',
-  `expiration` int(11) NOT NULL DEFAULT '0' COMMENT 'Expiration timestamp. Expired events are purged on cron run.',
-  PRIMARY KEY (`fid`),
-  KEY `allow` (`event`,`identifier`,`timestamp`),
-  KEY `purge` (`expiration`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Flood controls the threshold of events, such as the...' AUTO_INCREMENT=1 ;
+  `expiration` int(11) NOT NULL DEFAULT '0' COMMENT 'Expiration timestamp. Expired events are purged on cron run.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Flood controls the threshold of events, such as the...';
 
 -- --------------------------------------------------------
 
@@ -1204,23 +1057,11 @@ CREATE TABLE IF NOT EXISTS `flood` (
 -- Table structure for table `history`
 --
 
-CREATE TABLE IF NOT EXISTS `history` (
+CREATE TABLE `history` (
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT 'The users.uid that read the node nid.',
   `nid` int(11) NOT NULL DEFAULT '0' COMMENT 'The node.nid that was read.',
-  `timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'The Unix timestamp at which the read occurred.',
-  PRIMARY KEY (`uid`,`nid`),
-  KEY `nid` (`nid`)
+  `timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'The Unix timestamp at which the read occurred.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='A record of which users have read which nodes.';
-
---
--- Dumping data for table `history`
---
-
-INSERT INTO `history` (`uid`, `nid`, `timestamp`) VALUES
-(1, 1, 1366140460),
-(1, 2, 1366140479),
-(1, 3, 1366140560),
-(1, 12, 1366140545);
 
 -- --------------------------------------------------------
 
@@ -1228,16 +1069,13 @@ INSERT INTO `history` (`uid`, `nid`, `timestamp`) VALUES
 -- Table structure for table `image_effects`
 --
 
-CREATE TABLE IF NOT EXISTS `image_effects` (
-  `ieid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for an image effect.',
-  `isid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The image_styles.isid for an image style.',
+CREATE TABLE `image_effects` (
+  `ieid` int(10) UNSIGNED NOT NULL COMMENT 'The primary identifier for an image effect.',
+  `isid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The image_styles.isid for an image style.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of the effect in the style.',
   `name` varchar(255) NOT NULL COMMENT 'The unique name of the effect to be executed.',
-  `data` longblob NOT NULL COMMENT 'The configuration data for the effect.',
-  PRIMARY KEY (`ieid`),
-  KEY `isid` (`isid`),
-  KEY `weight` (`weight`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configuration options for image effects.' AUTO_INCREMENT=1 ;
+  `data` longblob NOT NULL COMMENT 'The configuration data for the effect.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configuration options for image effects.';
 
 -- --------------------------------------------------------
 
@@ -1245,12 +1083,10 @@ CREATE TABLE IF NOT EXISTS `image_effects` (
 -- Table structure for table `image_styles`
 --
 
-CREATE TABLE IF NOT EXISTS `image_styles` (
-  `isid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for an image style.',
-  `name` varchar(255) NOT NULL COMMENT 'The style name.',
-  PRIMARY KEY (`isid`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configuration options for image styles.' AUTO_INCREMENT=1 ;
+CREATE TABLE `image_styles` (
+  `isid` int(10) UNSIGNED NOT NULL COMMENT 'The primary identifier for an image style.',
+  `name` varchar(255) NOT NULL COMMENT 'The style name.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores configuration options for image styles.';
 
 -- --------------------------------------------------------
 
@@ -1258,11 +1094,10 @@ CREATE TABLE IF NOT EXISTS `image_styles` (
 -- Table structure for table `menu_custom`
 --
 
-CREATE TABLE IF NOT EXISTS `menu_custom` (
+CREATE TABLE `menu_custom` (
   `menu_name` varchar(32) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique key for menu. This is used as a block delta so length is 32.',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title; displayed at top of block.',
-  `description` text COMMENT 'Menu description.',
-  PRIMARY KEY (`menu_name`)
+  `description` text COMMENT 'Menu description.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Holds definitions for top-level custom menus (for example...';
 
 --
@@ -1279,7 +1114,7 @@ INSERT INTO `menu_custom` (`menu_name`, `title`, `description`) VALUES
 ('menu-wine-rack', 'Wine Rack', ''),
 ('menu-wine-spinner', 'Wine Spinner', ''),
 ('navigation', 'Navigation', 'The <em>Navigation</em> menu contains links intended for site visitors. Links are added to the <em>Navigation</em> menu automatically by some modules.'),
-('user-menu', 'User menu', 'The <em>User</em> menu contains links related to the user''s account, as well as the ''Log out'' link.');
+('user-menu', 'User menu', 'The <em>User</em> menu contains links related to the user\'s account, as well as the \'Log out\' link.');
 
 -- --------------------------------------------------------
 
@@ -1287,10 +1122,10 @@ INSERT INTO `menu_custom` (`menu_name`, `title`, `description`) VALUES
 -- Table structure for table `menu_links`
 --
 
-CREATE TABLE IF NOT EXISTS `menu_links` (
+CREATE TABLE `menu_links` (
   `menu_name` varchar(32) NOT NULL DEFAULT '' COMMENT 'The menu name. All links with the same menu name (such as ’navigation’) are part of the same menu.',
-  `mlid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The menu link ID (mlid) is the integer primary key.',
-  `plid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The parent link ID (plid) is the mlid of the link above in the hierarchy, or zero if the link is at the top level in its menu.',
+  `mlid` int(10) UNSIGNED NOT NULL COMMENT 'The menu link ID (mlid) is the integer primary key.',
+  `plid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The parent link ID (plid) is the mlid of the link above in the hierarchy, or zero if the link is at the top level in its menu.',
   `link_path` varchar(255) NOT NULL DEFAULT '' COMMENT 'The Drupal path or external path this link points to.',
   `router_path` varchar(255) NOT NULL DEFAULT '' COMMENT 'For links corresponding to a Drupal path (external = 0), this connects the link to a menu_router.path for joins.',
   `link_title` varchar(255) NOT NULL DEFAULT '' COMMENT 'The text displayed for the link, which may be modified by a title callback stored in menu_router.',
@@ -1303,22 +1138,17 @@ CREATE TABLE IF NOT EXISTS `menu_links` (
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'Link weight among links in the same menu at the same depth.',
   `depth` smallint(6) NOT NULL DEFAULT '0' COMMENT 'The depth relative to the top level. A link with plid == 0 will have depth == 1.',
   `customized` smallint(6) NOT NULL DEFAULT '0' COMMENT 'A flag to indicate that the user has manually created or edited the link (1 = customized, 0 = not customized).',
-  `p1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The first mlid in the materialized path. If N = depth, then pN must equal the mlid. If depth > 1 then p(N-1) must equal the plid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.',
-  `p2` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The second mlid in the materialized path. See p1.',
-  `p3` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The third mlid in the materialized path. See p1.',
-  `p4` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The fourth mlid in the materialized path. See p1.',
-  `p5` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The fifth mlid in the materialized path. See p1.',
-  `p6` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The sixth mlid in the materialized path. See p1.',
-  `p7` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The seventh mlid in the materialized path. See p1.',
-  `p8` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The eighth mlid in the materialized path. See p1.',
-  `p9` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The ninth mlid in the materialized path. See p1.',
-  `updated` smallint(6) NOT NULL DEFAULT '0' COMMENT 'Flag that indicates that this link was generated during the update from Drupal 5.',
-  PRIMARY KEY (`mlid`),
-  KEY `path_menu` (`link_path`(128),`menu_name`),
-  KEY `menu_plid_expand_child` (`menu_name`,`plid`,`expanded`,`has_children`),
-  KEY `menu_parents` (`menu_name`,`p1`,`p2`,`p3`,`p4`,`p5`,`p6`,`p7`,`p8`,`p9`),
-  KEY `router_path` (`router_path`(128))
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Contains the individual links within a menu.' AUTO_INCREMENT=528 ;
+  `p1` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The first mlid in the materialized path. If N = depth, then pN must equal the mlid. If depth > 1 then p(N-1) must equal the plid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.',
+  `p2` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The second mlid in the materialized path. See p1.',
+  `p3` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The third mlid in the materialized path. See p1.',
+  `p4` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The fourth mlid in the materialized path. See p1.',
+  `p5` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The fifth mlid in the materialized path. See p1.',
+  `p6` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The sixth mlid in the materialized path. See p1.',
+  `p7` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The seventh mlid in the materialized path. See p1.',
+  `p8` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The eighth mlid in the materialized path. See p1.',
+  `p9` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The ninth mlid in the materialized path. See p1.',
+  `updated` smallint(6) NOT NULL DEFAULT '0' COMMENT 'Flag that indicates that this link was generated during the update from Drupal 5.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Contains the individual links within a menu.';
 
 --
 -- Dumping data for table `menu_links`
@@ -1382,8 +1212,8 @@ INSERT INTO `menu_links` (`menu_name`, `mlid`, `plid`, `link_path`, `router_path
 ('management', 55, 19, 'admin/reports/status', 'admin/reports/status', 'Status report', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a37343a22476574206120737461747573207265706f72742061626f757420796f757220736974652773206f7065726174696f6e20616e6420616e792064657465637465642070726f626c656d732e223b7d7d, 'system', 0, 0, 0, 0, -60, 3, 0, 1, 19, 55, 0, 0, 0, 0, 0, 0, 0),
 ('management', 56, 8, 'admin/config/system', 'admin/config/system', 'System', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a33373a2247656e6572616c2073797374656d2072656c6174656420636f6e66696775726174696f6e2e223b7d7d, 'system', 0, 0, 1, 0, -20, 3, 0, 1, 8, 56, 0, 0, 0, 0, 0, 0, 0),
 ('management', 57, 21, 'admin/structure/taxonomy', 'admin/structure/taxonomy', 'Taxonomy', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a36373a224d616e6167652074616767696e672c2063617465676f72697a6174696f6e2c20616e6420636c617373696669636174696f6e206f6620796f757220636f6e74656e742e223b7d7d, 'system', 0, 0, 1, 0, 0, 3, 0, 1, 21, 57, 0, 0, 0, 0, 0, 0, 0),
-('management', 58, 19, 'admin/reports/access-denied', 'admin/reports/access-denied', 'Top ''access denied'' errors', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a33353a225669657720276163636573732064656e69656427206572726f7273202834303373292e223b7d7d, 'system', 0, 0, 0, 0, 0, 3, 0, 1, 19, 58, 0, 0, 0, 0, 0, 0, 0),
-('management', 59, 19, 'admin/reports/page-not-found', 'admin/reports/page-not-found', 'Top ''page not found'' errors', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a33363a2256696577202770616765206e6f7420666f756e6427206572726f7273202834303473292e223b7d7d, 'system', 0, 0, 0, 0, 0, 3, 0, 1, 19, 59, 0, 0, 0, 0, 0, 0, 0),
+('management', 58, 19, 'admin/reports/access-denied', 'admin/reports/access-denied', 'Top \'access denied\' errors', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a33353a225669657720276163636573732064656e69656427206572726f7273202834303373292e223b7d7d, 'system', 0, 0, 0, 0, 0, 3, 0, 1, 19, 58, 0, 0, 0, 0, 0, 0, 0),
+('management', 59, 19, 'admin/reports/page-not-found', 'admin/reports/page-not-found', 'Top \'page not found\' errors', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a33363a2256696577202770616765206e6f7420666f756e6427206572726f7273202834303473292e223b7d7d, 'system', 0, 0, 0, 0, 0, 3, 0, 1, 19, 59, 0, 0, 0, 0, 0, 0, 0),
 ('management', 60, 16, 'admin/modules/uninstall', 'admin/modules/uninstall', 'Uninstall', 0x613a303a7b7d, 'system', -1, 0, 0, 0, 20, 3, 0, 1, 16, 60, 0, 0, 0, 0, 0, 0, 0),
 ('management', 61, 8, 'admin/config/user-interface', 'admin/config/user-interface', 'User interface', 0x613a313a7b733a31303a2261747472696275746573223b613a313a7b733a353a227469746c65223b733a33383a22546f6f6c73207468617420656e68616e636520746865207573657220696e746572666163652e223b7d7d, 'system', 0, 0, 1, 0, -15, 3, 0, 1, 8, 61, 0, 0, 0, 0, 0, 0, 0),
 ('navigation', 62, 5, 'node/%/view', 'node/%/view', 'View', 0x613a303a7b7d, 'system', -1, 0, 0, 0, -10, 2, 0, 5, 62, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -1658,7 +1488,7 @@ INSERT INTO `menu_links` (`menu_name`, `mlid`, `plid`, `link_path`, `router_path
 -- Table structure for table `menu_router`
 --
 
-CREATE TABLE IF NOT EXISTS `menu_router` (
+CREATE TABLE `menu_router` (
   `path` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: the Drupal path this entry describes',
   `load_functions` blob NOT NULL COMMENT 'A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.',
   `to_arg_functions` blob NOT NULL COMMENT 'A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.',
@@ -1681,11 +1511,7 @@ CREATE TABLE IF NOT EXISTS `menu_router` (
   `description` text NOT NULL COMMENT 'A description of this item.',
   `position` varchar(255) NOT NULL DEFAULT '' COMMENT 'The position of the block (left or right) on the system administration page for this item.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'Weight of the element. Lighter weights are higher up, heavier weights go down.',
-  `include_file` mediumtext COMMENT 'The file to include for this element, usually the page callback function lives in this file.',
-  PRIMARY KEY (`path`),
-  KEY `fit` (`fit`),
-  KEY `tab_parent` (`tab_parent`(64),`weight`,`title`),
-  KEY `tab_root_weight_title` (`tab_root`(64),`weight`,`title`)
+  `include_file` mediumtext COMMENT 'The file to include for this element, usually the page callback function lives in this file.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maps paths to various callbacks (access, page and title)';
 
 --
@@ -1717,7 +1543,7 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 ('admin/config/content/formats/add', '', '', 'user_access', 0x613a313a7b693a303b733a31383a2261646d696e69737465722066696c74657273223b7d, 'filter_admin_format_page', 0x613a303a7b7d, '', 31, 5, 1, 'admin/config/content/formats', 'admin/config/content/formats', 'Add text format', 't', '', '', 'a:0:{}', 388, '', '', 1, 'modules/filter/filter.admin.inc'),
 ('admin/config/content/formats/list', '', '', 'user_access', 0x613a313a7b693a303b733a31383a2261646d696e69737465722066696c74657273223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32313a2266696c7465725f61646d696e5f6f76657276696577223b7d, '', 31, 5, 1, 'admin/config/content/formats', 'admin/config/content/formats', 'List', 't', '', '', 'a:0:{}', 140, '', '', 0, 'modules/filter/filter.admin.inc'),
 ('admin/config/development', '', '', 'user_access', 0x613a313a7b693a303b733a32373a226163636573732061646d696e697374726174696f6e207061676573223b7d, 'system_admin_menu_block_page', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/config/development', 'Development', 't', '', '', 'a:0:{}', 6, 'Development tools.', 'right', -10, 'modules/system/system.admin.inc'),
-('admin/config/development/logging', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32333a2273797374656d5f6c6f6767696e675f73657474696e6773223b7d, '', 15, 4, 0, '', 'admin/config/development/logging', 'Logging and errors', 't', '', '', 'a:0:{}', 6, 'Settings for logging and alerts modules. Various modules can route Drupal''s system events to different destinations, such as syslog, database, email, etc.', '', -15, 'modules/system/system.admin.inc'),
+('admin/config/development/logging', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32333a2273797374656d5f6c6f6767696e675f73657474696e6773223b7d, '', 15, 4, 0, '', 'admin/config/development/logging', 'Logging and errors', 't', '', '', 'a:0:{}', 6, 'Settings for logging and alerts modules. Various modules can route Drupal\'s system events to different destinations, such as syslog, database, email, etc.', '', -15, 'modules/system/system.admin.inc'),
 ('admin/config/development/maintenance', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32383a2273797374656d5f736974655f6d61696e74656e616e63655f6d6f6465223b7d, '', 15, 4, 0, '', 'admin/config/development/maintenance', 'Maintenance mode', 't', '', '', 'a:0:{}', 6, 'Take the site offline for maintenance or bring it back online.', '', -10, 'modules/system/system.admin.inc'),
 ('admin/config/development/performance', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32373a2273797374656d5f706572666f726d616e63655f73657474696e6773223b7d, '', 15, 4, 0, '', 'admin/config/development/performance', 'Performance', 't', '', '', 'a:0:{}', 6, 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.', '', -20, 'modules/system/system.admin.inc'),
 ('admin/config/media', '', '', 'user_access', 0x613a313a7b693a303b733a32373a226163636573732061646d696e697374726174696f6e207061676573223b7d, 'system_admin_menu_block_page', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/config/media', 'Media', 't', '', '', 'a:0:{}', 6, 'Media tools.', 'left', -10, 'modules/system/system.admin.inc'),
@@ -1757,11 +1583,11 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 ('admin/config/regional/date-time/types', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32353a2273797374656d5f646174655f74696d655f73657474696e6773223b7d, '', 31, 5, 1, 'admin/config/regional/date-time', 'admin/config/regional/date-time', 'Types', 't', '', '', 'a:0:{}', 140, 'Configure display formats for date and time.', '', -10, 'modules/system/system.admin.inc'),
 ('admin/config/regional/date-time/types/%/delete', 0x613a313a7b693a353b4e3b7d, '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a323a7b693a303b733a33353a2273797374656d5f64656c6574655f646174655f666f726d61745f747970655f666f726d223b693a313b693a353b7d, '', 125, 7, 0, '', 'admin/config/regional/date-time/types/%/delete', 'Delete date type', 't', '', '', 'a:0:{}', 6, 'Allow users to delete a configured date type.', '', 0, 'modules/system/system.admin.inc'),
 ('admin/config/regional/date-time/types/add', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a33323a2273797374656d5f6164645f646174655f666f726d61745f747970655f666f726d223b7d, '', 63, 6, 1, 'admin/config/regional/date-time/types', 'admin/config/regional/date-time', 'Add date type', 't', '', '', 'a:0:{}', 388, 'Add new date type.', '', -10, 'modules/system/system.admin.inc'),
-('admin/config/regional/settings', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32343a2273797374656d5f726567696f6e616c5f73657474696e6773223b7d, '', 15, 4, 0, '', 'admin/config/regional/settings', 'Regional settings', 't', '', '', 'a:0:{}', 6, 'Settings for the site''s default time zone and country.', '', -20, 'modules/system/system.admin.inc'),
+('admin/config/regional/settings', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32343a2273797374656d5f726567696f6e616c5f73657474696e6773223b7d, '', 15, 4, 0, '', 'admin/config/regional/settings', 'Regional settings', 't', '', '', 'a:0:{}', 6, 'Settings for the site\'s default time zone and country.', '', -20, 'modules/system/system.admin.inc'),
 ('admin/config/search', '', '', 'user_access', 0x613a313a7b693a303b733a32373a226163636573732061646d696e697374726174696f6e207061676573223b7d, 'system_admin_menu_block_page', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/config/search', 'Search and metadata', 't', '', '', 'a:0:{}', 6, 'Local site search, metadata and SEO.', 'left', -10, 'modules/system/system.admin.inc'),
 ('admin/config/search/clean-urls', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32353a2273797374656d5f636c65616e5f75726c5f73657474696e6773223b7d, '', 15, 4, 0, '', 'admin/config/search/clean-urls', 'Clean URLs', 't', '', '', 'a:0:{}', 6, 'Enable or disable clean URLs for your site.', '', 5, 'modules/system/system.admin.inc'),
 ('admin/config/search/clean-urls/check', '', '', '1', 0x613a303a7b7d, 'drupal_json_output', 0x613a313a7b693a303b613a313a7b733a363a22737461747573223b623a313b7d7d, '', 31, 5, 0, '', 'admin/config/search/clean-urls/check', 'Clean URL check', 't', '', '', 'a:0:{}', 0, '', '', 0, 'modules/system/system.admin.inc'),
-('admin/config/search/path', '', '', 'user_access', 0x613a313a7b693a303b733a32323a2261646d696e69737465722075726c20616c6961736573223b7d, 'path_admin_overview', 0x613a303a7b7d, '', 15, 4, 0, '', 'admin/config/search/path', 'URL aliases', 't', '', '', 'a:0:{}', 6, 'Change your site''s URL paths by aliasing them.', '', -5, 'modules/path/path.admin.inc'),
+('admin/config/search/path', '', '', 'user_access', 0x613a313a7b693a303b733a32323a2261646d696e69737465722075726c20616c6961736573223b7d, 'path_admin_overview', 0x613a303a7b7d, '', 15, 4, 0, '', 'admin/config/search/path', 'URL aliases', 't', '', '', 'a:0:{}', 6, 'Change your site\'s URL paths by aliasing them.', '', -5, 'modules/path/path.admin.inc'),
 ('admin/config/search/path/add', '', '', 'user_access', 0x613a313a7b693a303b733a32323a2261646d696e69737465722075726c20616c6961736573223b7d, 'path_admin_edit', 0x613a303a7b7d, '', 31, 5, 1, 'admin/config/search/path', 'admin/config/search/path', 'Add alias', 't', '', '', 'a:0:{}', 388, '', '', 0, 'modules/path/path.admin.inc'),
 ('admin/config/search/path/delete/%', 0x613a313a7b693a353b733a393a22706174685f6c6f6164223b7d, '', 'user_access', 0x613a313a7b693a303b733a32323a2261646d696e69737465722075726c20616c6961736573223b7d, 'drupal_get_form', 0x613a323a7b693a303b733a32353a22706174685f61646d696e5f64656c6574655f636f6e6669726d223b693a313b693a353b7d, '', 62, 6, 0, '', 'admin/config/search/path/delete/%', 'Delete alias', 't', '', '', 'a:0:{}', 6, '', '', 0, 'modules/path/path.admin.inc'),
 ('admin/config/search/path/edit/%', 0x613a313a7b693a353b733a393a22706174685f6c6f6164223b7d, '', 'user_access', 0x613a313a7b693a303b733a32323a2261646d696e69737465722075726c20616c6961736573223b7d, 'path_admin_edit', 0x613a313a7b693a303b693a353b7d, '', 62, 6, 0, '', 'admin/config/search/path/edit/%', 'Edit alias', 't', '', '', 'a:0:{}', 6, '', '', 0, 'modules/path/path.admin.inc'),
@@ -1852,13 +1678,13 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 ('admin/people/permissions/roles/delete/%', 0x613a313a7b693a353b733a31343a22757365725f726f6c655f6c6f6164223b7d, '', 'user_role_edit_access', 0x613a313a7b693a303b693a353b7d, 'drupal_get_form', 0x613a323a7b693a303b733a33303a22757365725f61646d696e5f726f6c655f64656c6574655f636f6e6669726d223b693a313b693a353b7d, '', 62, 6, 0, '', 'admin/people/permissions/roles/delete/%', 'Delete role', 't', '', '', 'a:0:{}', 6, '', '', 0, 'modules/user/user.admin.inc'),
 ('admin/people/permissions/roles/edit/%', 0x613a313a7b693a353b733a31343a22757365725f726f6c655f6c6f6164223b7d, '', 'user_role_edit_access', 0x613a313a7b693a303b693a353b7d, 'drupal_get_form', 0x613a323a7b693a303b733a31353a22757365725f61646d696e5f726f6c65223b693a313b693a353b7d, '', 62, 6, 0, '', 'admin/people/permissions/roles/edit/%', 'Edit role', 't', '', '', 'a:0:{}', 6, '', '', 0, 'modules/user/user.admin.inc'),
 ('admin/reports', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'system_admin_menu_block_page', 0x613a303a7b7d, '', 3, 2, 0, '', 'admin/reports', 'Reports', 't', '', '', 'a:0:{}', 6, 'View reports, updates, and errors.', 'left', 5, 'modules/system/system.admin.inc'),
-('admin/reports/access-denied', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_top', 0x613a313a7b693a303b733a31333a226163636573732064656e696564223b7d, '', 7, 3, 0, '', 'admin/reports/access-denied', 'Top ''access denied'' errors', 't', '', '', 'a:0:{}', 6, 'View ''access denied'' errors (403s).', '', 0, 'modules/dblog/dblog.admin.inc'),
+('admin/reports/access-denied', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_top', 0x613a313a7b693a303b733a31333a226163636573732064656e696564223b7d, '', 7, 3, 0, '', 'admin/reports/access-denied', 'Top \'access denied\' errors', 't', '', '', 'a:0:{}', 6, 'View \'access denied\' errors (403s).', '', 0, 'modules/dblog/dblog.admin.inc'),
 ('admin/reports/dblog', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_overview', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/reports/dblog', 'Recent log messages', 't', '', '', 'a:0:{}', 6, 'View events that have recently been logged.', '', -1, 'modules/dblog/dblog.admin.inc'),
 ('admin/reports/event/%', 0x613a313a7b693a333b4e3b7d, '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_event', 0x613a313a7b693a303b693a333b7d, '', 14, 4, 0, '', 'admin/reports/event/%', 'Details', 't', '', '', 'a:0:{}', 6, '', '', 0, 'modules/dblog/dblog.admin.inc'),
 ('admin/reports/fields', '', '', 'user_access', 0x613a313a7b693a303b733a32343a2261646d696e697374657220636f6e74656e74207479706573223b7d, 'field_ui_fields_list', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/reports/fields', 'Field list', 't', '', '', 'a:0:{}', 6, 'Overview of fields on all entity types.', '', 0, 'modules/field_ui/field_ui.admin.inc'),
-('admin/reports/page-not-found', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_top', 0x613a313a7b693a303b733a31343a2270616765206e6f7420666f756e64223b7d, '', 7, 3, 0, '', 'admin/reports/page-not-found', 'Top ''page not found'' errors', 't', '', '', 'a:0:{}', 6, 'View ''page not found'' errors (404s).', '', 0, 'modules/dblog/dblog.admin.inc'),
+('admin/reports/page-not-found', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_top', 0x613a313a7b693a303b733a31343a2270616765206e6f7420666f756e64223b7d, '', 7, 3, 0, '', 'admin/reports/page-not-found', 'Top \'page not found\' errors', 't', '', '', 'a:0:{}', 6, 'View \'page not found\' errors (404s).', '', 0, 'modules/dblog/dblog.admin.inc'),
 ('admin/reports/search', '', '', 'user_access', 0x613a313a7b693a303b733a31393a226163636573732073697465207265706f727473223b7d, 'dblog_top', 0x613a313a7b693a303b733a363a22736561726368223b7d, '', 7, 3, 0, '', 'admin/reports/search', 'Top search phrases', 't', '', '', 'a:0:{}', 6, 'View most popular search phrases.', '', 0, 'modules/dblog/dblog.admin.inc'),
-('admin/reports/status', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'system_status', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/reports/status', 'Status report', 't', '', '', 'a:0:{}', 6, 'Get a status report about your site''s operation and any detected problems.', '', -60, 'modules/system/system.admin.inc'),
+('admin/reports/status', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'system_status', 0x613a303a7b7d, '', 7, 3, 0, '', 'admin/reports/status', 'Status report', 't', '', '', 'a:0:{}', 6, 'Get a status report about your site\'s operation and any detected problems.', '', -60, 'modules/system/system.admin.inc'),
 ('admin/reports/status/php', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'system_php', 0x613a303a7b7d, '', 15, 4, 0, '', 'admin/reports/status/php', 'PHP', 't', '', '', 'a:0:{}', 0, '', '', 0, 'modules/system/system.admin.inc'),
 ('admin/reports/status/rebuild', '', '', 'user_access', 0x613a313a7b693a303b733a32373a226163636573732061646d696e697374726174696f6e207061676573223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a33303a226e6f64655f636f6e6669677572655f72656275696c645f636f6e6669726d223b7d, '', 15, 4, 0, '', 'admin/reports/status/rebuild', 'Rebuild permissions', 't', '', '', 'a:0:{}', 0, '', '', 0, 'modules/node/node.admin.inc'),
 ('admin/reports/status/run-cron', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'system_run_cron', 0x613a303a7b7d, '', 15, 4, 0, '', 'admin/reports/status/run-cron', 'Run cron', 't', '', '', 'a:0:{}', 0, '', '', 0, 'modules/system/system.admin.inc'),
@@ -1869,14 +1695,14 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 ('admin/reports/updates/settings', '', '', 'user_access', 0x613a313a7b693a303b733a32393a2261646d696e6973746572207369746520636f6e66696775726174696f6e223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a31353a227570646174655f73657474696e6773223b7d, '', 15, 4, 1, 'admin/reports/updates', 'admin/reports/updates', 'Settings', 't', '', '', 'a:0:{}', 132, '', '', 50, 'modules/update/update.settings.inc'),
 ('admin/reports/updates/update', '', '', 'update_manager_access', 0x613a303a7b7d, 'drupal_get_form', 0x613a323a7b693a303b733a32363a227570646174655f6d616e616765725f7570646174655f666f726d223b693a313b733a363a227265706f7274223b7d, '', 15, 4, 1, 'admin/reports/updates', 'admin/reports/updates', 'Update', 't', '', '', 'a:0:{}', 132, '', '', 10, 'modules/update/update.manager.inc'),
 ('admin/structure', '', '', 'user_access', 0x613a313a7b693a303b733a32373a226163636573732061646d696e697374726174696f6e207061676573223b7d, 'system_admin_menu_block_page', 0x613a303a7b7d, '', 3, 2, 0, '', 'admin/structure', 'Structure', 't', '', '', 'a:0:{}', 6, 'Administer blocks, content types, menus, etc.', 'right', -8, 'modules/system/system.admin.inc'),
-('admin/structure/block', '', '', 'user_access', 0x613a313a7b693a303b733a31373a2261646d696e697374657220626c6f636b73223b7d, 'block_admin_display', 0x613a313a7b693a303b733a31333a22636f726b656473637265776572223b7d, '', 7, 3, 0, '', 'admin/structure/block', 'Blocks', 't', '', '', 'a:0:{}', 6, 'Configure what block content appears in your site''s sidebars and other regions.', '', 0, 'modules/block/block.admin.inc'),
+('admin/structure/block', '', '', 'user_access', 0x613a313a7b693a303b733a31373a2261646d696e697374657220626c6f636b73223b7d, 'block_admin_display', 0x613a313a7b693a303b733a31333a22636f726b656473637265776572223b7d, '', 7, 3, 0, '', 'admin/structure/block', 'Blocks', 't', '', '', 'a:0:{}', 6, 'Configure what block content appears in your site\'s sidebars and other regions.', '', 0, 'modules/block/block.admin.inc'),
 ('admin/structure/block/add', '', '', 'user_access', 0x613a313a7b693a303b733a31373a2261646d696e697374657220626c6f636b73223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32303a22626c6f636b5f6164645f626c6f636b5f666f726d223b7d, '', 15, 4, 1, 'admin/structure/block', 'admin/structure/block', 'Add block', 't', '', '', 'a:0:{}', 388, '', '', 0, 'modules/block/block.admin.inc');
 INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access_callback`, `access_arguments`, `page_callback`, `page_arguments`, `delivery_callback`, `fit`, `number_parts`, `context`, `tab_parent`, `tab_root`, `title`, `title_callback`, `title_arguments`, `theme_callback`, `theme_arguments`, `type`, `description`, `position`, `weight`, `include_file`) VALUES
-('admin/structure/block/demo/bartik', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32353a227468656d65732f62617274696b2f62617274696b2e696e666f223b733a343a226e616d65223b733a363a2262617274696b223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a363a2242617274696b223b733a31313a226465736372697074696f6e223b733a34383a224120666c657869626c652c207265636f6c6f7261626c65207468656d652077697468206d616e7920726567696f6e732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a333a7b733a31343a226373732f6c61796f75742e637373223b733a32383a227468656d65732f62617274696b2f6373732f6c61796f75742e637373223b733a31333a226373732f7374796c652e637373223b733a32373a227468656d65732f62617274696b2f6373732f7374796c652e637373223b733a31343a226373732f636f6c6f72732e637373223b733a32383a227468656d65732f62617274696b2f6373732f636f6c6f72732e637373223b7d733a353a227072696e74223b613a313a7b733a31333a226373732f7072696e742e637373223b733a32373a227468656d65732f62617274696b2f6373732f7072696e742e637373223b7d7d733a373a22726567696f6e73223b613a32303a7b733a363a22686561646572223b733a363a22486561646572223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a383a226665617475726564223b733a383a224665617475726564223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a31333a22736964656261725f6669727374223b733a31333a2253696465626172206669727374223b733a31343a22736964656261725f7365636f6e64223b733a31343a2253696465626172207365636f6e64223b733a31343a2274726970747963685f6669727374223b733a31343a225472697074796368206669727374223b733a31353a2274726970747963685f6d6964646c65223b733a31353a225472697074796368206d6964646c65223b733a31333a2274726970747963685f6c617374223b733a31333a225472697074796368206c617374223b733a31383a22666f6f7465725f6669727374636f6c756d6e223b733a31393a22466f6f74657220666972737420636f6c756d6e223b733a31393a22666f6f7465725f7365636f6e64636f6c756d6e223b733a32303a22466f6f746572207365636f6e6420636f6c756d6e223b733a31383a22666f6f7465725f7468697264636f6c756d6e223b733a31393a22466f6f74657220746869726420636f6c756d6e223b733a31393a22666f6f7465725f666f75727468636f6c756d6e223b733a32303a22466f6f74657220666f7572746820636f6c756d6e223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a2273657474696e6773223b613a313a7b733a32303a2273686f72746375745f6d6f64756c655f6c696e6b223b733a313a2230223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32383a227468656d65732f62617274696b2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a333a7b733a31343a226373732f6c61796f75742e637373223b733a32383a227468656d65732f62617274696b2f6373732f6c61796f75742e637373223b733a31333a226373732f7374796c652e637373223b733a32373a227468656d65732f62617274696b2f6373732f7374796c652e637373223b733a31343a226373732f636f6c6f72732e637373223b733a32383a227468656d65732f62617274696b2f6373732f636f6c6f72732e637373223b7d733a353a227072696e74223b613a313a7b733a31333a226373732f7072696e742e637373223b733a32373a227468656d65732f62617274696b2f6373732f7072696e742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a363a2262617274696b223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/bartik', 'Bartik', 't', '', '_block_custom_theme', 'a:1:{i:0;s:6:"bartik";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
-('admin/structure/block/demo/corkedscrewer', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a34393a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f636f726b6564736372657765722e696e666f223b733a343a226e616d65223b733a31333a22636f726b656473637265776572223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31373a7b733a343a226e616d65223b733a31333a22636f726b656473637265776572223b733a31313a226465736372697074696f6e223b733a3335323a224120666c657869626c6520726573706f6e73697665207468656d652077697468206d616e7920726567696f6e7320737570706f72746564206279203c6120687265663d22687474703a2f2f7777772e6d6f72657468616e7468656d65732e636f6d2f22207461726765743d225f626c616e6b223e4d6f7265205468616e20286a75737429205468656d65733c2f613e2e20496620796f75206c696b652074686973207468656d652c20776520656e636f757261676520796f7520746f2074727920616c736f206f7572206f74686572203c6120687265663d22687474703a2f2f7777772e6d6f72657468616e7468656d65732e636f6d22207461726765743d225f626c616e6b223e5072656d69756d3c2f613e20616e64203c6120687265663d22687474703a2f2f64727570616c697a696e672e636f6d22207461726765743d225f626c616e6b223e467265653c2f613e2044727570616c207468656d65732e223b733a373a2276657273696f6e223b733a373a22372e782d312e32223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a343a7b733a333a22616c6c223b613a323a7b733a31333a226373732f72657365742e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f72657365742e637373223b733a31333a226373732f7374796c652e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f7374796c652e637373223b7d733a32363a22616c6c20616e6420286d696e2d77696474683a20393830707829223b613a313a7b733a31313a226373732f3936302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3936302e637373223b7d733a34393a22616c6c20616e6420286d696e2d77696474683a2037363070782920616e6420286d61782d77696474683a20393830707829223b613a313a7b733a31313a226373732f3732302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3732302e637373223b7d733a32363a22616c6c20616e6420286d61782d77696474683a20373539707829223b613a313a7b733a31343a226373732f6d6f62696c652e637373223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f6d6f62696c652e637373223b7d7d733a373a22726567696f6e73223b613a32303a7b733a363a22686561646572223b733a363a22486561646572223b733a31313a22636f6e74656e745f746f70223b733a31313a22436f6e74656e7420546f70223b733a31303a226e617669676174696f6e223b733a31303a224e617669676174696f6e223b733a363a2262616e6e6572223b733a363a2242616e6e6572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a31333a22736964656261725f6669727374223b733a31333a2253696465626172204669727374223b733a31343a22736964656261725f7365636f6e64223b733a31343a2253696465626172205365636f6e64223b733a31353a22666f6f7465725f6665617475726564223b733a31353a22466f6f746572204665617475726564223b733a31323a22666f6f7465725f6669727374223b733a31323a22466f6f746572206669727374223b733a31333a22666f6f7465725f7365636f6e64223b733a31333a22466f6f746572207365636f6e64223b733a31323a22666f6f7465725f7468697264223b733a31323a22466f6f746572207468697264223b733a31333a22666f6f7465725f666f75727468223b733a31333a22466f6f74657220666f75727468223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a2273657474696e6773223b613a31323a7b733a31383a2262726561646372756d625f646973706c6179223b733a313a2231223b733a32303a2262726561646372756d625f736570617261746f72223b733a323a22c2bb223b733a31393a22686967686c6967687465645f646973706c6179223b733a313a2231223b733a31373a22736c69646573686f775f646973706c6179223b733a313a2231223b733a31323a22736c69646573686f775f6a73223b733a313a2231223b733a31363a22736c69646573686f775f656666656374223b733a31303a227363726f6c6c486f727a223b733a32313a22736c69646573686f775f6566666563745f74696d65223b733a323a223130223b733a31393a22736c69646573686f775f72616e646f6d697a65223b733a313a2230223b733a31343a22736c69646573686f775f77726170223b733a313a2230223b733a31353a22736c69646573686f775f7061757365223b733a313a2230223b733a31353a22726573706f6e736976655f6d657461223b733a313a2231223b733a31383a22726573706f6e736976655f726573706f6e64223b733a313a2230223b7d733a373a2270726f6a656374223b733a31333a22636f726b656473637265776572223b733a393a22646174657374616d70223b733a31303a2231333636313335383437223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a343a7b733a333a22616c6c223b613a323a7b733a31333a226373732f72657365742e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f72657365742e637373223b733a31333a226373732f7374796c652e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f7374796c652e637373223b7d733a32363a22616c6c20616e6420286d696e2d77696474683a20393830707829223b613a313a7b733a31313a226373732f3936302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3936302e637373223b7d733a34393a22616c6c20616e6420286d696e2d77696474683a2037363070782920616e6420286d61782d77696474683a20393830707829223b613a313a7b733a31313a226373732f3732302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3732302e637373223b7d733a32363a22616c6c20616e6420286d61782d77696474683a20373539707829223b613a313a7b733a31343a226373732f6d6f62696c652e637373223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f6d6f62696c652e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a31333a22636f726b656473637265776572223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/corkedscrewer', 'corkedscrewer', 't', '', '_block_custom_theme', 'a:1:{i:0;s:13:"corkedscrewer";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
-('admin/structure/block/demo/garland', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32373a227468656d65732f6761726c616e642f6761726c616e642e696e666f223b733a343a226e616d65223b733a373a226761726c616e64223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a373a224761726c616e64223b733a31313a226465736372697074696f6e223b733a3131313a2241206d756c74692d636f6c756d6e207468656d652077686963682063616e20626520636f6e6669677572656420746f206d6f6469667920636f6c6f727320616e6420737769746368206265747765656e20666978656420616e6420666c756964207769647468206c61796f7574732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a313a7b733a393a227374796c652e637373223b733a32343a227468656d65732f6761726c616e642f7374796c652e637373223b7d733a353a227072696e74223b613a313a7b733a393a227072696e742e637373223b733a32343a227468656d65732f6761726c616e642f7072696e742e637373223b7d7d733a383a2273657474696e6773223b613a313a7b733a31333a226761726c616e645f7769647468223b733a353a22666c756964223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a373a22726567696f6e73223b613a31323a7b733a31333a22736964656261725f6669727374223b733a31323a224c6566742073696465626172223b733a31343a22736964656261725f7365636f6e64223b733a31333a2252696768742073696465626172223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a363a22686561646572223b733a363a22486561646572223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32393a227468656d65732f6761726c616e642f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a313a7b733a393a227374796c652e637373223b733a32343a227468656d65732f6761726c616e642f7374796c652e637373223b7d733a353a227072696e74223b613a313a7b733a393a227072696e742e637373223b733a32343a227468656d65732f6761726c616e642f7072696e742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a373a226761726c616e64223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/garland', 'Garland', 't', '', '_block_custom_theme', 'a:1:{i:0;s:7:"garland";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
-('admin/structure/block/demo/seven', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32333a227468656d65732f736576656e2f736576656e2e696e666f223b733a343a226e616d65223b733a353a22736576656e223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a353a22536576656e223b733a31313a226465736372697074696f6e223b733a36353a22412073696d706c65206f6e652d636f6c756d6e2c207461626c656c6573732c20666c7569642077696474682061646d696e697374726174696f6e207468656d652e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a313a7b733a363a2273637265656e223b613a323a7b733a393a2272657365742e637373223b733a32323a227468656d65732f736576656e2f72657365742e637373223b733a393a227374796c652e637373223b733a32323a227468656d65732f736576656e2f7374796c652e637373223b7d7d733a383a2273657474696e6773223b613a313a7b733a32303a2273686f72746375745f6d6f64756c655f6c696e6b223b733a313a2231223b7d733a373a22726567696f6e73223b613a383a7b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31333a22736964656261725f6669727374223b733a31333a2246697273742073696465626172223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a31343a22726567696f6e735f68696464656e223b613a333a7b693a303b733a31333a22736964656261725f6669727374223b693a313b733a383a22706167655f746f70223b693a323b733a31313a22706167655f626f74746f6d223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32373a227468656d65732f736576656e2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a313a7b733a363a2273637265656e223b613a323a7b733a393a2272657365742e637373223b733a32323a227468656d65732f736576656e2f72657365742e637373223b733a393a227374796c652e637373223b733a32323a227468656d65732f736576656e2f7374796c652e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a353a22736576656e223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/seven', 'Seven', 't', '', '_block_custom_theme', 'a:1:{i:0;s:5:"seven";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
-('admin/structure/block/demo/stark', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32333a227468656d65732f737461726b2f737461726b2e696e666f223b733a343a226e616d65223b733a353a22737461726b223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2230223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31373a7b733a343a226e616d65223b733a353a22537461726b223b733a31313a226465736372697074696f6e223b733a3230383a2254686973207468656d652064656d6f6e737472617465732044727570616c27732064656661756c742048544d4c206d61726b757020616e6420435353207374796c65732e20546f206c6561726e20686f7720746f206275696c6420796f7572206f776e207468656d6520616e64206f766572726964652044727570616c27732064656661756c7420636f64652c2073656520746865203c6120687265663d22687474703a2f2f64727570616c2e6f72672f7468656d652d6775696465223e5468656d696e672047756964653c2f613e2e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a313a7b733a333a22616c6c223b613a313a7b733a31303a226c61796f75742e637373223b733a32333a227468656d65732f737461726b2f6c61796f75742e637373223b7d7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a373a22726567696f6e73223b613a31323a7b733a31333a22736964656261725f6669727374223b733a31323a224c6566742073696465626172223b733a31343a22736964656261725f7365636f6e64223b733a31333a2252696768742073696465626172223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a363a22686561646572223b733a363a22486561646572223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32373a227468656d65732f737461726b2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a313a7b733a333a22616c6c223b613a313a7b733a31303a226c61796f75742e637373223b733a32333a227468656d65732f737461726b2f6c61796f75742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a353a22737461726b223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/stark', 'Stark', 't', '', '_block_custom_theme', 'a:1:{i:0;s:5:"stark";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
+('admin/structure/block/demo/bartik', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32353a227468656d65732f62617274696b2f62617274696b2e696e666f223b733a343a226e616d65223b733a363a2262617274696b223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a363a2242617274696b223b733a31313a226465736372697074696f6e223b733a34383a224120666c657869626c652c207265636f6c6f7261626c65207468656d652077697468206d616e7920726567696f6e732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a333a7b733a31343a226373732f6c61796f75742e637373223b733a32383a227468656d65732f62617274696b2f6373732f6c61796f75742e637373223b733a31333a226373732f7374796c652e637373223b733a32373a227468656d65732f62617274696b2f6373732f7374796c652e637373223b733a31343a226373732f636f6c6f72732e637373223b733a32383a227468656d65732f62617274696b2f6373732f636f6c6f72732e637373223b7d733a353a227072696e74223b613a313a7b733a31333a226373732f7072696e742e637373223b733a32373a227468656d65732f62617274696b2f6373732f7072696e742e637373223b7d7d733a373a22726567696f6e73223b613a32303a7b733a363a22686561646572223b733a363a22486561646572223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a383a226665617475726564223b733a383a224665617475726564223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a31333a22736964656261725f6669727374223b733a31333a2253696465626172206669727374223b733a31343a22736964656261725f7365636f6e64223b733a31343a2253696465626172207365636f6e64223b733a31343a2274726970747963685f6669727374223b733a31343a225472697074796368206669727374223b733a31353a2274726970747963685f6d6964646c65223b733a31353a225472697074796368206d6964646c65223b733a31333a2274726970747963685f6c617374223b733a31333a225472697074796368206c617374223b733a31383a22666f6f7465725f6669727374636f6c756d6e223b733a31393a22466f6f74657220666972737420636f6c756d6e223b733a31393a22666f6f7465725f7365636f6e64636f6c756d6e223b733a32303a22466f6f746572207365636f6e6420636f6c756d6e223b733a31383a22666f6f7465725f7468697264636f6c756d6e223b733a31393a22466f6f74657220746869726420636f6c756d6e223b733a31393a22666f6f7465725f666f75727468636f6c756d6e223b733a32303a22466f6f74657220666f7572746820636f6c756d6e223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a2273657474696e6773223b613a313a7b733a32303a2273686f72746375745f6d6f64756c655f6c696e6b223b733a313a2230223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32383a227468656d65732f62617274696b2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a333a7b733a31343a226373732f6c61796f75742e637373223b733a32383a227468656d65732f62617274696b2f6373732f6c61796f75742e637373223b733a31333a226373732f7374796c652e637373223b733a32373a227468656d65732f62617274696b2f6373732f7374796c652e637373223b733a31343a226373732f636f6c6f72732e637373223b733a32383a227468656d65732f62617274696b2f6373732f636f6c6f72732e637373223b7d733a353a227072696e74223b613a313a7b733a31333a226373732f7072696e742e637373223b733a32373a227468656d65732f62617274696b2f6373732f7072696e742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a363a2262617274696b223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/bartik', 'Bartik', 't', '', '_block_custom_theme', 'a:1:{i:0;s:6:\"bartik\";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
+('admin/structure/block/demo/corkedscrewer', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a34393a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f636f726b6564736372657765722e696e666f223b733a343a226e616d65223b733a31333a22636f726b656473637265776572223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31373a7b733a343a226e616d65223b733a31333a22636f726b656473637265776572223b733a31313a226465736372697074696f6e223b733a3335323a224120666c657869626c6520726573706f6e73697665207468656d652077697468206d616e7920726567696f6e7320737570706f72746564206279203c6120687265663d22687474703a2f2f7777772e6d6f72657468616e7468656d65732e636f6d2f22207461726765743d225f626c616e6b223e4d6f7265205468616e20286a75737429205468656d65733c2f613e2e20496620796f75206c696b652074686973207468656d652c20776520656e636f757261676520796f7520746f2074727920616c736f206f7572206f74686572203c6120687265663d22687474703a2f2f7777772e6d6f72657468616e7468656d65732e636f6d22207461726765743d225f626c616e6b223e5072656d69756d3c2f613e20616e64203c6120687265663d22687474703a2f2f64727570616c697a696e672e636f6d22207461726765743d225f626c616e6b223e467265653c2f613e2044727570616c207468656d65732e223b733a373a2276657273696f6e223b733a373a22372e782d312e32223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a343a7b733a333a22616c6c223b613a323a7b733a31333a226373732f72657365742e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f72657365742e637373223b733a31333a226373732f7374796c652e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f7374796c652e637373223b7d733a32363a22616c6c20616e6420286d696e2d77696474683a20393830707829223b613a313a7b733a31313a226373732f3936302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3936302e637373223b7d733a34393a22616c6c20616e6420286d696e2d77696474683a2037363070782920616e6420286d61782d77696474683a20393830707829223b613a313a7b733a31313a226373732f3732302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3732302e637373223b7d733a32363a22616c6c20616e6420286d61782d77696474683a20373539707829223b613a313a7b733a31343a226373732f6d6f62696c652e637373223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f6d6f62696c652e637373223b7d7d733a373a22726567696f6e73223b613a32303a7b733a363a22686561646572223b733a363a22486561646572223b733a31313a22636f6e74656e745f746f70223b733a31313a22436f6e74656e7420546f70223b733a31303a226e617669676174696f6e223b733a31303a224e617669676174696f6e223b733a363a2262616e6e6572223b733a363a2242616e6e6572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a31333a22736964656261725f6669727374223b733a31333a2253696465626172204669727374223b733a31343a22736964656261725f7365636f6e64223b733a31343a2253696465626172205365636f6e64223b733a31353a22666f6f7465725f6665617475726564223b733a31353a22466f6f746572204665617475726564223b733a31323a22666f6f7465725f6669727374223b733a31323a22466f6f746572206669727374223b733a31333a22666f6f7465725f7365636f6e64223b733a31333a22466f6f746572207365636f6e64223b733a31323a22666f6f7465725f7468697264223b733a31323a22466f6f746572207468697264223b733a31333a22666f6f7465725f666f75727468223b733a31333a22466f6f74657220666f75727468223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a2273657474696e6773223b613a31323a7b733a31383a2262726561646372756d625f646973706c6179223b733a313a2231223b733a32303a2262726561646372756d625f736570617261746f72223b733a323a22c2bb223b733a31393a22686967686c6967687465645f646973706c6179223b733a313a2231223b733a31373a22736c69646573686f775f646973706c6179223b733a313a2231223b733a31323a22736c69646573686f775f6a73223b733a313a2231223b733a31363a22736c69646573686f775f656666656374223b733a31303a227363726f6c6c486f727a223b733a32313a22736c69646573686f775f6566666563745f74696d65223b733a323a223130223b733a31393a22736c69646573686f775f72616e646f6d697a65223b733a313a2230223b733a31343a22736c69646573686f775f77726170223b733a313a2230223b733a31353a22736c69646573686f775f7061757365223b733a313a2230223b733a31353a22726573706f6e736976655f6d657461223b733a313a2231223b733a31383a22726573706f6e736976655f726573706f6e64223b733a313a2230223b7d733a373a2270726f6a656374223b733a31333a22636f726b656473637265776572223b733a393a22646174657374616d70223b733a31303a2231333636313335383437223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a343a7b733a333a22616c6c223b613a323a7b733a31333a226373732f72657365742e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f72657365742e637373223b733a31333a226373732f7374796c652e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f7374796c652e637373223b7d733a32363a22616c6c20616e6420286d696e2d77696474683a20393830707829223b613a313a7b733a31313a226373732f3936302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3936302e637373223b7d733a34393a22616c6c20616e6420286d696e2d77696474683a2037363070782920616e6420286d61782d77696474683a20393830707829223b613a313a7b733a31313a226373732f3732302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3732302e637373223b7d733a32363a22616c6c20616e6420286d61782d77696474683a20373539707829223b613a313a7b733a31343a226373732f6d6f62696c652e637373223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f6d6f62696c652e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a31333a22636f726b656473637265776572223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/corkedscrewer', 'corkedscrewer', 't', '', '_block_custom_theme', 'a:1:{i:0;s:13:\"corkedscrewer\";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
+('admin/structure/block/demo/garland', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32373a227468656d65732f6761726c616e642f6761726c616e642e696e666f223b733a343a226e616d65223b733a373a226761726c616e64223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a373a224761726c616e64223b733a31313a226465736372697074696f6e223b733a3131313a2241206d756c74692d636f6c756d6e207468656d652077686963682063616e20626520636f6e6669677572656420746f206d6f6469667920636f6c6f727320616e6420737769746368206265747765656e20666978656420616e6420666c756964207769647468206c61796f7574732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a313a7b733a393a227374796c652e637373223b733a32343a227468656d65732f6761726c616e642f7374796c652e637373223b7d733a353a227072696e74223b613a313a7b733a393a227072696e742e637373223b733a32343a227468656d65732f6761726c616e642f7072696e742e637373223b7d7d733a383a2273657474696e6773223b613a313a7b733a31333a226761726c616e645f7769647468223b733a353a22666c756964223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a373a22726567696f6e73223b613a31323a7b733a31333a22736964656261725f6669727374223b733a31323a224c6566742073696465626172223b733a31343a22736964656261725f7365636f6e64223b733a31333a2252696768742073696465626172223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a363a22686561646572223b733a363a22486561646572223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32393a227468656d65732f6761726c616e642f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a313a7b733a393a227374796c652e637373223b733a32343a227468656d65732f6761726c616e642f7374796c652e637373223b7d733a353a227072696e74223b613a313a7b733a393a227072696e742e637373223b733a32343a227468656d65732f6761726c616e642f7072696e742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a373a226761726c616e64223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/garland', 'Garland', 't', '', '_block_custom_theme', 'a:1:{i:0;s:7:\"garland\";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
+('admin/structure/block/demo/seven', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32333a227468656d65732f736576656e2f736576656e2e696e666f223b733a343a226e616d65223b733a353a22736576656e223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a353a22536576656e223b733a31313a226465736372697074696f6e223b733a36353a22412073696d706c65206f6e652d636f6c756d6e2c207461626c656c6573732c20666c7569642077696474682061646d696e697374726174696f6e207468656d652e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a313a7b733a363a2273637265656e223b613a323a7b733a393a2272657365742e637373223b733a32323a227468656d65732f736576656e2f72657365742e637373223b733a393a227374796c652e637373223b733a32323a227468656d65732f736576656e2f7374796c652e637373223b7d7d733a383a2273657474696e6773223b613a313a7b733a32303a2273686f72746375745f6d6f64756c655f6c696e6b223b733a313a2231223b7d733a373a22726567696f6e73223b613a383a7b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31333a22736964656261725f6669727374223b733a31333a2246697273742073696465626172223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a31343a22726567696f6e735f68696464656e223b613a333a7b693a303b733a31333a22736964656261725f6669727374223b693a313b733a383a22706167655f746f70223b693a323b733a31313a22706167655f626f74746f6d223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32373a227468656d65732f736576656e2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a313a7b733a363a2273637265656e223b613a323a7b733a393a2272657365742e637373223b733a32323a227468656d65732f736576656e2f72657365742e637373223b733a393a227374796c652e637373223b733a32323a227468656d65732f736576656e2f7374796c652e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a353a22736576656e223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/seven', 'Seven', 't', '', '_block_custom_theme', 'a:1:{i:0;s:5:\"seven\";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
+('admin/structure/block/demo/stark', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32333a227468656d65732f737461726b2f737461726b2e696e666f223b733a343a226e616d65223b733a353a22737461726b223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2230223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31373a7b733a343a226e616d65223b733a353a22537461726b223b733a31313a226465736372697074696f6e223b733a3230383a2254686973207468656d652064656d6f6e737472617465732044727570616c27732064656661756c742048544d4c206d61726b757020616e6420435353207374796c65732e20546f206c6561726e20686f7720746f206275696c6420796f7572206f776e207468656d6520616e64206f766572726964652044727570616c27732064656661756c7420636f64652c2073656520746865203c6120687265663d22687474703a2f2f64727570616c2e6f72672f7468656d652d6775696465223e5468656d696e672047756964653c2f613e2e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a313a7b733a333a22616c6c223b613a313a7b733a31303a226c61796f75742e637373223b733a32333a227468656d65732f737461726b2f6c61796f75742e637373223b7d7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a373a22726567696f6e73223b613a31323a7b733a31333a22736964656261725f6669727374223b733a31323a224c6566742073696465626172223b733a31343a22736964656261725f7365636f6e64223b733a31333a2252696768742073696465626172223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a363a22686561646572223b733a363a22486561646572223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32373a227468656d65732f737461726b2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a313a7b733a333a22616c6c223b613a313a7b733a31303a226c61796f75742e637373223b733a32333a227468656d65732f737461726b2f6c61796f75742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_demo', 0x613a313a7b693a303b733a353a22737461726b223b7d, '', 31, 5, 0, '', 'admin/structure/block/demo/stark', 'Stark', 't', '', '_block_custom_theme', 'a:1:{i:0;s:5:\"stark\";}', 0, '', '', 0, 'modules/block/block.admin.inc'),
 ('admin/structure/block/list/bartik', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a32353a227468656d65732f62617274696b2f62617274696b2e696e666f223b733a343a226e616d65223b733a363a2262617274696b223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31383a7b733a343a226e616d65223b733a363a2242617274696b223b733a31313a226465736372697074696f6e223b733a34383a224120666c657869626c652c207265636f6c6f7261626c65207468656d652077697468206d616e7920726567696f6e732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a333a7b733a31343a226373732f6c61796f75742e637373223b733a32383a227468656d65732f62617274696b2f6373732f6c61796f75742e637373223b733a31333a226373732f7374796c652e637373223b733a32373a227468656d65732f62617274696b2f6373732f7374796c652e637373223b733a31343a226373732f636f6c6f72732e637373223b733a32383a227468656d65732f62617274696b2f6373732f636f6c6f72732e637373223b7d733a353a227072696e74223b613a313a7b733a31333a226373732f7072696e742e637373223b733a32373a227468656d65732f62617274696b2f6373732f7072696e742e637373223b7d7d733a373a22726567696f6e73223b613a32303a7b733a363a22686561646572223b733a363a22486561646572223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a383a226665617475726564223b733a383a224665617475726564223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a31333a22736964656261725f6669727374223b733a31333a2253696465626172206669727374223b733a31343a22736964656261725f7365636f6e64223b733a31343a2253696465626172207365636f6e64223b733a31343a2274726970747963685f6669727374223b733a31343a225472697074796368206669727374223b733a31353a2274726970747963685f6d6964646c65223b733a31353a225472697074796368206d6964646c65223b733a31333a2274726970747963685f6c617374223b733a31333a225472697074796368206c617374223b733a31383a22666f6f7465725f6669727374636f6c756d6e223b733a31393a22466f6f74657220666972737420636f6c756d6e223b733a31393a22666f6f7465725f7365636f6e64636f6c756d6e223b733a32303a22466f6f746572207365636f6e6420636f6c756d6e223b733a31383a22666f6f7465725f7468697264636f6c756d6e223b733a31393a22466f6f74657220746869726420636f6c756d6e223b733a31393a22666f6f7465725f666f75727468636f6c756d6e223b733a32303a22466f6f74657220666f7572746820636f6c756d6e223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a2273657474696e6773223b613a313a7b733a32303a2273686f72746375745f6d6f64756c655f6c696e6b223b733a313a2230223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a32383a227468656d65732f62617274696b2f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a323a7b733a333a22616c6c223b613a333a7b733a31343a226373732f6c61796f75742e637373223b733a32383a227468656d65732f62617274696b2f6373732f6c61796f75742e637373223b733a31333a226373732f7374796c652e637373223b733a32373a227468656d65732f62617274696b2f6373732f7374796c652e637373223b733a31343a226373732f636f6c6f72732e637373223b733a32383a227468656d65732f62617274696b2f6373732f636f6c6f72732e637373223b7d733a353a227072696e74223b613a313a7b733a31333a226373732f7072696e742e637373223b733a32373a227468656d65732f62617274696b2f6373732f7072696e742e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_display', 0x613a313a7b693a303b733a363a2262617274696b223b7d, '', 31, 5, 1, 'admin/structure/block', 'admin/structure/block', 'Bartik', 't', '', '', 'a:0:{}', 132, '', '', 0, 'modules/block/block.admin.inc'),
 ('admin/structure/block/list/bartik/add', '', '', 'user_access', 0x613a313a7b693a303b733a31373a2261646d696e697374657220626c6f636b73223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a32303a22626c6f636b5f6164645f626c6f636b5f666f726d223b7d, '', 63, 6, 1, 'admin/structure/block/list/bartik', 'admin/structure/block', 'Add block', 't', '', '', 'a:0:{}', 388, '', '', 0, 'modules/block/block.admin.inc'),
 ('admin/structure/block/list/corkedscrewer', '', '', '_block_themes_access', 0x613a313a7b693a303b4f3a383a22737464436c617373223a31323a7b733a383a2266696c656e616d65223b733a34393a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f636f726b6564736372657765722e696e666f223b733a343a226e616d65223b733a31333a22636f726b656473637265776572223b733a343a2274797065223b733a353a227468656d65223b733a353a226f776e6572223b733a34353a227468656d65732f656e67696e65732f70687074656d706c6174652f70687074656d706c6174652e656e67696e65223b733a363a22737461747573223b733a313a2231223b733a393a22626f6f747374726170223b733a313a2230223b733a31343a22736368656d615f76657273696f6e223b733a323a222d31223b733a363a22776569676874223b733a313a2230223b733a343a22696e666f223b613a31373a7b733a343a226e616d65223b733a31333a22636f726b656473637265776572223b733a31313a226465736372697074696f6e223b733a3335323a224120666c657869626c6520726573706f6e73697665207468656d652077697468206d616e7920726567696f6e7320737570706f72746564206279203c6120687265663d22687474703a2f2f7777772e6d6f72657468616e7468656d65732e636f6d2f22207461726765743d225f626c616e6b223e4d6f7265205468616e20286a75737429205468656d65733c2f613e2e20496620796f75206c696b652074686973207468656d652c20776520656e636f757261676520796f7520746f2074727920616c736f206f7572206f74686572203c6120687265663d22687474703a2f2f7777772e6d6f72657468616e7468656d65732e636f6d22207461726765743d225f626c616e6b223e5072656d69756d3c2f613e20616e64203c6120687265663d22687474703a2f2f64727570616c697a696e672e636f6d22207461726765743d225f626c616e6b223e467265653c2f613e2044727570616c207468656d65732e223b733a373a2276657273696f6e223b733a373a22372e782d312e32223b733a343a22636f7265223b733a333a22372e78223b733a31313a227374796c65736865657473223b613a343a7b733a333a22616c6c223b613a323a7b733a31333a226373732f72657365742e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f72657365742e637373223b733a31333a226373732f7374796c652e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f7374796c652e637373223b7d733a32363a22616c6c20616e6420286d696e2d77696474683a20393830707829223b613a313a7b733a31313a226373732f3936302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3936302e637373223b7d733a34393a22616c6c20616e6420286d696e2d77696474683a2037363070782920616e6420286d61782d77696474683a20393830707829223b613a313a7b733a31313a226373732f3732302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3732302e637373223b7d733a32363a22616c6c20616e6420286d61782d77696474683a20373539707829223b613a313a7b733a31343a226373732f6d6f62696c652e637373223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f6d6f62696c652e637373223b7d7d733a373a22726567696f6e73223b613a32303a7b733a363a22686561646572223b733a363a22486561646572223b733a31313a22636f6e74656e745f746f70223b733a31313a22436f6e74656e7420546f70223b733a31303a226e617669676174696f6e223b733a31303a224e617669676174696f6e223b733a363a2262616e6e6572223b733a363a2242616e6e6572223b733a31313a22686967686c696768746564223b733a31313a22486967686c696768746564223b733a373a22636f6e74656e74223b733a373a22436f6e74656e74223b733a31333a22736964656261725f6669727374223b733a31333a2253696465626172204669727374223b733a31343a22736964656261725f7365636f6e64223b733a31343a2253696465626172205365636f6e64223b733a31353a22666f6f7465725f6665617475726564223b733a31353a22466f6f746572204665617475726564223b733a31323a22666f6f7465725f6669727374223b733a31323a22466f6f746572206669727374223b733a31333a22666f6f7465725f7365636f6e64223b733a31333a22466f6f746572207365636f6e64223b733a31323a22666f6f7465725f7468697264223b733a31323a22466f6f746572207468697264223b733a31333a22666f6f7465725f666f75727468223b733a31333a22466f6f74657220666f75727468223b733a363a22666f6f746572223b733a363a22466f6f746572223b733a343a2268656c70223b733a343a2248656c70223b733a383a22706167655f746f70223b733a383a225061676520746f70223b733a31313a22706167655f626f74746f6d223b733a31313a225061676520626f74746f6d223b733a31343a2264617368626f6172645f6d61696e223b733a31363a2244617368626f61726420286d61696e29223b733a31373a2264617368626f6172645f73696465626172223b733a31393a2244617368626f61726420287369646562617229223b733a31383a2264617368626f6172645f696e616374697665223b733a32303a2244617368626f6172642028696e61637469766529223b7d733a383a2273657474696e6773223b613a31323a7b733a31383a2262726561646372756d625f646973706c6179223b733a313a2231223b733a32303a2262726561646372756d625f736570617261746f72223b733a323a22c2bb223b733a31393a22686967686c6967687465645f646973706c6179223b733a313a2231223b733a31373a22736c69646573686f775f646973706c6179223b733a313a2231223b733a31323a22736c69646573686f775f6a73223b733a313a2231223b733a31363a22736c69646573686f775f656666656374223b733a31303a227363726f6c6c486f727a223b733a32313a22736c69646573686f775f6566666563745f74696d65223b733a323a223130223b733a31393a22736c69646573686f775f72616e646f6d697a65223b733a313a2230223b733a31343a22736c69646573686f775f77726170223b733a313a2230223b733a31353a22736c69646573686f775f7061757365223b733a313a2230223b733a31353a22726573706f6e736976655f6d657461223b733a313a2231223b733a31383a22726573706f6e736976655f726573706f6e64223b733a313a2230223b7d733a373a2270726f6a656374223b733a31333a22636f726b656473637265776572223b733a393a22646174657374616d70223b733a31303a2231333636313335383437223b733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b733a383a226665617475726573223b613a393a7b693a303b733a343a226c6f676f223b693a313b733a373a2266617669636f6e223b693a323b733a343a226e616d65223b693a333b733a363a22736c6f67616e223b693a343b733a31373a226e6f64655f757365725f70696374757265223b693a353b733a32303a22636f6d6d656e745f757365725f70696374757265223b693a363b733a32353a22636f6d6d656e745f757365725f766572696669636174696f6e223b693a373b733a393a226d61696e5f6d656e75223b693a383b733a31343a227365636f6e646172795f6d656e75223b7d733a31303a2273637265656e73686f74223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f73637265656e73686f742e706e67223b733a333a22706870223b733a353a22352e322e34223b733a373a2273637269707473223b613a303a7b7d733a31353a226f7665726c61795f726567696f6e73223b613a353a7b693a303b733a31343a2264617368626f6172645f6d61696e223b693a313b733a31373a2264617368626f6172645f73696465626172223b693a323b733a31383a2264617368626f6172645f696e616374697665223b693a333b733a373a22636f6e74656e74223b693a343b733a343a2268656c70223b7d733a31343a22726567696f6e735f68696464656e223b613a323a7b693a303b733a383a22706167655f746f70223b693a313b733a31313a22706167655f626f74746f6d223b7d733a32383a226f7665726c61795f737570706c656d656e74616c5f726567696f6e73223b613a313a7b693a303b733a383a22706167655f746f70223b7d7d733a363a22707265666978223b733a31313a2270687074656d706c617465223b733a31313a227374796c65736865657473223b613a343a7b733a333a22616c6c223b613a323a7b733a31333a226373732f72657365742e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f72657365742e637373223b733a31333a226373732f7374796c652e637373223b733a34343a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f7374796c652e637373223b7d733a32363a22616c6c20616e6420286d696e2d77696474683a20393830707829223b613a313a7b733a31313a226373732f3936302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3936302e637373223b7d733a34393a22616c6c20616e6420286d696e2d77696474683a2037363070782920616e6420286d61782d77696474683a20393830707829223b613a313a7b733a31313a226373732f3732302e637373223b733a34323a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f3732302e637373223b7d733a32363a22616c6c20616e6420286d61782d77696474683a20373539707829223b613a313a7b733a31343a226373732f6d6f62696c652e637373223b733a34353a2273697465732f616c6c2f7468656d65732f636f726b6564736372657765722f6373732f6d6f62696c652e637373223b7d7d733a363a22656e67696e65223b733a31313a2270687074656d706c617465223b7d7d, 'block_admin_display', 0x613a313a7b693a303b733a31333a22636f726b656473637265776572223b7d, '', 31, 5, 1, 'admin/structure/block', 'admin/structure/block', 'corkedscrewer', 't', '', '', 'a:0:{}', 140, '', '', -10, 'modules/block/block.admin.inc'),
@@ -1908,7 +1734,7 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 ('admin/structure/menu/parents', '', '', 'user_access', 0x613a313a7b693a303b623a313b7d, 'menu_parent_options_js', 0x613a303a7b7d, '', 15, 4, 0, '', 'admin/structure/menu/parents', 'Parent menu items', 't', '', '', 'a:0:{}', 0, '', '', 0, ''),
 ('admin/structure/menu/settings', '', '', 'user_access', 0x613a313a7b693a303b733a31353a2261646d696e6973746572206d656e75223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a31343a226d656e755f636f6e666967757265223b7d, '', 15, 4, 1, 'admin/structure/menu', 'admin/structure/menu', 'Settings', 't', '', '', 'a:0:{}', 132, '', '', 5, 'modules/menu/menu.admin.inc'),
 ('admin/structure/taxonomy', '', '', 'user_access', 0x613a313a7b693a303b733a31393a2261646d696e6973746572207461786f6e6f6d79223b7d, 'drupal_get_form', 0x613a313a7b693a303b733a33303a227461786f6e6f6d795f6f766572766965775f766f636162756c6172696573223b7d, '', 7, 3, 0, '', 'admin/structure/taxonomy', 'Taxonomy', 't', '', '', 'a:0:{}', 6, 'Manage tagging, categorization, and classification of your content.', '', 0, 'modules/taxonomy/taxonomy.admin.inc'),
-('admin/structure/taxonomy/%', 0x613a313a7b693a333b733a33373a227461786f6e6f6d795f766f636162756c6172795f6d616368696e655f6e616d655f6c6f6164223b7d, '', 'user_access', 0x613a313a7b693a303b733a31393a2261646d696e6973746572207461786f6e6f6d79223b7d, 'drupal_get_form', 0x613a323a7b693a303b733a32333a227461786f6e6f6d795f6f766572766965775f7465726d73223b693a313b693a333b7d, '', 14, 4, 0, '', 'admin/structure/taxonomy/%', '', 'entity_label', 'a:2:{i:0;s:19:"taxonomy_vocabulary";i:1;i:3;}', '', 'a:0:{}', 6, '', '', 0, 'modules/taxonomy/taxonomy.admin.inc'),
+('admin/structure/taxonomy/%', 0x613a313a7b693a333b733a33373a227461786f6e6f6d795f766f636162756c6172795f6d616368696e655f6e616d655f6c6f6164223b7d, '', 'user_access', 0x613a313a7b693a303b733a31393a2261646d696e6973746572207461786f6e6f6d79223b7d, 'drupal_get_form', 0x613a323a7b693a303b733a32333a227461786f6e6f6d795f6f766572766965775f7465726d73223b693a313b693a333b7d, '', 14, 4, 0, '', 'admin/structure/taxonomy/%', '', 'entity_label', 'a:2:{i:0;s:19:\"taxonomy_vocabulary\";i:1;i:3;}', '', 'a:0:{}', 6, '', '', 0, 'modules/taxonomy/taxonomy.admin.inc'),
 ('admin/structure/taxonomy/%/add', 0x613a313a7b693a333b733a33373a227461786f6e6f6d795f766f636162756c6172795f6d616368696e655f6e616d655f6c6f6164223b7d, '', 'user_access', 0x613a313a7b693a303b733a31393a2261646d696e6973746572207461786f6e6f6d79223b7d, 'drupal_get_form', 0x613a333a7b693a303b733a31383a227461786f6e6f6d795f666f726d5f7465726d223b693a313b613a303a7b7d693a323b693a333b7d, '', 29, 5, 1, 'admin/structure/taxonomy/%', 'admin/structure/taxonomy/%', 'Add term', 't', '', '', 'a:0:{}', 388, '', '', 0, 'modules/taxonomy/taxonomy.admin.inc'),
 ('admin/structure/taxonomy/%/display', 0x613a313a7b693a333b733a33373a227461786f6e6f6d795f766f636162756c6172795f6d616368696e655f6e616d655f6c6f6164223b7d, '', 'user_access', 0x613a313a7b693a303b733a31393a2261646d696e6973746572207461786f6e6f6d79223b7d, 'drupal_get_form', 0x613a343a7b693a303b733a33303a226669656c645f75695f646973706c61795f6f766572766965775f666f726d223b693a313b733a31333a227461786f6e6f6d795f7465726d223b693a323b693a333b693a333b733a373a2264656661756c74223b7d, '', 29, 5, 1, 'admin/structure/taxonomy/%', 'admin/structure/taxonomy/%', 'Manage display', 't', '', '', 'a:0:{}', 132, '', '', 2, 'modules/field_ui/field_ui.admin.inc'),
 ('admin/structure/taxonomy/%/display/default', 0x613a313a7b693a333b733a33373a227461786f6e6f6d795f766f636162756c6172795f6d616368696e655f6e616d655f6c6f6164223b7d, '', '_field_ui_view_mode_menu_access', 0x613a353a7b693a303b733a31333a227461786f6e6f6d795f7465726d223b693a313b693a333b693a323b733a373a2264656661756c74223b693a333b733a31313a22757365725f616363657373223b693a343b733a31393a2261646d696e6973746572207461786f6e6f6d79223b7d, 'drupal_get_form', 0x613a343a7b693a303b733a33303a226669656c645f75695f646973706c61795f6f766572766965775f666f726d223b693a313b733a31333a227461786f6e6f6d795f7465726d223b693a323b693a333b693a333b733a373a2264656661756c74223b7d, '', 59, 6, 1, 'admin/structure/taxonomy/%/display', 'admin/structure/taxonomy/%', 'Default', 't', '', '', 'a:0:{}', 140, '', '', -10, 'modules/field_ui/field_ui.admin.inc'),
@@ -1976,7 +1802,7 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 ('node/%/view', 0x613a313a7b693a313b733a393a226e6f64655f6c6f6164223b7d, '', 'node_access', 0x613a323a7b693a303b733a343a2276696577223b693a313b693a313b7d, 'node_page_view', 0x613a313a7b693a303b693a313b7d, '', 5, 3, 1, 'node/%', 'node/%', 'View', 't', '', '', 'a:0:{}', 140, '', '', -10, ''),
 ('node/add', '', '', '_node_add_access', 0x613a303a7b7d, 'node_add_page', 0x613a303a7b7d, '', 3, 2, 0, '', 'node/add', 'Add content', 't', '', '', 'a:0:{}', 6, '', '', 0, 'modules/node/node.pages.inc'),
 ('node/add/article', '', '', 'node_access', 0x613a323a7b693a303b733a363a22637265617465223b693a313b733a373a2261727469636c65223b7d, 'node_add', 0x613a313a7b693a303b733a373a2261727469636c65223b7d, '', 7, 3, 0, '', 'node/add/article', 'Article', 'check_plain', '', '', 'a:0:{}', 6, 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.', '', 0, 'modules/node/node.pages.inc'),
-('node/add/page', '', '', 'node_access', 0x613a323a7b693a303b733a363a22637265617465223b693a313b733a343a2270616765223b7d, 'node_add', 0x613a313a7b693a303b733a343a2270616765223b7d, '', 7, 3, 0, '', 'node/add/page', 'Basic page', 'check_plain', '', '', 'a:0:{}', 6, 'Use <em>basic pages</em> for your static content, such as an ''About us'' page.', '', 0, 'modules/node/node.pages.inc'),
+('node/add/page', '', '', 'node_access', 0x613a323a7b693a303b733a363a22637265617465223b693a313b733a343a2270616765223b7d, 'node_add', 0x613a313a7b693a303b733a343a2270616765223b7d, '', 7, 3, 0, '', 'node/add/page', 'Basic page', 'check_plain', '', '', 'a:0:{}', 6, 'Use <em>basic pages</em> for your static content, such as an \'About us\' page.', '', 0, 'modules/node/node.pages.inc'),
 ('overlay-ajax/%', 0x613a313a7b693a313b4e3b7d, '', 'user_access', 0x613a313a7b693a303b733a31343a22616363657373206f7665726c6179223b7d, 'overlay_ajax_render_region', 0x613a313a7b693a303b693a313b7d, '', 2, 2, 0, '', 'overlay-ajax/%', '', 't', '', '', 'a:0:{}', 0, '', '', 0, ''),
 ('overlay/dismiss-message', '', '', 'user_access', 0x613a313a7b693a303b733a31343a22616363657373206f7665726c6179223b7d, 'overlay_user_dismiss_message', 0x613a303a7b7d, '', 3, 2, 0, '', 'overlay/dismiss-message', '', 't', '', '', 'a:0:{}', 0, '', '', 0, ''),
 ('rss.xml', '', '', 'user_access', 0x613a313a7b693a303b733a31343a2261636365737320636f6e74656e74223b7d, 'node_feed', 0x613a323a7b693a303b623a303b693a313b613a303a7b7d7d, '', 1, 1, 0, '', 'rss.xml', 'RSS feed', 't', '', '', 'a:0:{}', 0, '', '', 0, ''),
@@ -2019,9 +1845,9 @@ INSERT INTO `menu_router` (`path`, `load_functions`, `to_arg_functions`, `access
 -- Table structure for table `node`
 --
 
-CREATE TABLE IF NOT EXISTS `node` (
-  `nid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for a node.',
-  `vid` int(10) unsigned DEFAULT NULL COMMENT 'The current node_revision.vid version identifier.',
+CREATE TABLE `node` (
+  `nid` int(10) UNSIGNED NOT NULL COMMENT 'The primary identifier for a node.',
+  `vid` int(10) UNSIGNED DEFAULT NULL COMMENT 'The current node_revision.vid version identifier.',
   `type` varchar(32) NOT NULL DEFAULT '' COMMENT 'The node_type.type of this node.',
   `language` varchar(12) NOT NULL DEFAULT '' COMMENT 'The languages.language of this node.',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'The title of this node, always treated as non-markup plain text.',
@@ -2032,20 +1858,9 @@ CREATE TABLE IF NOT EXISTS `node` (
   `comment` int(11) NOT NULL DEFAULT '0' COMMENT 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
   `promote` int(11) NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether the node should be displayed on the front page.',
   `sticky` int(11) NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether the node should be displayed at the top of lists in which it appears.',
-  `tnid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The translation set id for this node, which equals the node id of the source post in each set.',
-  `translate` int(11) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this translation page needs to be updated.',
-  PRIMARY KEY (`nid`),
-  UNIQUE KEY `vid` (`vid`),
-  KEY `node_changed` (`changed`),
-  KEY `node_created` (`created`),
-  KEY `node_frontpage` (`promote`,`status`,`sticky`,`created`),
-  KEY `node_status_type` (`status`,`type`,`nid`),
-  KEY `node_title_type` (`title`,`type`(4)),
-  KEY `node_type` (`type`(4)),
-  KEY `uid` (`uid`),
-  KEY `tnid` (`tnid`),
-  KEY `translate` (`translate`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='The base table for nodes.' AUTO_INCREMENT=13 ;
+  `tnid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The translation set id for this node, which equals the node id of the source post in each set.',
+  `translate` int(11) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this translation page needs to be updated.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='The base table for nodes.';
 
 --
 -- Dumping data for table `node`
@@ -2064,14 +1879,13 @@ INSERT INTO `node` (`nid`, `vid`, `type`, `language`, `title`, `uid`, `status`, 
 -- Table structure for table `node_access`
 --
 
-CREATE TABLE IF NOT EXISTS `node_access` (
-  `nid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The node.nid this record affects.',
-  `gid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The grant ID a user must possess in the specified realm to gain this row’s privileges on the node.',
+CREATE TABLE `node_access` (
+  `nid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The node.nid this record affects.',
+  `gid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The grant ID a user must possess in the specified realm to gain this row’s privileges on the node.',
   `realm` varchar(255) NOT NULL DEFAULT '' COMMENT 'The realm in which the user must possess the grant ID. Each node access node can define one or more realms.',
-  `grant_view` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether a user with the realm/grant pair can view this node.',
-  `grant_update` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
-  `grant_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether a user with the realm/grant pair can delete this node.',
-  PRIMARY KEY (`nid`,`gid`,`realm`)
+  `grant_view` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether a user with the realm/grant pair can view this node.',
+  `grant_update` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
+  `grant_delete` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether a user with the realm/grant pair can delete this node.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Identifies which realm/grant pairs a user must possess in...';
 
 --
@@ -2087,17 +1901,13 @@ INSERT INTO `node_access` (`nid`, `gid`, `realm`, `grant_view`, `grant_update`, 
 -- Table structure for table `node_comment_statistics`
 --
 
-CREATE TABLE IF NOT EXISTS `node_comment_statistics` (
-  `nid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The node.nid for which the statistics are compiled.',
+CREATE TABLE `node_comment_statistics` (
+  `nid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The node.nid for which the statistics are compiled.',
   `cid` int(11) NOT NULL DEFAULT '0' COMMENT 'The comment.cid of the last comment.',
   `last_comment_timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'The Unix timestamp of the last comment that was posted within this node, from comment.changed.',
   `last_comment_name` varchar(60) DEFAULT NULL COMMENT 'The name of the latest author to post a comment on this node, from comment.name.',
   `last_comment_uid` int(11) NOT NULL DEFAULT '0' COMMENT 'The user ID of the latest author to post a comment on this node, from comment.uid.',
-  `comment_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The total number of comments on this node.',
-  PRIMARY KEY (`nid`),
-  KEY `node_comment_timestamp` (`last_comment_timestamp`),
-  KEY `comment_count` (`comment_count`),
-  KEY `last_comment_uid` (`last_comment_uid`)
+  `comment_count` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The total number of comments on this node.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maintains statistics of node and comments posts to show ...';
 
 --
@@ -2117,9 +1927,9 @@ INSERT INTO `node_comment_statistics` (`nid`, `cid`, `last_comment_timestamp`, `
 -- Table structure for table `node_revision`
 --
 
-CREATE TABLE IF NOT EXISTS `node_revision` (
-  `nid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The node this version belongs to.',
-  `vid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for this version.',
+CREATE TABLE `node_revision` (
+  `nid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The node this version belongs to.',
+  `vid` int(10) UNSIGNED NOT NULL COMMENT 'The primary identifier for this version.',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT 'The users.uid that created this version.',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'The title of this version.',
   `log` longtext NOT NULL COMMENT 'The log entry explaining the changes in this version.',
@@ -2127,11 +1937,8 @@ CREATE TABLE IF NOT EXISTS `node_revision` (
   `status` int(11) NOT NULL DEFAULT '1' COMMENT 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
   `comment` int(11) NOT NULL DEFAULT '0' COMMENT 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
   `promote` int(11) NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
-  `sticky` int(11) NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
-  PRIMARY KEY (`vid`),
-  KEY `nid` (`nid`),
-  KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores information about each saved version of a node.' AUTO_INCREMENT=13 ;
+  `sticky` int(11) NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores information about each saved version of a node.';
 
 --
 -- Dumping data for table `node_revision`
@@ -2150,21 +1957,20 @@ INSERT INTO `node_revision` (`nid`, `vid`, `uid`, `title`, `log`, `timestamp`, `
 -- Table structure for table `node_type`
 --
 
-CREATE TABLE IF NOT EXISTS `node_type` (
+CREATE TABLE `node_type` (
   `type` varchar(32) NOT NULL COMMENT 'The machine-readable name of this type.',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The human-readable name of this type.',
   `base` varchar(255) NOT NULL COMMENT 'The base string used to construct callbacks corresponding to this node type.',
   `module` varchar(255) NOT NULL COMMENT 'The module defining this node type.',
   `description` mediumtext NOT NULL COMMENT 'A brief description of this type.',
   `help` mediumtext NOT NULL COMMENT 'Help information shown to the user when creating a node of this type.',
-  `has_title` tinyint(3) unsigned NOT NULL COMMENT 'Boolean indicating whether this type uses the node.title field.',
+  `has_title` tinyint(3) UNSIGNED NOT NULL COMMENT 'Boolean indicating whether this type uses the node.title field.',
   `title_label` varchar(255) NOT NULL DEFAULT '' COMMENT 'The label displayed for the title field on the edit form.',
   `custom` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
   `modified` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether this type has been modified by an administrator; currently not used in any way.',
   `locked` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether the administrator can change the machine name of this type.',
   `disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'A boolean indicating whether the node type is disabled.',
-  `orig_type` varchar(255) NOT NULL DEFAULT '' COMMENT 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.',
-  PRIMARY KEY (`type`)
+  `orig_type` varchar(255) NOT NULL DEFAULT '' COMMENT 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores information about all defined node types.';
 
 --
@@ -2173,7 +1979,7 @@ CREATE TABLE IF NOT EXISTS `node_type` (
 
 INSERT INTO `node_type` (`type`, `name`, `base`, `module`, `description`, `help`, `has_title`, `title_label`, `custom`, `modified`, `locked`, `disabled`, `orig_type`) VALUES
 ('article', 'Article', 'node_content', 'node', 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.', '', 1, 'Title', 1, 1, 0, 0, 'article'),
-('page', 'Basic page', 'node_content', 'node', 'Use <em>basic pages</em> for your static content, such as an ''About us'' page.', '', 1, 'Title', 1, 1, 0, 0, 'page');
+('page', 'Basic page', 'node_content', 'node', 'Use <em>basic pages</em> for your static content, such as an \'About us\' page.', '', 1, 'Title', 1, 1, 0, 0, 'page');
 
 -- --------------------------------------------------------
 
@@ -2181,16 +1987,13 @@ INSERT INTO `node_type` (`type`, `name`, `base`, `module`, `description`, `help`
 -- Table structure for table `queue`
 --
 
-CREATE TABLE IF NOT EXISTS `queue` (
-  `item_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique item ID.',
+CREATE TABLE `queue` (
+  `item_id` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique item ID.',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The queue name.',
   `data` longblob COMMENT 'The arbitrary data for the item.',
   `expire` int(11) NOT NULL DEFAULT '0' COMMENT 'Timestamp when the claim lease expires on the item.',
-  `created` int(11) NOT NULL DEFAULT '0' COMMENT 'Timestamp when the item was created.',
-  PRIMARY KEY (`item_id`),
-  KEY `name_created` (`name`,`created`),
-  KEY `expire` (`expire`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores items in queues.' AUTO_INCREMENT=111 ;
+  `created` int(11) NOT NULL DEFAULT '0' COMMENT 'Timestamp when the item was created.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores items in queues.';
 
 -- --------------------------------------------------------
 
@@ -2198,11 +2001,10 @@ CREATE TABLE IF NOT EXISTS `queue` (
 -- Table structure for table `rdf_mapping`
 --
 
-CREATE TABLE IF NOT EXISTS `rdf_mapping` (
+CREATE TABLE `rdf_mapping` (
   `type` varchar(128) NOT NULL COMMENT 'The name of the entity type a mapping applies to (node, user, comment, etc.).',
   `bundle` varchar(128) NOT NULL COMMENT 'The name of the bundle a mapping applies to.',
-  `mapping` longblob COMMENT 'The serialized mapping of the bundle type and fields to RDF terms.',
-  PRIMARY KEY (`type`,`bundle`)
+  `mapping` longblob COMMENT 'The serialized mapping of the bundle type and fields to RDF terms.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores custom RDF mappings for user defined content types...';
 
 --
@@ -2219,14 +2021,12 @@ INSERT INTO `rdf_mapping` (`type`, `bundle`, `mapping`) VALUES
 -- Table structure for table `registry`
 --
 
-CREATE TABLE IF NOT EXISTS `registry` (
+CREATE TABLE `registry` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The name of the function, class, or interface.',
   `type` varchar(9) NOT NULL DEFAULT '' COMMENT 'Either function or class or interface.',
   `filename` varchar(255) NOT NULL COMMENT 'Name of the file.',
   `module` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the module the file belongs to.',
-  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The order in which this module’s hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name.',
-  PRIMARY KEY (`name`,`type`),
-  KEY `hook` (`type`,`weight`,`module`)
+  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The order in which this module’s hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Each record is a function, class, or interface name and...';
 
 --
@@ -2591,10 +2391,9 @@ INSERT INTO `registry` (`name`, `type`, `filename`, `module`, `weight`) VALUES
 -- Table structure for table `registry_file`
 --
 
-CREATE TABLE IF NOT EXISTS `registry_file` (
+CREATE TABLE `registry_file` (
   `filename` varchar(255) NOT NULL COMMENT 'Path to the file.',
-  `hash` varchar(64) NOT NULL COMMENT 'sha-256 hash of the file’s contents when last parsed.',
-  PRIMARY KEY (`filename`)
+  `hash` varchar(64) NOT NULL COMMENT 'sha-256 hash of the file’s contents when last parsed.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Files parsed to build the registry.';
 
 --
@@ -2721,14 +2520,11 @@ INSERT INTO `registry_file` (`filename`, `hash`) VALUES
 -- Table structure for table `role`
 --
 
-CREATE TABLE IF NOT EXISTS `role` (
-  `rid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique role ID.',
+CREATE TABLE `role` (
+  `rid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique role ID.',
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Unique role name.',
-  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this role in listings and the user interface.',
-  PRIMARY KEY (`rid`),
-  UNIQUE KEY `name` (`name`),
-  KEY `name_weight` (`name`,`weight`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores user roles.' AUTO_INCREMENT=4 ;
+  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this role in listings and the user interface.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores user roles.';
 
 --
 -- Dumping data for table `role`
@@ -2745,12 +2541,10 @@ INSERT INTO `role` (`rid`, `name`, `weight`) VALUES
 -- Table structure for table `role_permission`
 --
 
-CREATE TABLE IF NOT EXISTS `role_permission` (
-  `rid` int(10) unsigned NOT NULL COMMENT 'Foreign Key: role.rid.',
+CREATE TABLE `role_permission` (
+  `rid` int(10) UNSIGNED NOT NULL COMMENT 'Foreign Key: role.rid.',
   `permission` varchar(128) NOT NULL DEFAULT '' COMMENT 'A single permission granted to the role identified by rid.',
-  `module` varchar(255) NOT NULL DEFAULT '' COMMENT 'The module declaring the permission.',
-  PRIMARY KEY (`rid`,`permission`),
-  KEY `permission` (`permission`)
+  `module` varchar(255) NOT NULL DEFAULT '' COMMENT 'The module declaring the permission.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the permissions assigned to user roles.';
 
 --
@@ -2843,24 +2637,12 @@ INSERT INTO `role_permission` (`rid`, `permission`, `module`) VALUES
 -- Table structure for table `search_dataset`
 --
 
-CREATE TABLE IF NOT EXISTS `search_dataset` (
-  `sid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Search item ID, e.g. node ID for nodes.',
+CREATE TABLE `search_dataset` (
+  `sid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Search item ID, e.g. node ID for nodes.',
   `type` varchar(16) NOT NULL COMMENT 'Type of item, e.g. node.',
   `data` longtext NOT NULL COMMENT 'List of space-separated words from the item.',
-  `reindex` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Set to force node reindexing.',
-  PRIMARY KEY (`sid`,`type`)
+  `reindex` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Set to force node reindexing.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores items that will be searched.';
-
---
--- Dumping data for table `search_dataset`
---
-
-INSERT INTO `search_dataset` (`sid`, `type`, `data`, `reindex`) VALUES
-(1, 'node', ' best wine deals italian wine is wine produced in italy a country which is home to some of the oldest wineproducing regions in the world italy is one of the world s foremost producers responsible for approximately onefifth of world wine production in 2005 italian wine is wine produced in italy a country which is home to some of the oldest wineproducing regions in the world italian wine is wine produced in italy a country which is home to some of the oldest wineproducing regions in the world italy is one of the world s foremost producers responsible for approximately onefifth of world wine production in 2005 wine best wine italy spirit admin sun 12022012 1443 whilst campione d italia is an italian exclave in switzerland the territory of italy covers some 301338 km2 116347 sq mi and is influenced by a temperate seasonal climate with 606 million inhabitants it is the fifth most populous country in europe and the 23rd most populous in the world log in or register to post comments admin sun 12022012 1443 whilst campione d italia is an italian exclave in switzerland the territory of italy covers some 301338 km2 116347 sq mi  log in or register to post comments admin sun 12022012 1443 whilst campione d italia is an italian exclave in switzerland the territory of italy covers some 301338 km2 116347 sq mi and is influenced by a temperate seasonal climate with 606 million inhabitants it is the fifth most populous country in europe and the 23rd most populous in the world log in or register to post comments  ', 0),
-(2, 'node', ' top 10 wine restaurants lorem ipsum dolor sit amet consectetur adipiscing elit vivamus in velit enim in condimentum massa donec fringilla lacinia feugiat mauris rutrum lacus vitae ultrices faucibus felis enim cursus risus quis cursus dui massa eget dui donec interdum hendrerit quam in adipiscing pellentesque eros neque varius id fringilla nec condimentum vel magna nam lacinia ligula vel eros placerat quis sagittis arcu dictum nulla ut tristique metus donec suscipit feugiat libero nunc volutpat lorem in ligula vehicula et fermentum purus bibendum sed id semper nulla praesent et elit urna sit amet ultrices purus pellentesque condimentum purus vitae pellentesque rhoncus erat tortor ultricies nisi quis dapibus enim nibh vel risus sed id pellentesque magna ut lacinia elit non ullamcorper imperdiet purus eros interdum augue at tempus orci sapien sit amet orci suspendisse potenti maecenas ornare velit tempor nisi fringilla sed commodo felis gravida fusce metus orci vestibulum at cursus et sollicitudin ut tellus mauris semper tincidunt iaculis cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus aliquam eget feugiat neque praesent nulla nulla porttitor vel vehicula sit amet pulvinar quis ipsum aliquam erat volutpat integer quis iaculis turpis italy spirit wine admin sun 12022012 1609 in suscipit libero id felis posuere id condimentum diam pellentesque curabitur tempus odio ut nunc auctor viverra suspendisse pretium mauris a justo lobortis sed gravida sem interdum in ut fringilla lectus sed quam risus tincidunt a pulvinar a pellentesque mattis tellus log in or register to post comments admin sun 12022012 1609 vivamus nec diam ligula id porta ante sed egestas tincidunt adipiscing mauris mollis rhoncus tincidunt donec rutrum cursus nibh eu facilisis log in or register to post comments  ', 0),
-(3, 'node', ' sed urna orci consectetur nec facilisis vitae viverra eget nibh morbi vel purus metus eu aliquam justo sed urna orci consectetur nec facilisis vitae viverra eget nibh morbi vel purus metus eu aliquam justo fusce pharetra consectetur ligula vel tempor quam rhoncus vel cras bibendum varius odio sed adipiscing phasellus tempus gravida libero nec imperdiet phasellus dignissim pellentesque tellus a vehicula quisque pharetra dignissim congue sed elit augue tincidunt et imperdiet ac aliquet vel leo pellentesque et velit in lectus suscipit bibendum quis id nisi etiam vitae massa odio sed condimentum sapien curabitur nec quam ligula nam vulputate consectetur lorem sed imperdiet nulla ullamcorper ut vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet maecenas varius nisl eu magna fringilla quis dignissim erat semper morbi gravida posuere est eget posuere etiam cursus tristique nulla a vestibulum arcu pretium imperdiet aliquam vitae odio eros aenean eu sagittis velit vivamus et semper turpis ut congue leo lobortis vulputate cursus nisi mauris fermentum arcu at iaculis augue tellus ut est wine italy admin sun 12022012 1644 curabitur nec quam ligula nam vulputate consectetur lorem sed imperdiet nulla ullamcorper ut vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet maecenas varius nisl eu magna fringilla quis dignissim erat semper morbi gravida posuere est eget posuere etiam cursus tristique nulla a vestibulum arcu pretium imperdiet aliquam vitae odio eros aenean eu sagittis velit log in or register to post comments admin sun 12022012 1700 etiam cursus tristique nulla a vestibulum arcu pretium imperdiet aliquam vitae odio eros aenean eu sagittis velit log in or register to post comments admin sun 12022012 1700 vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet maecenas varius nisl eu magna fringilla quis dignissim erat semper morbi gravida posuere est eget posuere etiam cursus tristique nulla a vestibulum arcu pretium imperdiet aliquam vitae odio eros aenean eu sagittis velit log in or register to post comments admin sun 12022012 1700 curabitur nec quam ligula nam vulputate consectetur lorem sed imperdiet nulla ullamcorper ut vestibulum consectetur nulla non nisl consectetur ut malesuada lorem aliquet maecenas varius nisl eu magna fringilla quis dignissim erat semper log in or register to post comments admin sun 12022012 1701 etiam cursus tristique nulla a vestibulum arcu pretium imperdiet aliquam vitae odio eros aenean eu sagittis velit log in or register to post comments admin sun 12022012 1701 consectetur nulla non nisl consectetur ut malesuada lorem aliquet maecenas varius nisl eu magna fringilla quis dignissim erat semper morbi gravida posuere est eget posuere etiam cursus tristique nulla a vestibulum arcu pretium imperdiet aliquam vitae odio eros aenean eu sagittis velit log in or register to post comments  ', 0),
-(4, 'node', ' typography excepteur sint occaecat cupidatat non proident lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non blockquote  lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco  header 2 lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua linked header 2 lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua header 3 lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua header 4 lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua code snippet  header h1 a display block height 80px width 300px  drupal s messages sample status message page typography has been updated sample error message there is a security update available for your version of drupal to ensure the security of your server you should update immediately see the available updates page for more information sample warning message lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua paragraph with links lorem ipsum dolor sit amet  consectetuer adipiscing elit donec odio quisque volutpat mattis eros nullam malesuada erat ut turpis suspendisse urna nibh viverra non semper suscipit posuere a pede ordered list this is a sample ordered list  lorem ipsum dolor sit amet consectetuer condimentum quis congue quisque augue elit dolor something goes here and another here then one more congue quisque augue elit dolor nibh unordered list this is a sample unordered list  condimentum quis congue quisque augue elit dolor something goes here and another here something here as well something here as well something here as well then one more nunc cursus sem et pretium sapien eget fieldset account information table header 1 header 2 row 1 cell 1 row 1 cell 2 row 2 cell 1 row 2 cell 2 row 3 cell 1 row 3 cell 2  ', 0),
-(12, 'node', ' wine tips tricks lorem ipsum dolor sit amet consectetur adipiscing elit in libero nunc accumsan quis ultrices id semper ac turpis sed sed rhoncus tellus integer facilisis est sit amet est pellentesque pulvinar cras imperdiet pellentesque eros non vulputate massa gravida non suspendisse potenti duis malesuada risus vitae nunc venenatis a rutrum sapien dignissim mauris vitae nibh eget est viverra ultrices sit amet non lectus ut tincidunt ipsum viverra sagittis venenatis velit ipsum commodo elit nec vestibulum libero massa a felis pellentesque libero tortor euismod eget congue in facilisis vitae diam ut sed enim libero nulla facilisi nam vehicula blandit aliquam ut ornare nisl ac erat ornare bibendum sed semper dolor mauris class aptent taciti sociosqu ad litora torquent per conubia nostra per inceptos himenaeos  ', 0);
 
 -- --------------------------------------------------------
 
@@ -2868,524 +2650,12 @@ INSERT INTO `search_dataset` (`sid`, `type`, `data`, `reindex`) VALUES
 -- Table structure for table `search_index`
 --
 
-CREATE TABLE IF NOT EXISTS `search_index` (
+CREATE TABLE `search_index` (
   `word` varchar(50) NOT NULL DEFAULT '' COMMENT 'The search_total.word that is associated with the search item.',
-  `sid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The search_dataset.sid of the searchable item to which the word belongs.',
+  `sid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The search_dataset.sid of the searchable item to which the word belongs.',
   `type` varchar(16) NOT NULL COMMENT 'The search_dataset.type of the searchable item to which the word belongs.',
-  `score` float DEFAULT NULL COMMENT 'The numeric score of the word, higher being more important.',
-  PRIMARY KEY (`word`,`sid`,`type`),
-  KEY `sid_type` (`sid`,`type`)
+  `score` float DEFAULT NULL COMMENT 'The numeric score of the word, higher being more important.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the search index, associating words, items and...';
-
---
--- Dumping data for table `search_index`
---
-
-INSERT INTO `search_index` (`word`, `sid`, `type`, `score`) VALUES
-('1', 4, 'node', 5.2325),
-('10', 2, 'node', 26),
-('116347', 1, 'node', 3),
-('12022012', 1, 'node', 3),
-('12022012', 2, 'node', 1.86443),
-('12022012', 3, 'node', 6),
-('1443', 1, 'node', 3),
-('1609', 2, 'node', 1.86054),
-('1644', 3, 'node', 1),
-('1700', 3, 'node', 3),
-('1701', 3, 'node', 2),
-('2', 4, 'node', 53.2261),
-('2005', 1, 'node', 2),
-('23rd', 1, 'node', 2),
-('3', 4, 'node', 17.7399),
-('300px', 4, 'node', 1),
-('301338', 1, 'node', 3),
-('4', 4, 'node', 13),
-('606', 1, 'node', 2),
-('80px', 4, 'node', 1),
-('account', 4, 'node', 0.886095),
-('accumsan', 12, 'node', 1),
-('adipiscing', 2, 'node', 2.8894),
-('adipiscing', 3, 'node', 1),
-('adipiscing', 4, 'node', 11),
-('adipiscing', 12, 'node', 1),
-('adipisicing', 4, 'node', 7),
-('admin', 1, 'node', 3),
-('admin', 2, 'node', 1.87231),
-('admin', 3, 'node', 6),
-('aenean', 3, 'node', 6),
-('aliqua', 4, 'node', 7),
-('aliquam', 2, 'node', 1.98902),
-('aliquam', 3, 'node', 8),
-('aliquam', 12, 'node', 1),
-('aliquet', 3, 'node', 6),
-('aliquip', 4, 'node', 1),
-('amet', 2, 'node', 3.99315),
-('amet', 4, 'node', 8.9534),
-('amet', 12, 'node', 3),
-('and', 1, 'node', 4),
-('and', 4, 'node', 1.84428),
-('another', 4, 'node', 1.84066),
-('ante', 2, 'node', 0.896076),
-('approximately', 1, 'node', 2),
-('aptent', 12, 'node', 1),
-('arcu', 2, 'node', 1),
-('arcu', 3, 'node', 7),
-('auctor', 2, 'node', 0.942091),
-('augue', 2, 'node', 1),
-('augue', 3, 'node', 2),
-('augue', 4, 'node', 2.77579),
-('aute', 4, 'node', 1),
-('available', 4, 'node', 2),
-('been', 4, 'node', 1),
-('best', 1, 'node', 37),
-('bibendum', 2, 'node', 1),
-('bibendum', 3, 'node', 2),
-('bibendum', 12, 'node', 1),
-('blandit', 12, 'node', 1),
-('block', 4, 'node', 1),
-('blockquote', 4, 'node', 4),
-('campione', 1, 'node', 3),
-('cell', 4, 'node', 5.22289),
-('cillum', 4, 'node', 1),
-('class', 12, 'node', 1),
-('climate', 1, 'node', 2),
-('code', 4, 'node', 13),
-('comments', 1, 'node', 3),
-('comments', 2, 'node', 1.78568),
-('comments', 3, 'node', 6),
-('commodo', 2, 'node', 1),
-('commodo', 4, 'node', 1),
-('commodo', 12, 'node', 1),
-('condimentum', 2, 'node', 3.9534),
-('condimentum', 3, 'node', 1),
-('condimentum', 4, 'node', 1.86662),
-('congue', 3, 'node', 2),
-('congue', 4, 'node', 2.77956),
-('congue', 12, 'node', 1),
-('consectetuer', 4, 'node', 11.9534),
-('consectetur', 2, 'node', 1),
-('consectetur', 3, 'node', 41),
-('consectetur', 4, 'node', 7),
-('consectetur', 12, 'node', 1),
-('consequat', 4, 'node', 1),
-('conubia', 12, 'node', 1),
-('country', 1, 'node', 5),
-('covers', 1, 'node', 3),
-('cras', 3, 'node', 1),
-('cras', 12, 'node', 1),
-('cum', 2, 'node', 1),
-('cupidatat', 4, 'node', 2),
-('curabitur', 2, 'node', 0.949597),
-('curabitur', 3, 'node', 3),
-('cursus', 2, 'node', 3.8861),
-('cursus', 3, 'node', 7),
-('cursus', 4, 'node', 0.906287),
-('dapibus', 2, 'node', 1),
-('deals', 1, 'node', 26),
-('diam', 2, 'node', 1.85285),
-('diam', 12, 'node', 1),
-('dictum', 2, 'node', 1),
-('dignissim', 3, 'node', 7),
-('dignissim', 12, 'node', 1),
-('dis', 2, 'node', 1),
-('display', 4, 'node', 1),
-('dolor', 2, 'node', 1),
-('dolor', 4, 'node', 12.7254),
-('dolor', 12, 'node', 2),
-('dolore', 4, 'node', 8),
-('donec', 2, 'node', 3.8861),
-('donec', 4, 'node', 1),
-('drupal', 4, 'node', 14),
-('dui', 2, 'node', 2),
-('duis', 4, 'node', 1),
-('duis', 12, 'node', 1),
-('egestas', 2, 'node', 0.892724),
-('eget', 2, 'node', 1.99731),
-('eget', 3, 'node', 31),
-('eget', 4, 'node', 0.892724),
-('eget', 12, 'node', 2),
-('eiusmod', 4, 'node', 7),
-('elit', 2, 'node', 3),
-('elit', 3, 'node', 1),
-('elit', 4, 'node', 10.7721),
-('elit', 12, 'node', 2),
-('enim', 2, 'node', 3),
-('enim', 4, 'node', 2),
-('enim', 12, 'node', 1),
-('ensure', 4, 'node', 1),
-('erat', 2, 'node', 1.98902),
-('erat', 3, 'node', 5),
-('erat', 4, 'node', 1),
-('erat', 12, 'node', 1),
-('eros', 2, 'node', 3),
-('eros', 3, 'node', 6),
-('eros', 4, 'node', 1),
-('eros', 12, 'node', 1),
-('error', 4, 'node', 1),
-('esse', 4, 'node', 1),
-('est', 3, 'node', 5),
-('est', 12, 'node', 3),
-('etiam', 3, 'node', 7),
-('euismod', 12, 'node', 1),
-('europe', 1, 'node', 2),
-('excepteur', 4, 'node', 2),
-('exclave', 1, 'node', 3),
-('exercitation', 4, 'node', 2),
-('facilisi', 12, 'node', 1),
-('facilisis', 2, 'node', 0.886095),
-('facilisis', 3, 'node', 27),
-('facilisis', 12, 'node', 2),
-('faucibus', 2, 'node', 1),
-('felis', 2, 'node', 2.95723),
-('felis', 12, 'node', 1),
-('fermentum', 2, 'node', 1),
-('fermentum', 3, 'node', 1),
-('feugiat', 2, 'node', 2.99731),
-('fieldset', 4, 'node', 16.8985),
-('fifth', 1, 'node', 2),
-('for', 1, 'node', 2),
-('for', 4, 'node', 2),
-('foremost', 1, 'node', 2),
-('fringilla', 2, 'node', 3.92027),
-('fringilla', 3, 'node', 5),
-('fugiat', 4, 'node', 1),
-('fusce', 2, 'node', 1),
-('fusce', 3, 'node', 1),
-('goes', 4, 'node', 1.85161),
-('gravida', 2, 'node', 1.92384),
-('gravida', 3, 'node', 5),
-('gravida', 12, 'node', 1),
-('has', 4, 'node', 1),
-('header', 4, 'node', 79.7559),
-('height', 4, 'node', 1),
-('hendrerit', 2, 'node', 1),
-('here', 4, 'node', 6.4177),
-('himenaeos', 12, 'node', 1),
-('home', 1, 'node', 3),
-('iaculis', 2, 'node', 1.98493),
-('iaculis', 3, 'node', 1),
-('immediately', 4, 'node', 1),
-('imperdiet', 2, 'node', 1),
-('imperdiet', 3, 'node', 11),
-('imperdiet', 12, 'node', 1),
-('inceptos', 12, 'node', 1),
-('incididunt', 4, 'node', 7),
-('influenced', 1, 'node', 2),
-('information', 4, 'node', 1.88282),
-('inhabitants', 1, 'node', 2),
-('integer', 2, 'node', 0.989021),
-('integer', 12, 'node', 1),
-('interdum', 2, 'node', 2.92027),
-('ipsum', 2, 'node', 1.98902),
-('ipsum', 4, 'node', 8.9534),
-('ipsum', 12, 'node', 3),
-('irure', 4, 'node', 1),
-('italia', 1, 'node', 3),
-('italian', 1, 'node', 6),
-('italy', 1, 'node', 19),
-('italy', 2, 'node', 10.7896),
-('italy', 3, 'node', 11),
-('justo', 2, 'node', 0.931053),
-('justo', 3, 'node', 2),
-('km2', 1, 'node', 3),
-('labore', 4, 'node', 7),
-('laboris', 4, 'node', 1),
-('lacinia', 2, 'node', 3),
-('lacus', 2, 'node', 1),
-('lectus', 2, 'node', 0.920273),
-('lectus', 3, 'node', 1),
-('lectus', 12, 'node', 1),
-('leo', 3, 'node', 2),
-('libero', 2, 'node', 1.95723),
-('libero', 3, 'node', 1),
-('libero', 12, 'node', 4),
-('ligula', 2, 'node', 2.89945),
-('ligula', 3, 'node', 4),
-('linked', 4, 'node', 29),
-('links', 4, 'node', 19),
-('list', 4, 'node', 43.0784),
-('litora', 12, 'node', 1),
-('lobortis', 2, 'node', 0.927431),
-('lobortis', 3, 'node', 1),
-('log', 1, 'node', 6.6),
-('log', 2, 'node', 3.9513),
-('log', 3, 'node', 13.2),
-('lorem', 2, 'node', 2),
-('lorem', 3, 'node', 8),
-('lorem', 4, 'node', 8.9534),
-('lorem', 12, 'node', 1),
-('maecenas', 2, 'node', 1),
-('maecenas', 3, 'node', 5),
-('magna', 2, 'node', 2),
-('magna', 3, 'node', 5),
-('magna', 4, 'node', 7),
-('magnis', 2, 'node', 1),
-('malesuada', 3, 'node', 5),
-('malesuada', 4, 'node', 11),
-('malesuada', 12, 'node', 1),
-('massa', 2, 'node', 2),
-('massa', 3, 'node', 1),
-('massa', 12, 'node', 2),
-('mattis', 2, 'node', 0.916736),
-('mattis', 4, 'node', 1),
-('mauris', 2, 'node', 3.82045),
-('mauris', 3, 'node', 1),
-('mauris', 12, 'node', 2),
-('message', 4, 'node', 3),
-('messages', 4, 'node', 13),
-('metus', 2, 'node', 2),
-('metus', 3, 'node', 27),
-('million', 1, 'node', 2),
-('minim', 4, 'node', 2),
-('mollis', 2, 'node', 0.889397),
-('montes', 2, 'node', 1),
-('morbi', 3, 'node', 31),
-('more', 4, 'node', 2.82648),
-('most', 1, 'node', 4),
-('mus', 2, 'node', 1),
-('nam', 2, 'node', 1),
-('nam', 3, 'node', 3),
-('nam', 12, 'node', 1),
-('nascetur', 2, 'node', 1),
-('natoque', 2, 'node', 1),
-('nec', 2, 'node', 1.89945),
-('nec', 3, 'node', 31),
-('nec', 12, 'node', 1),
-('neque', 2, 'node', 1.99731),
-('nibh', 2, 'node', 1.8861),
-('nibh', 3, 'node', 27),
-('nibh', 4, 'node', 1.90576),
-('nibh', 12, 'node', 1),
-('nisi', 2, 'node', 2),
-('nisi', 3, 'node', 2),
-('nisi', 4, 'node', 1),
-('nisl', 3, 'node', 10),
-('nisl', 12, 'node', 1),
-('non', 2, 'node', 1),
-('non', 3, 'node', 5),
-('non', 4, 'node', 2.98087),
-('non', 12, 'node', 3),
-('nostra', 12, 'node', 1),
-('nostrud', 4, 'node', 2),
-('nulla', 2, 'node', 3.99461),
-('nulla', 3, 'node', 14),
-('nulla', 4, 'node', 1),
-('nulla', 12, 'node', 1),
-('nullam', 4, 'node', 11),
-('nunc', 2, 'node', 1.94209),
-('nunc', 4, 'node', 0.909743),
-('nunc', 12, 'node', 2),
-('occaecat', 4, 'node', 2),
-('odio', 2, 'node', 0.945829),
-('odio', 3, 'node', 8),
-('odio', 4, 'node', 1),
-('oldest', 1, 'node', 3),
-('one', 1, 'node', 2),
-('one', 4, 'node', 1.83002),
-('onefifth', 1, 'node', 2),
-('orci', 2, 'node', 3),
-('orci', 3, 'node', 27),
-('ordered', 4, 'node', 22.1482),
-('ornare', 2, 'node', 1),
-('ornare', 12, 'node', 2),
-('page', 4, 'node', 2),
-('paragraph', 4, 'node', 19),
-('pariatur', 4, 'node', 1),
-('parturient', 2, 'node', 1),
-('pede', 4, 'node', 0.968904),
-('pellentesque', 2, 'node', 5.86633),
-('pellentesque', 3, 'node', 2),
-('pellentesque', 12, 'node', 3),
-('penatibus', 2, 'node', 1),
-('per', 12, 'node', 2),
-('pharetra', 3, 'node', 2),
-('phasellus', 3, 'node', 2),
-('placerat', 2, 'node', 1),
-('populous', 1, 'node', 4),
-('porta', 2, 'node', 0.899454),
-('porttitor', 2, 'node', 0.997306),
-('post', 1, 'node', 3),
-('post', 2, 'node', 1.7891),
-('post', 3, 'node', 6),
-('posuere', 2, 'node', 0.957226),
-('posuere', 3, 'node', 8),
-('posuere', 4, 'node', 0.972861),
-('potenti', 2, 'node', 1),
-('potenti', 12, 'node', 1),
-('praesent', 2, 'node', 1.99731),
-('pretium', 2, 'node', 0.934703),
-('pretium', 3, 'node', 6),
-('pretium', 4, 'node', 0.899454),
-('produced', 1, 'node', 3),
-('producers', 1, 'node', 2),
-('production', 1, 'node', 2),
-('proident', 4, 'node', 1),
-('pulvinar', 2, 'node', 1.90988),
-('pulvinar', 12, 'node', 1),
-('purus', 2, 'node', 4),
-('purus', 3, 'node', 27),
-('quam', 2, 'node', 1.91674),
-('quam', 3, 'node', 4),
-('quis', 2, 'node', 4.97395),
-('quis', 3, 'node', 6),
-('quis', 4, 'node', 3.86282),
-('quis', 12, 'node', 1),
-('quisque', 3, 'node', 1),
-('quisque', 4, 'node', 3.77579),
-('regions', 1, 'node', 3),
-('register', 1, 'node', 6.6),
-('register', 2, 'node', 3.94363),
-('register', 3, 'node', 13.2),
-('reprehenderit', 4, 'node', 1),
-('responsible', 1, 'node', 2),
-('restaurants', 2, 'node', 26),
-('rhoncus', 2, 'node', 1.8861),
-('rhoncus', 3, 'node', 1),
-('rhoncus', 12, 'node', 1),
-('ridiculus', 2, 'node', 1),
-('risus', 2, 'node', 2.91674),
-('risus', 12, 'node', 1),
-('row', 4, 'node', 5.22609),
-('rutrum', 2, 'node', 1.8861),
-('rutrum', 12, 'node', 1),
-('sagittis', 2, 'node', 1),
-('sagittis', 3, 'node', 6),
-('sagittis', 12, 'node', 1),
-('sample', 4, 'node', 4.86662),
-('sapien', 2, 'node', 1),
-('sapien', 3, 'node', 1),
-('sapien', 4, 'node', 0.896076),
-('sapien', 12, 'node', 1),
-('seasonal', 1, 'node', 2),
-('security', 4, 'node', 2),
-('sed', 2, 'node', 5.7333),
-('sed', 3, 'node', 33),
-('sed', 4, 'node', 7),
-('sed', 12, 'node', 4),
-('see', 4, 'node', 1),
-('sem', 2, 'node', 0.923838),
-('sem', 4, 'node', 0.902857),
-('semper', 2, 'node', 2),
-('semper', 3, 'node', 6),
-('semper', 4, 'node', 0.980874),
-('semper', 12, 'node', 2),
-('server', 4, 'node', 1),
-('should', 4, 'node', 1),
-('sint', 4, 'node', 2),
-('sit', 2, 'node', 3.99315),
-('sit', 4, 'node', 8.9534),
-('sit', 12, 'node', 3),
-('snippet', 4, 'node', 13),
-('sociis', 2, 'node', 1),
-('sociosqu', 12, 'node', 1),
-('sollicitudin', 2, 'node', 1),
-('some', 1, 'node', 6),
-('something', 4, 'node', 4.58803),
-('spirit', 1, 'node', 11),
-('spirit', 2, 'node', 10.7454),
-('status', 4, 'node', 1),
-('sun', 1, 'node', 3),
-('sun', 2, 'node', 1.86836),
-('sun', 3, 'node', 6),
-('suscipit', 2, 'node', 1.95723),
-('suscipit', 3, 'node', 1),
-('suscipit', 4, 'node', 0.976851),
-('suspendisse', 2, 'node', 1.9347),
-('suspendisse', 4, 'node', 0.997306),
-('suspendisse', 12, 'node', 1),
-('switzerland', 1, 'node', 3),
-('table', 4, 'node', 16.7735),
-('taciti', 12, 'node', 1),
-('tellus', 2, 'node', 1.91323),
-('tellus', 3, 'node', 2),
-('tellus', 12, 'node', 1),
-('temperate', 1, 'node', 2),
-('tempor', 2, 'node', 1),
-('tempor', 3, 'node', 1),
-('tempor', 4, 'node', 7),
-('tempus', 2, 'node', 1.94583),
-('tempus', 3, 'node', 1),
-('territory', 1, 'node', 3),
-('the', 1, 'node', 17),
-('the', 4, 'node', 2),
-('then', 4, 'node', 1.83358),
-('there', 4, 'node', 1),
-('this', 4, 'node', 1.87045),
-('tincidunt', 2, 'node', 3.69223),
-('tincidunt', 3, 'node', 1),
-('tincidunt', 12, 'node', 1),
-('tips', 12, 'node', 26),
-('top', 2, 'node', 26),
-('torquent', 12, 'node', 1),
-('tortor', 2, 'node', 1),
-('tortor', 12, 'node', 1),
-('tricks', 12, 'node', 26),
-('tristique', 2, 'node', 1),
-('tristique', 3, 'node', 6),
-('turpis', 2, 'node', 0.98493),
-('turpis', 3, 'node', 1),
-('turpis', 4, 'node', 1),
-('turpis', 12, 'node', 1),
-('typography', 4, 'node', 33),
-('ullamco', 4, 'node', 2),
-('ullamcorper', 2, 'node', 1),
-('ullamcorper', 3, 'node', 3),
-('ultrices', 2, 'node', 2),
-('ultrices', 12, 'node', 2),
-('ultricies', 2, 'node', 1),
-('unordered', 4, 'node', 21.0709),
-('update', 4, 'node', 2),
-('updated', 4, 'node', 1),
-('updates', 4, 'node', 1),
-('urna', 2, 'node', 1),
-('urna', 3, 'node', 27),
-('urna', 4, 'node', 0.993146),
-('varius', 2, 'node', 1),
-('varius', 3, 'node', 6),
-('vehicula', 2, 'node', 1.99315),
-('vehicula', 3, 'node', 1),
-('vehicula', 12, 'node', 1),
-('vel', 2, 'node', 3.99315),
-('vel', 3, 'node', 30),
-('velit', 2, 'node', 2),
-('velit', 3, 'node', 7),
-('velit', 4, 'node', 1),
-('velit', 12, 'node', 1),
-('venenatis', 12, 'node', 2),
-('veniam', 4, 'node', 2),
-('version', 4, 'node', 1),
-('vestibulum', 2, 'node', 1),
-('vestibulum', 3, 'node', 10),
-('vestibulum', 12, 'node', 1),
-('vitae', 2, 'node', 2),
-('vitae', 3, 'node', 34),
-('vitae', 12, 'node', 3),
-('vivamus', 2, 'node', 1.89945),
-('vivamus', 3, 'node', 1),
-('viverra', 2, 'node', 0.938382),
-('viverra', 3, 'node', 27),
-('viverra', 4, 'node', 0.98493),
-('viverra', 12, 'node', 2),
-('voluptate', 4, 'node', 1),
-('volutpat', 2, 'node', 1.98902),
-('volutpat', 4, 'node', 1),
-('vulputate', 3, 'node', 4),
-('vulputate', 12, 'node', 1),
-('warning', 4, 'node', 1),
-('well', 4, 'node', 2.73271),
-('which', 1, 'node', 3),
-('whilst', 1, 'node', 3),
-('width', 4, 'node', 1),
-('wine', 1, 'node', 56),
-('wine', 2, 'node', 36.7015),
-('wine', 3, 'node', 11),
-('wine', 12, 'node', 26),
-('wineproducing', 1, 'node', 3),
-('with', 1, 'node', 2),
-('with', 4, 'node', 19),
-('world', 1, 'node', 9),
-('you', 4, 'node', 1),
-('your', 4, 'node', 2);
 
 -- --------------------------------------------------------
 
@@ -3393,13 +2663,11 @@ INSERT INTO `search_index` (`word`, `sid`, `type`, `score`) VALUES
 -- Table structure for table `search_node_links`
 --
 
-CREATE TABLE IF NOT EXISTS `search_node_links` (
-  `sid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The search_dataset.sid of the searchable item containing the link to the node.',
+CREATE TABLE `search_node_links` (
+  `sid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The search_dataset.sid of the searchable item containing the link to the node.',
   `type` varchar(16) NOT NULL DEFAULT '' COMMENT 'The search_dataset.type of the searchable item containing the link to the node.',
-  `nid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The node.nid that this item links to.',
-  `caption` longtext COMMENT 'The text used to link to the node.nid.',
-  PRIMARY KEY (`sid`,`type`,`nid`),
-  KEY `nid` (`nid`)
+  `nid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The node.nid that this item links to.',
+  `caption` longtext COMMENT 'The text used to link to the node.nid.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores items (like nodes) that link to other nodes, used...';
 
 -- --------------------------------------------------------
@@ -3408,10 +2676,9 @@ CREATE TABLE IF NOT EXISTS `search_node_links` (
 -- Table structure for table `search_total`
 --
 
-CREATE TABLE IF NOT EXISTS `search_total` (
+CREATE TABLE `search_total` (
   `word` varchar(50) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique word in the search index.',
-  `count` float DEFAULT NULL COMMENT 'The count of the word in the index using Zipf’s law to equalize the probability distribution.',
-  PRIMARY KEY (`word`)
+  `count` float DEFAULT NULL COMMENT 'The count of the word in the index using Zipf’s law to equalize the probability distribution.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores search totals for words.';
 
 --
@@ -3733,13 +3000,10 @@ INSERT INTO `search_total` (`word`, `count`) VALUES
 -- Table structure for table `semaphore`
 --
 
-CREATE TABLE IF NOT EXISTS `semaphore` (
+CREATE TABLE `semaphore` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Primary Key: Unique name.',
   `value` varchar(255) NOT NULL DEFAULT '' COMMENT 'A value for the semaphore.',
-  `expire` double NOT NULL COMMENT 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
-  PRIMARY KEY (`name`),
-  KEY `value` (`value`),
-  KEY `expire` (`expire`)
+  `expire` double NOT NULL COMMENT 'A Unix timestamp with microseconds indicating when the semaphore should expire.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table for holding semaphores, locks, flags, etc. that...';
 
 -- --------------------------------------------------------
@@ -3748,10 +3012,9 @@ CREATE TABLE IF NOT EXISTS `semaphore` (
 -- Table structure for table `sequences`
 --
 
-CREATE TABLE IF NOT EXISTS `sequences` (
-  `value` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The value of the sequence.',
-  PRIMARY KEY (`value`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores IDs.' AUTO_INCREMENT=5 ;
+CREATE TABLE `sequences` (
+  `value` int(10) UNSIGNED NOT NULL COMMENT 'The value of the sequence.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores IDs.';
 
 --
 -- Dumping data for table `sequences`
@@ -3766,18 +3029,14 @@ INSERT INTO `sequences` (`value`) VALUES
 -- Table structure for table `sessions`
 --
 
-CREATE TABLE IF NOT EXISTS `sessions` (
-  `uid` int(10) unsigned NOT NULL COMMENT 'The users.uid corresponding to a session, or 0 for anonymous user.',
+CREATE TABLE `sessions` (
+  `uid` int(10) UNSIGNED NOT NULL COMMENT 'The users.uid corresponding to a session, or 0 for anonymous user.',
   `sid` varchar(128) NOT NULL COMMENT 'A session ID. The value is generated by Drupal’s session handlers.',
   `ssid` varchar(128) NOT NULL DEFAULT '' COMMENT 'Secure session ID. The value is generated by Drupal’s session handlers.',
   `hostname` varchar(128) NOT NULL DEFAULT '' COMMENT 'The IP address that last used this session ID (sid).',
   `timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'The Unix timestamp when this session last requested a page. Old records are purged by PHP automatically.',
   `cache` int(11) NOT NULL DEFAULT '0' COMMENT 'The time of this user’s last post. This is used when the site has specified a minimum_cache_lifetime. See cache_get().',
-  `session` longblob COMMENT 'The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.',
-  PRIMARY KEY (`sid`,`ssid`),
-  KEY `timestamp` (`timestamp`),
-  KEY `uid` (`uid`),
-  KEY `ssid` (`ssid`)
+  `session` longblob COMMENT 'The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Drupal’s session handlers read and write into the...';
 
 -- --------------------------------------------------------
@@ -3786,10 +3045,9 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 -- Table structure for table `shortcut_set`
 --
 
-CREATE TABLE IF NOT EXISTS `shortcut_set` (
+CREATE TABLE `shortcut_set` (
   `set_name` varchar(32) NOT NULL DEFAULT '' COMMENT 'Primary Key: The menu_links.menu_name under which the set’s links are stored.',
-  `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'The title of the set.',
-  PRIMARY KEY (`set_name`)
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'The title of the set.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores information about sets of shortcuts links.';
 
 --
@@ -3805,11 +3063,9 @@ INSERT INTO `shortcut_set` (`set_name`, `title`) VALUES
 -- Table structure for table `shortcut_set_users`
 --
 
-CREATE TABLE IF NOT EXISTS `shortcut_set_users` (
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The users.uid for this set.',
-  `set_name` varchar(32) NOT NULL DEFAULT '' COMMENT 'The shortcut_set.set_name that will be displayed for this user.',
-  PRIMARY KEY (`uid`),
-  KEY `set_name` (`set_name`)
+CREATE TABLE `shortcut_set_users` (
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The users.uid for this set.',
+  `set_name` varchar(32) NOT NULL DEFAULT '' COMMENT 'The shortcut_set.set_name that will be displayed for this user.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maps users to shortcut sets.';
 
 -- --------------------------------------------------------
@@ -3818,7 +3074,7 @@ CREATE TABLE IF NOT EXISTS `shortcut_set_users` (
 -- Table structure for table `system`
 --
 
-CREATE TABLE IF NOT EXISTS `system` (
+CREATE TABLE `system` (
   `filename` varchar(255) NOT NULL DEFAULT '' COMMENT 'The path of the primary file for this item, relative to the Drupal root; e.g. modules/node/node.module.',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The name of the item; e.g. node.',
   `type` varchar(12) NOT NULL DEFAULT '' COMMENT 'The type of the item, either module, theme, or theme_engine.',
@@ -3827,10 +3083,7 @@ CREATE TABLE IF NOT EXISTS `system` (
   `bootstrap` int(11) NOT NULL DEFAULT '0' COMMENT 'Boolean indicating whether this module is loaded during Drupal’s early bootstrapping phase (e.g. even before the page cache is consulted).',
   `schema_version` smallint(6) NOT NULL DEFAULT '-1' COMMENT 'The module’s database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module’s hook_update_N() function that has either been run or existed when the module was first installed.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The order in which this module’s hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name.',
-  `info` blob COMMENT 'A serialized array containing information from the module’s .info file; keys can include name, description, package, version, core, dependencies, and php.',
-  PRIMARY KEY (`filename`),
-  KEY `system_list` (`status`,`bootstrap`,`type`,`weight`,`name`),
-  KEY `type_name` (`type`,`name`)
+  `info` blob COMMENT 'A serialized array containing information from the module’s .info file; keys can include name, description, package, version, core, dependencies, and php.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='A list of all modules, themes, and theme engines that are...';
 
 --
@@ -3856,7 +3109,7 @@ INSERT INTO `system` (`filename`, `name`, `type`, `owner`, `status`, `bootstrap`
 ('modules/field/modules/list/tests/list_test.module', 'list_test', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a393a224c6973742074657374223b733a31313a226465736372697074696f6e223b733a34313a22537570706f7274206d6f64756c6520666f7220746865204c697374206d6f64756c652074657374732e223b733a343a22636f7265223b733a333a22372e78223b733a373a227061636b616765223b733a373a2254657374696e67223b733a373a2276657273696f6e223b733a343a22372e3232223b733a363a2268696464656e223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a353a2266696c6573223b613a303a7b7d733a393a22626f6f747374726170223b693a303b7d),
 ('modules/field/modules/number/number.module', 'number', 'module', '', 1, 0, 0, 0, 0x613a31313a7b733a343a226e616d65223b733a363a224e756d626572223b733a31313a226465736372697074696f6e223b733a32383a22446566696e6573206e756d65726963206669656c642074797065732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a353a226669656c64223b7d733a353a2266696c6573223b613a313a7b693a303b733a31313a226e756d6265722e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/field/modules/options/options.module', 'options', 'module', '', 1, 0, 0, 0, 0x613a31313a7b733a343a226e616d65223b733a373a224f7074696f6e73223b733a31313a226465736372697074696f6e223b733a38323a22446566696e65732073656c656374696f6e2c20636865636b20626f7820616e6420726164696f20627574746f6e207769646765747320666f72207465787420616e64206e756d65726963206669656c64732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a353a226669656c64223b7d733a353a2266696c6573223b613a313a7b693a303b733a31323a226f7074696f6e732e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
-('modules/field/modules/text/text.module', 'text', 'module', '', 1, 0, 7000, 0, 0x613a31333a7b733a343a226e616d65223b733a343a2254657874223b733a31313a226465736372697074696f6e223b733a33323a22446566696e65732073696d706c652074657874206669656c642074797065732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a353a226669656c64223b7d733a353a2266696c6573223b613a313a7b693a303b733a393a22746578742e74657374223b7d733a383a227265717569726564223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b733a31313a226578706c616e6174696f6e223b733a38333a224669656c64207479706528732920696e20757365202d20736565203c6120687265663d222f736974652d303431362f61646d696e2f7265706f7274732f6669656c6473223e4669656c64206c6973743c2f613e223b7d),
+('modules/field/modules/text/text.module', 'text', 'module', '', 1, 0, 7000, 0, 0x613a31333a7b733a343a226e616d65223b733a343a2254657874223b733a31313a226465736372697074696f6e223b733a33323a22446566696e65732073696d706c652074657874206669656c642074797065732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a353a226669656c64223b7d733a353a2266696c6573223b613a313a7b693a303b733a393a22746578742e74657374223b7d733a383a227265717569726564223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b733a31313a226578706c616e6174696f6e223b733a3130333a224669656c64207479706528732920696e20757365202d20736565203c6120687265663d222f6d74745f7468656d65732f636f726b6564736372657765722f736974652f61646d696e2f7265706f7274732f6669656c6473223e4669656c64206c6973743c2f613e223b7d),
 ('modules/field/tests/field_test.module', 'field_test', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a31343a224669656c64204150492054657374223b733a31313a226465736372697074696f6e223b733a33393a22537570706f7274206d6f64756c6520666f7220746865204669656c64204150492074657374732e223b733a343a22636f7265223b733a333a22372e78223b733a373a227061636b616765223b733a373a2254657374696e67223b733a353a2266696c6573223b613a313a7b693a303b733a32313a226669656c645f746573742e656e746974792e696e63223b7d733a373a2276657273696f6e223b733a343a22372e3232223b733a363a2268696464656e223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/field_ui/field_ui.module', 'field_ui', 'module', '', 1, 0, 0, 0, 0x613a31313a7b733a343a226e616d65223b733a383a224669656c64205549223b733a31313a226465736372697074696f6e223b733a33333a225573657220696e7465726661636520666f7220746865204669656c64204150492e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a353a226669656c64223b7d733a353a2266696c6573223b613a313a7b693a303b733a31333a226669656c645f75692e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/file/file.module', 'file', 'module', '', 1, 0, 0, 0, 0x613a31313a7b733a343a226e616d65223b733a343a2246696c65223b733a31313a226465736372697074696f6e223b733a32363a22446566696e657320612066696c65206669656c6420747970652e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a353a226669656c64223b7d733a353a2266696c6573223b613a313a7b693a303b733a31353a2274657374732f66696c652e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
@@ -3864,7 +3117,7 @@ INSERT INTO `system` (`filename`, `name`, `type`, `owner`, `status`, `bootstrap`
 ('modules/filter/filter.module', 'filter', 'module', '', 1, 0, 7010, 0, 0x613a31333a7b733a343a226e616d65223b733a363a2246696c746572223b733a31313a226465736372697074696f6e223b733a34333a2246696c7465727320636f6e74656e7420696e207072657061726174696f6e20666f7220646973706c61792e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a31313a2266696c7465722e74657374223b7d733a383a227265717569726564223b623a313b733a393a22636f6e666967757265223b733a32383a2261646d696e2f636f6e6669672f636f6e74656e742f666f726d617473223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/forum/forum.module', 'forum', 'module', '', 0, 0, -1, 0, 0x613a31333a7b733a343a226e616d65223b733a353a22466f72756d223b733a31313a226465736372697074696f6e223b733a32373a2250726f76696465732064697363757373696f6e20666f72756d732e223b733a31323a22646570656e64656e63696573223b613a323a7b693a303b733a383a227461786f6e6f6d79223b693a313b733a373a22636f6d6d656e74223b7d733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a31303a22666f72756d2e74657374223b7d733a393a22636f6e666967757265223b733a32313a2261646d696e2f7374727563747572652f666f72756d223b733a31313a227374796c65736865657473223b613a313a7b733a333a22616c6c223b613a313a7b733a393a22666f72756d2e637373223b733a32333a226d6f64756c65732f666f72756d2f666f72756d2e637373223b7d7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/help/help.module', 'help', 'module', '', 1, 0, 0, 0, 0x613a31313a7b733a343a226e616d65223b733a343a2248656c70223b733a31313a226465736372697074696f6e223b733a33353a224d616e616765732074686520646973706c6179206f66206f6e6c696e652068656c702e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a393a2268656c702e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
-('modules/image/image.module', 'image', 'module', '', 1, 0, 7004, 0, 0x613a31343a7b733a343a226e616d65223b733a353a22496d616765223b733a31313a226465736372697074696f6e223b733a33343a2250726f766964657320696d616765206d616e6970756c6174696f6e20746f6f6c732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a343a2266696c65223b7d733a353a2266696c6573223b613a313a7b693a303b733a31303a22696d6167652e74657374223b7d733a393a22636f6e666967757265223b733a33313a2261646d696e2f636f6e6669672f6d656469612f696d6167652d7374796c6573223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b733a383a227265717569726564223b623a313b733a31313a226578706c616e6174696f6e223b733a38333a224669656c64207479706528732920696e20757365202d20736565203c6120687265663d222f736974652d303431362f61646d696e2f7265706f7274732f6669656c6473223e4669656c64206c6973743c2f613e223b7d),
+('modules/image/image.module', 'image', 'module', '', 1, 0, 7004, 0, 0x613a31343a7b733a343a226e616d65223b733a353a22496d616765223b733a31313a226465736372697074696f6e223b733a33343a2250726f766964657320696d616765206d616e6970756c6174696f6e20746f6f6c732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a343a2266696c65223b7d733a353a2266696c6573223b613a313a7b693a303b733a31303a22696d6167652e74657374223b7d733a393a22636f6e666967757265223b733a33313a2261646d696e2f636f6e6669672f6d656469612f696d6167652d7374796c6573223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b733a383a227265717569726564223b623a313b733a31313a226578706c616e6174696f6e223b733a3130333a224669656c64207479706528732920696e20757365202d20736565203c6120687265663d222f6d74745f7468656d65732f636f726b6564736372657765722f736974652f61646d696e2f7265706f7274732f6669656c6473223e4669656c64206c6973743c2f613e223b7d),
 ('modules/image/tests/image_module_test.module', 'image_module_test', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a31303a22496d6167652074657374223b733a31313a226465736372697074696f6e223b733a36393a2250726f766964657320686f6f6b20696d706c656d656e746174696f6e7320666f722074657374696e6720496d616765206d6f64756c652066756e6374696f6e616c6974792e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a32343a22696d6167655f6d6f64756c655f746573742e6d6f64756c65223b7d733a363a2268696464656e223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/locale/locale.module', 'locale', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a363a224c6f63616c65223b733a31313a226465736372697074696f6e223b733a3131393a2241646473206c616e67756167652068616e646c696e672066756e6374696f6e616c69747920616e6420656e61626c657320746865207472616e736c6174696f6e206f6620746865207573657220696e7465726661636520746f206c616e677561676573206f74686572207468616e20456e676c6973682e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a31313a226c6f63616c652e74657374223b7d733a393a22636f6e666967757265223b733a33303a2261646d696e2f636f6e6669672f726567696f6e616c2f6c616e6775616765223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/locale/tests/locale_test.module', 'locale_test', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a31313a224c6f63616c652054657374223b733a31313a226465736372697074696f6e223b733a34323a22537570706f7274206d6f64756c6520666f7220746865206c6f63616c65206c617965722074657374732e223b733a343a22636f7265223b733a333a22372e78223b733a373a227061636b616765223b733a373a2254657374696e67223b733a373a2276657273696f6e223b733a343a22372e3232223b733a363a2268696464656e223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a353a2266696c6573223b613a303a7b7d733a393a22626f6f747374726170223b693a303b7d),
@@ -3930,7 +3183,7 @@ INSERT INTO `system` (`filename`, `name`, `type`, `owner`, `status`, `bootstrap`
 ('modules/statistics/statistics.module', 'statistics', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a31303a2253746174697374696373223b733a31313a226465736372697074696f6e223b733a33373a224c6f677320616363657373207374617469737469637320666f7220796f757220736974652e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a31353a22737461746973746963732e74657374223b7d733a393a22636f6e666967757265223b733a33303a2261646d696e2f636f6e6669672f73797374656d2f73746174697374696373223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/syslog/syslog.module', 'syslog', 'module', '', 0, 0, -1, 0, 0x613a31313a7b733a343a226e616d65223b733a363a225379736c6f67223b733a31313a226465736372697074696f6e223b733a34313a224c6f677320616e64207265636f7264732073797374656d206576656e747320746f207379736c6f672e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a31313a227379736c6f672e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/system/system.module', 'system', 'module', '', 1, 1, 7078, 0, 0x613a31333a7b733a343a226e616d65223b733a363a2253797374656d223b733a31313a226465736372697074696f6e223b733a35343a2248616e646c65732067656e6572616c207369746520636f6e66696775726174696f6e20666f722061646d696e6973747261746f72732e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a363a7b693a303b733a31393a2273797374656d2e61726368697665722e696e63223b693a313b733a31353a2273797374656d2e6d61696c2e696e63223b693a323b733a31363a2273797374656d2e71756575652e696e63223b693a333b733a31343a2273797374656d2e7461722e696e63223b693a343b733a31383a2273797374656d2e757064617465722e696e63223b693a353b733a31313a2273797374656d2e74657374223b7d733a383a227265717569726564223b623a313b733a393a22636f6e666967757265223b733a31393a2261646d696e2f636f6e6669672f73797374656d223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
-('modules/taxonomy/taxonomy.module', 'taxonomy', 'module', '', 1, 0, 7010, 0, 0x613a31343a7b733a343a226e616d65223b733a383a225461786f6e6f6d79223b733a31313a226465736372697074696f6e223b733a33383a22456e61626c6573207468652063617465676f72697a6174696f6e206f6620636f6e74656e742e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a373a226f7074696f6e73223b7d733a353a2266696c6573223b613a323a7b693a303b733a31353a227461786f6e6f6d792e6d6f64756c65223b693a313b733a31333a227461786f6e6f6d792e74657374223b7d733a393a22636f6e666967757265223b733a32343a2261646d696e2f7374727563747572652f7461786f6e6f6d79223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b733a383a227265717569726564223b623a313b733a31313a226578706c616e6174696f6e223b733a38333a224669656c64207479706528732920696e20757365202d20736565203c6120687265663d222f736974652d303431362f61646d696e2f7265706f7274732f6669656c6473223e4669656c64206c6973743c2f613e223b7d),
+('modules/taxonomy/taxonomy.module', 'taxonomy', 'module', '', 1, 0, 7010, 0, 0x613a31343a7b733a343a226e616d65223b733a383a225461786f6e6f6d79223b733a31313a226465736372697074696f6e223b733a33383a22456e61626c6573207468652063617465676f72697a6174696f6e206f6620636f6e74656e742e223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a373a226f7074696f6e73223b7d733a353a2266696c6573223b613a323a7b693a303b733a31353a227461786f6e6f6d792e6d6f64756c65223b693a313b733a31333a227461786f6e6f6d792e74657374223b7d733a393a22636f6e666967757265223b733a32343a2261646d696e2f7374727563747572652f7461786f6e6f6d79223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b733a383a227265717569726564223b623a313b733a31313a226578706c616e6174696f6e223b733a3130333a224669656c64207479706528732920696e20757365202d20736565203c6120687265663d222f6d74745f7468656d65732f636f726b6564736372657765722f736974652f61646d696e2f7265706f7274732f6669656c6473223e4669656c64206c6973743c2f613e223b7d),
 ('modules/toolbar/toolbar.module', 'toolbar', 'module', '', 1, 0, 0, 0, 0x613a31313a7b733a343a226e616d65223b733a373a22546f6f6c626172223b733a31313a226465736372697074696f6e223b733a39393a2250726f7669646573206120746f6f6c62617220746861742073686f77732074686520746f702d6c6576656c2061646d696e697374726174696f6e206d656e75206974656d7320616e64206c696e6b732066726f6d206f74686572206d6f64756c65732e223b733a343a22636f7265223b733a333a22372e78223b733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a353a2266696c6573223b613a303a7b7d733a393a22626f6f747374726170223b693a303b7d),
 ('modules/tracker/tracker.module', 'tracker', 'module', '', 0, 0, -1, 0, 0x613a31313a7b733a343a226e616d65223b733a373a22547261636b6572223b733a31313a226465736372697074696f6e223b733a34353a22456e61626c657320747261636b696e67206f6620726563656e7420636f6e74656e7420666f722075736572732e223b733a31323a22646570656e64656e63696573223b613a313a7b693a303b733a373a22636f6d6d656e74223b7d733a373a227061636b616765223b733a343a22436f7265223b733a373a2276657273696f6e223b733a343a22372e3232223b733a343a22636f7265223b733a333a22372e78223b733a353a2266696c6573223b613a313a7b693a303b733a31323a22747261636b65722e74657374223b7d733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a333a22706870223b733a353a22352e322e34223b733a393a22626f6f747374726170223b693a303b7d),
 ('modules/translation/tests/translation_test.module', 'translation_test', 'module', '', 0, 0, -1, 0, 0x613a31323a7b733a343a226e616d65223b733a32343a22436f6e74656e74205472616e736c6174696f6e2054657374223b733a31313a226465736372697074696f6e223b733a34393a22537570706f7274206d6f64756c6520666f722074686520636f6e74656e74207472616e736c6174696f6e2074657374732e223b733a343a22636f7265223b733a333a22372e78223b733a373a227061636b616765223b733a373a2254657374696e67223b733a373a2276657273696f6e223b733a343a22372e3232223b733a363a2268696464656e223b623a313b733a373a2270726f6a656374223b733a363a2264727570616c223b733a393a22646174657374616d70223b733a31303a2231333635303237303132223b733a31323a22646570656e64656e63696573223b613a303a7b7d733a333a22706870223b733a353a22352e322e34223b733a353a2266696c6573223b613a303a7b7d733a393a22626f6f747374726170223b693a303b7d),
@@ -3961,13 +3214,11 @@ INSERT INTO `system` (`filename`, `name`, `type`, `owner`, `status`, `bootstrap`
 -- Table structure for table `taxonomy_index`
 --
 
-CREATE TABLE IF NOT EXISTS `taxonomy_index` (
-  `nid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The node.nid this record tracks.',
-  `tid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The term ID.',
+CREATE TABLE `taxonomy_index` (
+  `nid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The node.nid this record tracks.',
+  `tid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The term ID.',
   `sticky` tinyint(4) DEFAULT '0' COMMENT 'Boolean indicating whether the node is sticky.',
-  `created` int(11) NOT NULL DEFAULT '0' COMMENT 'The Unix timestamp when the node was created.',
-  KEY `term_node` (`tid`,`sticky`,`created`),
-  KEY `nid` (`nid`)
+  `created` int(11) NOT NULL DEFAULT '0' COMMENT 'The Unix timestamp when the node was created.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maintains denormalized information about node/term...';
 
 --
@@ -3991,18 +3242,14 @@ INSERT INTO `taxonomy_index` (`nid`, `tid`, `sticky`, `created`) VALUES
 -- Table structure for table `taxonomy_term_data`
 --
 
-CREATE TABLE IF NOT EXISTS `taxonomy_term_data` (
-  `tid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique term ID.',
-  `vid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'The taxonomy_vocabulary.vid of the vocabulary to which the term is assigned.',
+CREATE TABLE `taxonomy_term_data` (
+  `tid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique term ID.',
+  `vid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The taxonomy_vocabulary.vid of the vocabulary to which the term is assigned.',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The term name.',
   `description` longtext COMMENT 'A description of the term.',
   `format` varchar(255) DEFAULT NULL COMMENT 'The filter_format.format of the description.',
-  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this term in relation to other terms.',
-  PRIMARY KEY (`tid`),
-  KEY `taxonomy_tree` (`vid`,`weight`,`name`),
-  KEY `vid_name` (`vid`,`name`),
-  KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores term information.' AUTO_INCREMENT=13 ;
+  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this term in relation to other terms.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores term information.';
 
 --
 -- Dumping data for table `taxonomy_term_data`
@@ -4028,11 +3275,9 @@ INSERT INTO `taxonomy_term_data` (`tid`, `vid`, `name`, `description`, `format`,
 -- Table structure for table `taxonomy_term_hierarchy`
 --
 
-CREATE TABLE IF NOT EXISTS `taxonomy_term_hierarchy` (
-  `tid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: The taxonomy_term_data.tid of the term.',
-  `parent` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: The taxonomy_term_data.tid of the term’s parent. 0 indicates no parent.',
-  PRIMARY KEY (`tid`,`parent`),
-  KEY `parent` (`parent`)
+CREATE TABLE `taxonomy_term_hierarchy` (
+  `tid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Primary Key: The taxonomy_term_data.tid of the term.',
+  `parent` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Primary Key: The taxonomy_term_data.tid of the term’s parent. 0 indicates no parent.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the hierarchical relationship between terms.';
 
 --
@@ -4059,18 +3304,15 @@ INSERT INTO `taxonomy_term_hierarchy` (`tid`, `parent`) VALUES
 -- Table structure for table `taxonomy_vocabulary`
 --
 
-CREATE TABLE IF NOT EXISTS `taxonomy_vocabulary` (
-  `vid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique vocabulary ID.',
+CREATE TABLE `taxonomy_vocabulary` (
+  `vid` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key: Unique vocabulary ID.',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Name of the vocabulary.',
   `machine_name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The vocabulary machine name.',
   `description` longtext COMMENT 'Description of the vocabulary.',
-  `hierarchy` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
+  `hierarchy` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
   `module` varchar(255) NOT NULL DEFAULT '' COMMENT 'The module which created the vocabulary.',
-  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this vocabulary in relation to other vocabularies.',
-  PRIMARY KEY (`vid`),
-  UNIQUE KEY `machine_name` (`machine_name`),
-  KEY `list` (`weight`,`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores vocabulary information.' AUTO_INCREMENT=2 ;
+  `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this vocabulary in relation to other vocabularies.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores vocabulary information.';
 
 --
 -- Dumping data for table `taxonomy_vocabulary`
@@ -4085,15 +3327,12 @@ INSERT INTO `taxonomy_vocabulary` (`vid`, `name`, `machine_name`, `description`,
 -- Table structure for table `url_alias`
 --
 
-CREATE TABLE IF NOT EXISTS `url_alias` (
-  `pid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'A unique path alias identifier.',
+CREATE TABLE `url_alias` (
+  `pid` int(10) UNSIGNED NOT NULL COMMENT 'A unique path alias identifier.',
   `source` varchar(255) NOT NULL DEFAULT '' COMMENT 'The Drupal path this alias is for; e.g. node/12.',
   `alias` varchar(255) NOT NULL DEFAULT '' COMMENT 'The alias for this path; e.g. title-of-the-story.',
-  `language` varchar(12) NOT NULL DEFAULT '' COMMENT 'The language this alias is for; if ’und’, the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.',
-  PRIMARY KEY (`pid`),
-  KEY `alias_language_pid` (`alias`,`language`,`pid`),
-  KEY `source_language_pid` (`source`,`language`,`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='A list of URL aliases for Drupal paths; a user may visit...' AUTO_INCREMENT=1 ;
+  `language` varchar(12) NOT NULL DEFAULT '' COMMENT 'The language this alias is for; if ’und’, the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='A list of URL aliases for Drupal paths; a user may visit...';
 
 -- --------------------------------------------------------
 
@@ -4101,8 +3340,8 @@ CREATE TABLE IF NOT EXISTS `url_alias` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: Unique user ID.',
+CREATE TABLE `users` (
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Primary Key: Unique user ID.',
   `name` varchar(60) NOT NULL DEFAULT '' COMMENT 'Unique user name.',
   `pass` varchar(128) NOT NULL DEFAULT '' COMMENT 'User’s password (hashed).',
   `mail` varchar(254) DEFAULT '' COMMENT 'User’s e-mail address.',
@@ -4117,13 +3356,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `language` varchar(12) NOT NULL DEFAULT '' COMMENT 'User’s default language.',
   `picture` int(11) NOT NULL DEFAULT '0' COMMENT 'Foreign key: file_managed.fid of user’s picture.',
   `init` varchar(254) DEFAULT '' COMMENT 'E-mail address used for initial account creation.',
-  `data` longblob COMMENT 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future...',
-  PRIMARY KEY (`uid`),
-  UNIQUE KEY `name` (`name`),
-  KEY `access` (`access`),
-  KEY `created` (`created`),
-  KEY `mail` (`mail`),
-  KEY `picture` (`picture`)
+  `data` longblob COMMENT 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future...'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores user data.';
 
 --
@@ -4132,7 +3365,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`uid`, `name`, `pass`, `mail`, `theme`, `signature`, `signature_format`, `created`, `access`, `login`, `status`, `timezone`, `language`, `picture`, `init`, `data`) VALUES
 (0, '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, '', 0, '', NULL),
-(1, 'admin', '$S$DviIJn5krh37P8XRaB2Wrk1Xb20Ba9LXwi6DtIm3xh9Z5I3hVxXo', 'george@morethanthemes.com', '', 'Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. ', 'filtered_html', 1354450286, 1366140837, 1366140837, 1, 'Europe/Athens', '', 3, 'skehaya@gmail.com', 0x613a323a7b733a373a226f7665726c6179223b693a313b733a373a22636f6e74616374223b693a303b7d);
+(1, 'admin', '$S$DviIJn5krh37P8XRaB2Wrk1Xb20Ba9LXwi6DtIm3xh9Z5I3hVxXo', 'support@yoursite.com', '', 'Italian wine is wine produced in Italy, a country which is home to some of the oldest wine-producing regions in the world. ', 'filtered_html', 1354450286, 1522686718, 1522686718, 1, 'Europe/Athens', '', 3, 'skehaya@gmail.com', 0x613a323a7b733a373a226f7665726c6179223b693a313b733a373a22636f6e74616374223b693a303b7d);
 
 -- --------------------------------------------------------
 
@@ -4140,11 +3373,9 @@ INSERT INTO `users` (`uid`, `name`, `pass`, `mail`, `theme`, `signature`, `signa
 -- Table structure for table `users_roles`
 --
 
-CREATE TABLE IF NOT EXISTS `users_roles` (
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: users.uid for user.',
-  `rid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: role.rid for role.',
-  PRIMARY KEY (`uid`,`rid`),
-  KEY `rid` (`rid`)
+CREATE TABLE `users_roles` (
+  `uid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Primary Key: users.uid for user.',
+  `rid` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Primary Key: role.rid for role.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Maps users to roles.';
 
 --
@@ -4160,10 +3391,9 @@ INSERT INTO `users_roles` (`uid`, `rid`) VALUES
 -- Table structure for table `variable`
 --
 
-CREATE TABLE IF NOT EXISTS `variable` (
+CREATE TABLE `variable` (
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT 'The name of the variable.',
-  `value` longblob NOT NULL COMMENT 'The value of the variable.',
-  PRIMARY KEY (`name`)
+  `value` longblob NOT NULL COMMENT 'The value of the variable.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Named variable/value pairs created by Drupal core or any...';
 
 --
@@ -4176,7 +3406,7 @@ INSERT INTO `variable` (`name`, `value`) VALUES
 ('clean_url', 0x733a313a2231223b),
 ('comment_page', 0x693a303b),
 ('cron_key', 0x733a34333a22575330386242554d70374e59314e2d61537163374f546677775a71646c5a3562722d70323031564852776b223b),
-('cron_last', 0x693a313336363134303835333b),
+('cron_last', 0x693a313532323638363532303b),
 ('css_js_query_string', 0x733a363a226d6c64347a77223b),
 ('ctools_last_cron', 0x693a313336323932363536303b),
 ('date_default_timezone', 0x733a31333a224575726f70652f417468656e73223b),
@@ -4257,7 +3487,7 @@ INSERT INTO `variable` (`name`, `value`) VALUES
 ('theme_default', 0x733a31333a22636f726b656473637265776572223b),
 ('update_check_disabled', 0x693a303b),
 ('update_check_frequency', 0x733a313a2231223b),
-('update_last_check', 0x693a313336363134303836323b),
+('update_last_check', 0x693a313532323638363532323b),
 ('update_last_email_notification', 0x693a313336323932363535393b),
 ('update_notification_threshold', 0x733a333a22616c6c223b),
 ('user_admin_role', 0x733a313a2233223b),
@@ -4298,24 +3528,766 @@ INSERT INTO `variable` (`name`, `value`) VALUES
 -- Table structure for table `watchdog`
 --
 
-CREATE TABLE IF NOT EXISTS `watchdog` (
-  `wid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique watchdog event ID.',
+CREATE TABLE `watchdog` (
+  `wid` int(11) NOT NULL COMMENT 'Primary Key: Unique watchdog event ID.',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT 'The users.uid of the user who triggered the event.',
   `type` varchar(64) NOT NULL DEFAULT '' COMMENT 'Type of log message, for example "user" or "page not found."',
   `message` longtext NOT NULL COMMENT 'Text of log message to be passed into the t() function.',
   `variables` longblob NOT NULL COMMENT 'Serialized array of variables that match the message string and that is passed into the t() function.',
-  `severity` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)',
+  `severity` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)',
   `link` varchar(255) DEFAULT '' COMMENT 'Link to view the result of the event.',
   `location` text NOT NULL COMMENT 'URL of the origin of the event.',
   `referer` text COMMENT 'URL of referring page.',
   `hostname` varchar(128) NOT NULL DEFAULT '' COMMENT 'Hostname of the user who triggered the event.',
-  `timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'Unix timestamp of when event occurred.',
-  PRIMARY KEY (`wid`),
-  KEY `type` (`type`),
-  KEY `uid` (`uid`),
-  KEY `severity` (`severity`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table that contains logs of all system events.' AUTO_INCREMENT=1 ;
+  `timestamp` int(11) NOT NULL DEFAULT '0' COMMENT 'Unix timestamp of when event occurred.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table that contains logs of all system events.';
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `actions`
+--
+ALTER TABLE `actions`
+  ADD PRIMARY KEY (`aid`);
+
+--
+-- Indexes for table `authmap`
+--
+ALTER TABLE `authmap`
+  ADD PRIMARY KEY (`aid`),
+  ADD UNIQUE KEY `authname` (`authname`);
+
+--
+-- Indexes for table `batch`
+--
+ALTER TABLE `batch`
+  ADD PRIMARY KEY (`bid`),
+  ADD KEY `token` (`token`);
+
+--
+-- Indexes for table `block`
+--
+ALTER TABLE `block`
+  ADD PRIMARY KEY (`bid`),
+  ADD UNIQUE KEY `tmd` (`theme`,`module`,`delta`),
+  ADD KEY `list` (`theme`,`status`,`region`,`weight`,`module`);
+
+--
+-- Indexes for table `blocked_ips`
+--
+ALTER TABLE `blocked_ips`
+  ADD PRIMARY KEY (`iid`),
+  ADD KEY `blocked_ip` (`ip`);
+
+--
+-- Indexes for table `block_custom`
+--
+ALTER TABLE `block_custom`
+  ADD PRIMARY KEY (`bid`),
+  ADD UNIQUE KEY `info` (`info`);
+
+--
+-- Indexes for table `block_node_type`
+--
+ALTER TABLE `block_node_type`
+  ADD PRIMARY KEY (`module`,`delta`,`type`),
+  ADD KEY `type` (`type`);
+
+--
+-- Indexes for table `block_role`
+--
+ALTER TABLE `block_role`
+  ADD PRIMARY KEY (`module`,`delta`,`rid`),
+  ADD KEY `rid` (`rid`);
+
+--
+-- Indexes for table `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_block`
+--
+ALTER TABLE `cache_block`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_bootstrap`
+--
+ALTER TABLE `cache_bootstrap`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_field`
+--
+ALTER TABLE `cache_field`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_filter`
+--
+ALTER TABLE `cache_filter`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_form`
+--
+ALTER TABLE `cache_form`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_image`
+--
+ALTER TABLE `cache_image`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_libraries`
+--
+ALTER TABLE `cache_libraries`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_menu`
+--
+ALTER TABLE `cache_menu`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_page`
+--
+ALTER TABLE `cache_page`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_path`
+--
+ALTER TABLE `cache_path`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `cache_update`
+--
+ALTER TABLE `cache_update`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `comment`
+--
+ALTER TABLE `comment`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `comment_status_pid` (`pid`,`status`),
+  ADD KEY `comment_num_new` (`nid`,`status`,`created`,`cid`,`thread`),
+  ADD KEY `comment_uid` (`uid`),
+  ADD KEY `comment_nid_language` (`nid`,`language`),
+  ADD KEY `comment_created` (`created`);
+
+--
+-- Indexes for table `contact`
+--
+ALTER TABLE `contact`
+  ADD PRIMARY KEY (`cid`),
+  ADD UNIQUE KEY `category` (`category`),
+  ADD KEY `list` (`weight`,`category`);
+
+--
+-- Indexes for table `date_formats`
+--
+ALTER TABLE `date_formats`
+  ADD PRIMARY KEY (`dfid`),
+  ADD UNIQUE KEY `formats` (`format`,`type`);
+
+--
+-- Indexes for table `date_format_locale`
+--
+ALTER TABLE `date_format_locale`
+  ADD PRIMARY KEY (`type`,`language`);
+
+--
+-- Indexes for table `date_format_type`
+--
+ALTER TABLE `date_format_type`
+  ADD PRIMARY KEY (`type`),
+  ADD KEY `title` (`title`);
+
+--
+-- Indexes for table `field_config`
+--
+ALTER TABLE `field_config`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `field_name` (`field_name`),
+  ADD KEY `active` (`active`),
+  ADD KEY `storage_active` (`storage_active`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `module` (`module`),
+  ADD KEY `storage_module` (`storage_module`),
+  ADD KEY `type` (`type`),
+  ADD KEY `storage_type` (`storage_type`);
+
+--
+-- Indexes for table `field_config_instance`
+--
+ALTER TABLE `field_config_instance`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `field_name_bundle` (`field_name`,`entity_type`,`bundle`),
+  ADD KEY `deleted` (`deleted`);
+
+--
+-- Indexes for table `field_data_body`
+--
+ALTER TABLE `field_data_body`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `body_format` (`body_format`);
+
+--
+-- Indexes for table `field_data_comment_body`
+--
+ALTER TABLE `field_data_comment_body`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `comment_body_format` (`comment_body_format`);
+
+--
+-- Indexes for table `field_data_field_image`
+--
+ALTER TABLE `field_data_field_image`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `field_image_fid` (`field_image_fid`);
+
+--
+-- Indexes for table `field_data_field_tags`
+--
+ALTER TABLE `field_data_field_tags`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `field_tags_tid` (`field_tags_tid`);
+
+--
+-- Indexes for table `field_revision_body`
+--
+ALTER TABLE `field_revision_body`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `body_format` (`body_format`);
+
+--
+-- Indexes for table `field_revision_comment_body`
+--
+ALTER TABLE `field_revision_comment_body`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `comment_body_format` (`comment_body_format`);
+
+--
+-- Indexes for table `field_revision_field_image`
+--
+ALTER TABLE `field_revision_field_image`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `field_image_fid` (`field_image_fid`);
+
+--
+-- Indexes for table `field_revision_field_tags`
+--
+ALTER TABLE `field_revision_field_tags`
+  ADD PRIMARY KEY (`entity_type`,`entity_id`,`revision_id`,`deleted`,`delta`,`language`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `bundle` (`bundle`),
+  ADD KEY `deleted` (`deleted`),
+  ADD KEY `entity_id` (`entity_id`),
+  ADD KEY `revision_id` (`revision_id`),
+  ADD KEY `language` (`language`),
+  ADD KEY `field_tags_tid` (`field_tags_tid`);
+
+--
+-- Indexes for table `file_managed`
+--
+ALTER TABLE `file_managed`
+  ADD PRIMARY KEY (`fid`),
+  ADD UNIQUE KEY `uri` (`uri`),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `status` (`status`),
+  ADD KEY `timestamp` (`timestamp`);
+
+--
+-- Indexes for table `file_usage`
+--
+ALTER TABLE `file_usage`
+  ADD PRIMARY KEY (`fid`,`type`,`id`,`module`),
+  ADD KEY `type_id` (`type`,`id`),
+  ADD KEY `fid_count` (`fid`,`count`),
+  ADD KEY `fid_module` (`fid`,`module`);
+
+--
+-- Indexes for table `filter`
+--
+ALTER TABLE `filter`
+  ADD PRIMARY KEY (`format`,`name`),
+  ADD KEY `list` (`weight`,`module`,`name`);
+
+--
+-- Indexes for table `filter_format`
+--
+ALTER TABLE `filter_format`
+  ADD PRIMARY KEY (`format`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `status_weight` (`status`,`weight`);
+
+--
+-- Indexes for table `flood`
+--
+ALTER TABLE `flood`
+  ADD PRIMARY KEY (`fid`),
+  ADD KEY `allow` (`event`,`identifier`,`timestamp`),
+  ADD KEY `purge` (`expiration`);
+
+--
+-- Indexes for table `history`
+--
+ALTER TABLE `history`
+  ADD PRIMARY KEY (`uid`,`nid`),
+  ADD KEY `nid` (`nid`);
+
+--
+-- Indexes for table `image_effects`
+--
+ALTER TABLE `image_effects`
+  ADD PRIMARY KEY (`ieid`),
+  ADD KEY `isid` (`isid`),
+  ADD KEY `weight` (`weight`);
+
+--
+-- Indexes for table `image_styles`
+--
+ALTER TABLE `image_styles`
+  ADD PRIMARY KEY (`isid`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `menu_custom`
+--
+ALTER TABLE `menu_custom`
+  ADD PRIMARY KEY (`menu_name`);
+
+--
+-- Indexes for table `menu_links`
+--
+ALTER TABLE `menu_links`
+  ADD PRIMARY KEY (`mlid`),
+  ADD KEY `path_menu` (`link_path`(128),`menu_name`),
+  ADD KEY `menu_plid_expand_child` (`menu_name`,`plid`,`expanded`,`has_children`),
+  ADD KEY `menu_parents` (`menu_name`,`p1`,`p2`,`p3`,`p4`,`p5`,`p6`,`p7`,`p8`,`p9`),
+  ADD KEY `router_path` (`router_path`(128));
+
+--
+-- Indexes for table `menu_router`
+--
+ALTER TABLE `menu_router`
+  ADD PRIMARY KEY (`path`),
+  ADD KEY `fit` (`fit`),
+  ADD KEY `tab_parent` (`tab_parent`(64),`weight`,`title`),
+  ADD KEY `tab_root_weight_title` (`tab_root`(64),`weight`,`title`);
+
+--
+-- Indexes for table `node`
+--
+ALTER TABLE `node`
+  ADD PRIMARY KEY (`nid`),
+  ADD UNIQUE KEY `vid` (`vid`),
+  ADD KEY `node_changed` (`changed`),
+  ADD KEY `node_created` (`created`),
+  ADD KEY `node_frontpage` (`promote`,`status`,`sticky`,`created`),
+  ADD KEY `node_status_type` (`status`,`type`,`nid`),
+  ADD KEY `node_title_type` (`title`,`type`(4)),
+  ADD KEY `node_type` (`type`(4)),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `tnid` (`tnid`),
+  ADD KEY `translate` (`translate`);
+
+--
+-- Indexes for table `node_access`
+--
+ALTER TABLE `node_access`
+  ADD PRIMARY KEY (`nid`,`gid`,`realm`);
+
+--
+-- Indexes for table `node_comment_statistics`
+--
+ALTER TABLE `node_comment_statistics`
+  ADD PRIMARY KEY (`nid`),
+  ADD KEY `node_comment_timestamp` (`last_comment_timestamp`),
+  ADD KEY `comment_count` (`comment_count`),
+  ADD KEY `last_comment_uid` (`last_comment_uid`);
+
+--
+-- Indexes for table `node_revision`
+--
+ALTER TABLE `node_revision`
+  ADD PRIMARY KEY (`vid`),
+  ADD KEY `nid` (`nid`),
+  ADD KEY `uid` (`uid`);
+
+--
+-- Indexes for table `node_type`
+--
+ALTER TABLE `node_type`
+  ADD PRIMARY KEY (`type`);
+
+--
+-- Indexes for table `queue`
+--
+ALTER TABLE `queue`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `name_created` (`name`,`created`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `rdf_mapping`
+--
+ALTER TABLE `rdf_mapping`
+  ADD PRIMARY KEY (`type`,`bundle`);
+
+--
+-- Indexes for table `registry`
+--
+ALTER TABLE `registry`
+  ADD PRIMARY KEY (`name`,`type`),
+  ADD KEY `hook` (`type`,`weight`,`module`);
+
+--
+-- Indexes for table `registry_file`
+--
+ALTER TABLE `registry_file`
+  ADD PRIMARY KEY (`filename`);
+
+--
+-- Indexes for table `role`
+--
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`rid`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `name_weight` (`name`,`weight`);
+
+--
+-- Indexes for table `role_permission`
+--
+ALTER TABLE `role_permission`
+  ADD PRIMARY KEY (`rid`,`permission`),
+  ADD KEY `permission` (`permission`);
+
+--
+-- Indexes for table `search_dataset`
+--
+ALTER TABLE `search_dataset`
+  ADD PRIMARY KEY (`sid`,`type`);
+
+--
+-- Indexes for table `search_index`
+--
+ALTER TABLE `search_index`
+  ADD PRIMARY KEY (`word`,`sid`,`type`),
+  ADD KEY `sid_type` (`sid`,`type`);
+
+--
+-- Indexes for table `search_node_links`
+--
+ALTER TABLE `search_node_links`
+  ADD PRIMARY KEY (`sid`,`type`,`nid`),
+  ADD KEY `nid` (`nid`);
+
+--
+-- Indexes for table `search_total`
+--
+ALTER TABLE `search_total`
+  ADD PRIMARY KEY (`word`);
+
+--
+-- Indexes for table `semaphore`
+--
+ALTER TABLE `semaphore`
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `value` (`value`),
+  ADD KEY `expire` (`expire`);
+
+--
+-- Indexes for table `sequences`
+--
+ALTER TABLE `sequences`
+  ADD PRIMARY KEY (`value`);
+
+--
+-- Indexes for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`sid`,`ssid`),
+  ADD KEY `timestamp` (`timestamp`),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `ssid` (`ssid`);
+
+--
+-- Indexes for table `shortcut_set`
+--
+ALTER TABLE `shortcut_set`
+  ADD PRIMARY KEY (`set_name`);
+
+--
+-- Indexes for table `shortcut_set_users`
+--
+ALTER TABLE `shortcut_set_users`
+  ADD PRIMARY KEY (`uid`),
+  ADD KEY `set_name` (`set_name`);
+
+--
+-- Indexes for table `system`
+--
+ALTER TABLE `system`
+  ADD PRIMARY KEY (`filename`),
+  ADD KEY `system_list` (`status`,`bootstrap`,`type`,`weight`,`name`),
+  ADD KEY `type_name` (`type`,`name`);
+
+--
+-- Indexes for table `taxonomy_index`
+--
+ALTER TABLE `taxonomy_index`
+  ADD KEY `term_node` (`tid`,`sticky`,`created`),
+  ADD KEY `nid` (`nid`);
+
+--
+-- Indexes for table `taxonomy_term_data`
+--
+ALTER TABLE `taxonomy_term_data`
+  ADD PRIMARY KEY (`tid`),
+  ADD KEY `taxonomy_tree` (`vid`,`weight`,`name`),
+  ADD KEY `vid_name` (`vid`,`name`),
+  ADD KEY `name` (`name`);
+
+--
+-- Indexes for table `taxonomy_term_hierarchy`
+--
+ALTER TABLE `taxonomy_term_hierarchy`
+  ADD PRIMARY KEY (`tid`,`parent`),
+  ADD KEY `parent` (`parent`);
+
+--
+-- Indexes for table `taxonomy_vocabulary`
+--
+ALTER TABLE `taxonomy_vocabulary`
+  ADD PRIMARY KEY (`vid`),
+  ADD UNIQUE KEY `machine_name` (`machine_name`),
+  ADD KEY `list` (`weight`,`name`);
+
+--
+-- Indexes for table `url_alias`
+--
+ALTER TABLE `url_alias`
+  ADD PRIMARY KEY (`pid`),
+  ADD KEY `alias_language_pid` (`alias`,`language`,`pid`),
+  ADD KEY `source_language_pid` (`source`,`language`,`pid`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`uid`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `access` (`access`),
+  ADD KEY `created` (`created`),
+  ADD KEY `mail` (`mail`),
+  ADD KEY `picture` (`picture`);
+
+--
+-- Indexes for table `users_roles`
+--
+ALTER TABLE `users_roles`
+  ADD PRIMARY KEY (`uid`,`rid`),
+  ADD KEY `rid` (`rid`);
+
+--
+-- Indexes for table `variable`
+--
+ALTER TABLE `variable`
+  ADD PRIMARY KEY (`name`);
+
+--
+-- Indexes for table `watchdog`
+--
+ALTER TABLE `watchdog`
+  ADD PRIMARY KEY (`wid`),
+  ADD KEY `type` (`type`),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `severity` (`severity`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `authmap`
+--
+ALTER TABLE `authmap`
+  MODIFY `aid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique authmap ID.';
+--
+-- AUTO_INCREMENT for table `block`
+--
+ALTER TABLE `block`
+  MODIFY `bid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique block ID.', AUTO_INCREMENT=125;
+--
+-- AUTO_INCREMENT for table `blocked_ips`
+--
+ALTER TABLE `blocked_ips`
+  MODIFY `iid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: unique ID for IP addresses.';
+--
+-- AUTO_INCREMENT for table `block_custom`
+--
+ALTER TABLE `block_custom`
+  MODIFY `bid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The block’s block.bid.', AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `comment`
+--
+ALTER TABLE `comment`
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique comment ID.', AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT for table `contact`
+--
+ALTER TABLE `contact`
+  MODIFY `cid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique category ID.', AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `date_formats`
+--
+ALTER TABLE `date_formats`
+  MODIFY `dfid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The date format identifier.', AUTO_INCREMENT=36;
+--
+-- AUTO_INCREMENT for table `field_config`
+--
+ALTER TABLE `field_config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for a field', AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `field_config_instance`
+--
+ALTER TABLE `field_config_instance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for a field instance', AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `file_managed`
+--
+ALTER TABLE `file_managed`
+  MODIFY `fid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'File ID.', AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `flood`
+--
+ALTER TABLE `flood`
+  MODIFY `fid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique flood event ID.';
+--
+-- AUTO_INCREMENT for table `image_effects`
+--
+ALTER TABLE `image_effects`
+  MODIFY `ieid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for an image effect.';
+--
+-- AUTO_INCREMENT for table `image_styles`
+--
+ALTER TABLE `image_styles`
+  MODIFY `isid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for an image style.';
+--
+-- AUTO_INCREMENT for table `menu_links`
+--
+ALTER TABLE `menu_links`
+  MODIFY `mlid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The menu link ID (mlid) is the integer primary key.', AUTO_INCREMENT=528;
+--
+-- AUTO_INCREMENT for table `node`
+--
+ALTER TABLE `node`
+  MODIFY `nid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for a node.', AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `node_revision`
+--
+ALTER TABLE `node_revision`
+  MODIFY `vid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The primary identifier for this version.', AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `queue`
+--
+ALTER TABLE `queue`
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique item ID.', AUTO_INCREMENT=115;
+--
+-- AUTO_INCREMENT for table `role`
+--
+ALTER TABLE `role`
+  MODIFY `rid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique role ID.', AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `sequences`
+--
+ALTER TABLE `sequences`
+  MODIFY `value` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The value of the sequence.', AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `taxonomy_term_data`
+--
+ALTER TABLE `taxonomy_term_data`
+  MODIFY `tid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique term ID.', AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `taxonomy_vocabulary`
+--
+ALTER TABLE `taxonomy_vocabulary`
+  MODIFY `vid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique vocabulary ID.', AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `url_alias`
+--
+ALTER TABLE `url_alias`
+  MODIFY `pid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'A unique path alias identifier.';
+--
+-- AUTO_INCREMENT for table `watchdog`
+--
+ALTER TABLE `watchdog`
+  MODIFY `wid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique watchdog event ID.';
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
